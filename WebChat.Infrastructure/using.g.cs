@@ -1,0 +1,10 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
+global using WebChat.Application.ApplicationSettings;
+global using WebChat.Application.Contracts.UnitOfWork;
+global using WebChat.Presistence.DBContext;
+global using WebChat.Presistence.UnitOfWork;
+global using WebChat.Application.Contracts.Presistence.IRepositories.Mongo;
+global using WebChat.Presistence.Repositories.MongoRepositories;
+global using MongoDB.Driver;
+global using WebChat.Application.Contracts.Presistence.IDBContext;
