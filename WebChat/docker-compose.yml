@@ -6,41 +6,54 @@ services:
     build:
       context: .
       dockerfile: ../WebChat.API/Dockerfile
-    depends_on:
-      - postgredb
-      - mongodb
-      - sqlserver
-  postgredb:
-    image: postgres:latest
-    container_name: WebChatV2.Db
-    environment:
-      - POSTGRES_DB=webchatv2
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./.containers/database:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-  mongodb:
-    image: mongo:latest
-    container_name: WebChatV2.Mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=myuser
-      - MONGO_INITDB_ROOT_PASSWORD=mypassword
-      - MONGO_INITDB_DATABASE=webchatv2
-    volumes:
-      - ./.containers/mongodb:/data/db
-    ports:
-      - 27017:27017
- 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server
-    container_name: WebChatV2.SqlServer
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=mypassword
-      - MSSQL_DB=webchatv2
-    volumes:
-      - ./.containers/sqlserver:/var/opt/mssql
-    ports:
-      - 1433:1433
+   # depends_on:
+      # - postgredb
+      # - mongodb
+      # - sqlserver
+      #- mysqlserver  # Add the new MySQL service dependency
+  # postgredb:
+  #   image: postgres:latest
+  #   container_name: WebChatV2.Postgres
+  #   environment:
+  #     - POSTGRES_DB=webchatv2
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #   # volumes:
+  #   #   - ./.containers/database:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+
+  # mongodb:
+  #   image: mongo:latest
+  #   container_name: WebChatV2.Mongo
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=myuser
+  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
+  #     - MONGO_INITDB_DATABASE=webchatv2
+  #   # volumes:
+  #   #   - ./.containers/mongodb:/data/db
+  #   ports:
+  #     - 27017:27017
+
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server
+  #   container_name: WebChatV2.SqlServer
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - SA_PASSWORD=mypassword
+  #     - MSSQL_DB=webchatv2
+  #   # volumes:
+  #   #   - ./.containers/sqlserver:/var/opt/mssql
+  #   ports:
+  #     - 1433:1433
+
+  # mysqlserver:
+  #   image: mysql:latest
+  #   container_name: WebChatV2.MySql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=mypassword
+  #     - MYSQL_DATABASE=webchatv2
+  #   # volumes:
+  #   #   - ./.containers/mysql:/var/lib/mysql
+  #   ports:
+  #     - 3306:3306

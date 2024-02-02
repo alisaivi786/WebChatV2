@@ -1,0 +1,60 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.groups-column {
+    border-right: 1px solid #ccc;
+}
+
+.group-chat-main {
+    height: 70vh;
+}
+
+.new-group-row{
+    position: absolute;
+    bottom: 0;
+}
+
+#messagesList {
+    height: 50vh;
+    overflow: auto;
+}
+
+.group-buttons {
+    margin: 0;
+    padding: 0;
+}
+
+.group-buttons li {
+    list-style-type: none;
+    background: #eee;
+    border: 1px solid #ddd;
+    /*margin-bottom: 0.3em;*/
+    text-align: center;
+}
+
+.group-buttons li:hover {
+    background: #ccc;
+}
+
+.group-button {
+}

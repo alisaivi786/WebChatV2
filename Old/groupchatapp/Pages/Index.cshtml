@@ -1,0 +1,153 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container-fluid">
+    <div class="row group-chat-main">
+        <div class="col-md-3 groups-column">
+            <h3>Groups</h3>
+            <ul class="group-buttons">
+                @foreach (var group in Model.Groups)
+                {
+                    @* <li asp-page-handler="Chat" asp-route-groupId="@group.Id">@group.Name</li> *@
+                    <li class="group-button">
+                        <a id="myButton" class="btn btn-group" onclick="CallServerAction(@group.Id)">@group.Name</a>
+                    </li>
+                }
+            </ul>
+            <div class="new-group-row">
+                @* <a class="btn btn-primary" tabindex="1">New Group</a> *@
+                <a class="btn btn-primary" asp-page="Groups/Create">New Group</a>
+            </div>
+        </div>
+        <div class="col-md-9 chats-column">
+            @* <h3>no chat to display</h3> *@
+            <div class="row p-1">
+                <div class="col-12">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+            <div class="container" style="position: absolute;bottom: 0;">
+                @* <div class="row p-1">
+                    <div class="col-1">User</div>
+                    <div class="col-5"><input type="text" id="userInput" /></div>
+                </div> *@
+                <div class="row p-1">
+                    <div class="col-1">Message</div>
+                    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-6 text-end">
+                        <input type="button" id="sendButton" onclick="SendMessage()" value="Send Message" />
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-6">
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="groupIdHidden" value="" hidden />
+<hr />
+
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+@* <script src="~/js/chat.js"></script> *@
+
+<script>
+    localStorage.clear();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("userId") || 1;
+    localStorage.removeItem("userId");
+    localStorage.setItem("userId", userId);
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    //Disable the send button until connection is established.
+    //document.getElementById("sendButton").disabled = true;
+
+    connection.on("ReceiveMessage", function (user, message) {
+        console.log("ReceiveMessage", message);
+        if (!message) return;
+        var li = document.createElement("li");
+        //document.getElementById("messagesList").innerHTML = "";
+        document.getElementById("messagesList").appendChild(li);
+        // We can assign user-supplied strings to an element's textContent because it
+        // is not interpreted as markup. If you're assigning in any other way, you
+        // should be aware of possible script injection concerns.
+        li.textContent = `${user} says ${message}`;
+    });
+
+    connection.start().then(function () {
+        document.getElementById("sendButton").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        
+        var user = localStorage.getItem("userId");
+        var message = document.getElementById("messageInput").value;
+        connection.invoke("SendMessage", user, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+    });
+
+    function CallServerAction(groupId) {
+        localStorage.removeItem("groupId");
+
+        localStorage.setItem("groupId", groupId);
+
+        connection.invoke("AddToGroup", groupId, 1);
+        var groupIdStr = groupId.toString();
+
+        $.ajax({
+            url: '@Url.Page("Index", "Messages")', // Replace with actual URL
+            type: 'GET', // Or GET, depending on your server action
+            data: {
+                "groupId": groupId
+                // Add any data you want to send to the server
+            },
+            success: function (response) {
+                console.log(response);
+
+                const messagesList = document.getElementById("messagesList");
+                messagesList.innerHTML = "";
+
+                response.messages.forEach(message => {
+                    const li = document.createElement("li");
+                    li.textContent = `user says ${message.Content}`;
+                    messagesList.appendChild(li);
+                });
+              //  messagesList.scrollTop = messagesList.scrollHeight;
+
+
+            },
+            error: function (error) {
+                // Handle any errors that occur during the AJAX call
+            }
+        });
+    }
+
+    function SendMessage() {
+        console.log(localStorage.getItem("groupId"));
+        var groupId = localStorage.getItem("groupId");
+        var user = localStorage.getItem("userId");
+        var message = document.getElementById("messageInput").value;
+        console.log("groupId", typeof(groupId));
+        connection.invoke("SendMessageToGroup", groupId, user, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        //document.getElementById("userInput").value = "";
+        document.getElementById("messageInput").value = "";
+    }
+</script>

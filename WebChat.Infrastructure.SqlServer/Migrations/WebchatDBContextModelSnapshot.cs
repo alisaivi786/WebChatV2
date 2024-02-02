@@ -192,6 +192,9 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("RowId")
                         .HasColumnType("uniqueidentifier");
 

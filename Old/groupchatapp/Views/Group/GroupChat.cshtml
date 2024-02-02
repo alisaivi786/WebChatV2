@@ -1,0 +1,45 @@
+﻿@page
+@model GroupChatApp.Models.GroupChatModel
+
+<h1>@Model.Group.Name Chat</h1>
+
+<ul id="membersList">
+    @foreach (var user in Model.Group.Users)
+    {
+        <li>@user.Name</li>
+    }
+</ul>
+
+<div id="chatWindow">
+    <ul id="messagesList"></ul>
+    <input type="text" id="messageInput" placeholder="Enter message..." />
+    <button id="sendMessageBtn">Send</button>
+</div>
+
+@section Scripts {
+    <script src="@Url.Content("~/lib/signalr/signalr.min.js")"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        connection.start().then(() => {
+            connection.on("ReceiveMessage", (groupId, message) => {
+                const messagesList = document.getElementById("messagesList");
+                const newMessageEl = document.createElement("li");
+                newMessageEl.innerText = `${message.sender.name}: ${message.content}`;
+                messagesList.appendChild(newMessageEl);
+            });
+
+            const sendMessageBtn = document.getElementById("sendMessageBtn");
+            sendMessageBtn.addEventListener("click", () => {
+                const messageInput = document.getElementById("messageInput");
+                const message = messageInput.value;
+                messageInput.value = "";
+
+                connection.invoke("SendMessage", @Model.Group.Id, message)
+                    .catch(error => console.error(error));
+            });
+        });
+    </script>
+}

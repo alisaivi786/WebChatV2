@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebChat.RabbitMQ\WebChat.RabbitMQ.csproj" />
+  </ItemGroup>
+
 </Project>

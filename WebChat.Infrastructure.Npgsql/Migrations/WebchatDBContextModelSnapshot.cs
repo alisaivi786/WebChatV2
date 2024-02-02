@@ -192,6 +192,9 @@ namespace WebChat.Infrastructure.Npgsql.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("RowId")
                         .HasColumnType("uuid");
 

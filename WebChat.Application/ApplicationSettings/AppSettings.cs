@@ -29,6 +29,8 @@ public class AppSettings(IConfiguration configuration)
     public string? SqlConnectionString { get; set; } = configuration["ConnectionStrings:SqlServer"];
     public string? MongoConnectionString { get; set; } = configuration["ConnectionStrings:Mongo"];
     public string? PostgresConnectionString { get; set; } = configuration["ConnectionStrings:Postgres"];
+    public string? MySqlConnectionString { get; set; } = configuration["ConnectionStrings:MySql"];
+    public string? OracleConnectionString { get; set; } = configuration["ConnectionStrings:Oracle"];
     #endregion
 
     #region JWT Token Settings

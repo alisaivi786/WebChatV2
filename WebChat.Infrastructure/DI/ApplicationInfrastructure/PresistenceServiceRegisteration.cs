@@ -42,6 +42,14 @@ public static class PersistenceServiceRegistration
                         b.MigrationsAssembly(migrationAssembly);
                     }),
 
+                "MySQL" => options.UseMySQL(
+                    applicationSettings.MySqlConnectionString,
+                    b => b.MigrationsAssembly(migrationAssembly)),
+
+                "Oracle" => options.UseOracle(
+                    applicationSettings.OracleConnectionString,
+                    b => b.MigrationsAssembly(migrationAssembly)),
+
                 _ => throw new InvalidOperationException($"Unsupported DBProvider: {dbProvider}")
             });
 

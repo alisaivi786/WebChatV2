@@ -1,5 +1,6 @@
 using WebChat.Application.Contracts.UnitOfWork;
 using WebChat.Infrastructure.DI.ApplicationInfrastructure;
+using WebChat.Infrastructure.DI.RabbitMQ;
 using WebChat.Presistence.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ var AppSetting = new AppSettings(configuration);
 builder.Services.AddSingleton(_ => AppSetting);
 // Add Persistence Infrastructure
 builder.Services.AddPersistenceInfrastructure(applicationSettings:AppSetting);
+
+// Add Rabbit MQ
+builder.Services.AddRegisterRabbitMQ(AppSetting);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

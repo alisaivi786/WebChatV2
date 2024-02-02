@@ -29,7 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebChat.Hub\WebChat.Hubs.csproj" />
+    <ProjectReference Include="..\WebChat.Infrastructure.MySQL\WebChat.Infrastructure.MySQL.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.Npgsql\WebChat.Infrastructure.Npgsql.csproj" />
+    <ProjectReference Include="..\WebChat.Infrastructure.Oracle\WebChat.Infrastructure.Oracle.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.SqlServer\WebChat.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure\WebChat.Infrastructure.csproj" />
   </ItemGroup>

@@ -1,0 +1,21 @@
+﻿<h1>All Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Online Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@(user.IsOnline ? "Online" : "Offline")</td>
+                <td><a asp-page="/Profile" asp-route-id="@user.Id">View Profile</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

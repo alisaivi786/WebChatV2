@@ -1,0 +1,25 @@
+﻿@page
+@model AddUserGroupModel
+
+<h1>Add User to Group</h1>
+
+<form method="post">
+    <div>
+        <label asp-for="GroupId">Group:</label>
+        <select asp-for="SelectedGroupId" asp-items="ViewBag.Groups">
+            <option value="">-- Select Group --</option>
+        </select>
+        <span asp-validation-for="GroupId"></span>
+    </div>
+
+    <div>
+        <label asp-for="UserId">User:</label>
+        <select asp-for="SelectedUserId" asp-items="ViewBag.Users">
+            <option value="">-- Select User --</option>
+        </select>
+        <span asp-validation-for="UserId"></span>
+    </div>
+    @ViewBag.SelectedGroupId
+    @ViewBag.SelectedUserId
+    <button type="submit">Add</button>
+</form>
