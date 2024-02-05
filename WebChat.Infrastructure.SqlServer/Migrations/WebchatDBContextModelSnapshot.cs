@@ -18,6 +18,9 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -36,19 +39,10 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("DeletedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
@@ -57,12 +51,19 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RowId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.ToTable("Group");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedBy = 1L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4582),
+                            IsActive = true,
+                            Name = "TB-Admin"
+                        });
                 });
 
             modelBuilder.Entity("WebChat.Domain.Entities.GroupUsersEntity", b =>
@@ -79,34 +80,26 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("DeletedBy")
+                    b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("RowId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("GroupUsers");
                 });
@@ -128,33 +121,99 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("DeletedBy")
+                    b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("RowId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("SentTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Message");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Content = "Hello Team",
+                            CreatedBy = 1L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4744),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Content = "Hey Ali!",
+                            CreatedBy = 2L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4746),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 2L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Content = "I am Fine Poonam what about you?",
+                            CreatedBy = 1L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4749),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 1L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Content = "Good to hear you are good, thanks for asking i am also fine!.",
+                            CreatedBy = 2L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4751),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 2L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Content = "hey Guys whats the update of our chat v1 Project???.",
+                            CreatedBy = 3L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4754),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 3L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Content = "Architecture of Project is done just doing some final tweaks and then update you here in group.",
+                            CreatedBy = 1L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4756),
+                            GroupId = 1L,
+                            IsActive = true,
+                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 1L
+                        });
                 });
 
             modelBuilder.Entity("WebChat.Domain.Entities.UserEntity", b =>
@@ -171,36 +230,91 @@ namespace WebChat.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("DeletedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RowId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedBy = 1L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4138),
+                            IsActive = true,
+                            PhoneNumber = "971505679899",
+                            UserName = "Ali"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedBy = 2L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4145),
+                            IsActive = true,
+                            PhoneNumber = "971505679800",
+                            UserName = "Poonam"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedBy = 3L,
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4147),
+                            IsActive = true,
+                            PhoneNumber = "971505679888",
+                            UserName = "Aymen"
+                        });
+                });
+
+            modelBuilder.Entity("WebChat.Domain.Entities.GroupUsersEntity", b =>
+                {
+                    b.HasOne("WebChat.Domain.Entities.GroupEntitiy", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebChat.Domain.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebChat.Domain.Entities.MessageEntity", b =>
+                {
+                    b.HasOne("WebChat.Domain.Entities.GroupEntitiy", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebChat.Domain.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

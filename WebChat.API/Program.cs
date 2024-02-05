@@ -1,5 +1,6 @@
 using System.Threading;
 using WebChat.Application.Contracts.UnitOfWork;
+using WebChat.Extension.Extensions;
 using WebChat.Hubs;
 using WebChat.Infrastructure.DI.ApplicationInfrastructure;
 using WebChat.Infrastructure.DI.RabbitMQ;
@@ -57,7 +58,7 @@ app.UseEndpoints(endpoints =>
 });
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsTest())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
