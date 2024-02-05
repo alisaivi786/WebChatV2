@@ -36,6 +36,8 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
 
     #region Entity Table
     public DbSet<T> Table { get; set; } = context.Set<T>();
+
+    DbSet<T> IBaseRepository<T>.Table => throw new NotImplementedException();
     #endregion
 
     #region AddAsync
@@ -165,7 +167,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="Id"></param>
     /// <returns>Return Entity Result</returns> 
     #endregion
-    public async Task<T?> GetAvailableAsync(int Id)
+    public async Task<T?> GetAvailableAsync(long Id)
     {
         #region ...
         var response = await Table.FindAsync(Id);
@@ -185,7 +187,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="id"></param>
     /// <returns>Return Entity Result</returns>  
     #endregion
-    public async Task<DbResponse<T>> GetByIdAsync(int id)
+    public async Task<DbResponse<T>> GetByIdAsync(long id)
     {
         #region ...
         try
@@ -255,7 +257,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="updatedBy"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<T>> UpdateAsync(T entity, int updatedBy)
+    public async Task<DbResponse<T>> UpdateAsync(T entity, long updatedBy)
     {
         #region ...
         if (entity is BaseEntity baseEntity)
@@ -284,7 +286,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="updatedBy"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<DbResponse<List<T>>> UpdateMultipleAsync(IEnumerable<T> entities, int updatedBy)
+    public async Task<DbResponse<List<T>>> UpdateMultipleAsync(IEnumerable<T> entities, long updatedBy)
     {
         #region ...
         try
@@ -339,7 +341,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="deletedBy"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<DbResponse<T>> DeleteAsync(int id, int deletedBy)
+    public async Task<DbResponse<T>> DeleteAsync(long id, long deletedBy)
     {
         #region ...
         var entity = await GetByIdAsync(id);
@@ -365,7 +367,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="entity"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<bool>> DeletePermanently(T entity)
+    public async Task<DbResponse<bool>> DeletePermanentlyAsync(T entity)
     {
         #region ...
         try
@@ -545,7 +547,6 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
         }
     }
 
-    
     #endregion
 
 

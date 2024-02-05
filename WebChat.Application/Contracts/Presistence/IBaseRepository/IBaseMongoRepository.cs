@@ -4,6 +4,16 @@ using WebChat.Application.Response;
 
 namespace WebChat.Application.Contracts.Presistence.IBaseRepository;
 
+#region IBaseMongoRepository Contract
+#region IBaseMongoRepository
+/// <summary>
+/// IBaseMongoRepository Contract
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 05-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
+/// <typeparam name="T"></typeparam> 
+#endregion
 public interface IBaseMongoRepository<T> where T : class
 {
     // Mongo DB Function:
@@ -14,3 +24,5 @@ public interface IBaseMongoRepository<T> where T : class
     Task<DbResponse<IEnumerable<T>>> GetMongoAsync(Expression<Func<T, bool>> filter);
     Task<DbResponse<T>> GetSingleMongoAsync(Expression<Func<T, bool>> filter);
 }
+
+#endregion

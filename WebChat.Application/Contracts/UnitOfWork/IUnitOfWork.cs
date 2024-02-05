@@ -1,11 +1,19 @@
-﻿using WebChat.Application.Contracts.Presistence.IRepositories;
+﻿namespace WebChat.Application.Contracts.UnitOfWork;
 
-namespace WebChat.Application.Contracts.UnitOfWork;
-
+#region IUnitOfWork Contract 
+#region IUnitOfWork Contract Summary
+/// <summary>
+/// IUnitOfWork Contract
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 05-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary> 
+#endregion
 public interface IUnitOfWork : IDisposable
 {
 
     IUserRepository UserRepository { get; }
+    IMessageRepository MessageRepository { get; }
 
 
     /// <summary>
@@ -20,3 +28,5 @@ public interface IUnitOfWork : IDisposable
     /// <returns>A task representing the asynchronous save operation and the number of objects saved.</returns>
     Task<int> SaveChangesAsync();
 }
+
+#endregion

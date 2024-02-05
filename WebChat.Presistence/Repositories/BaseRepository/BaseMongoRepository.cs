@@ -2,6 +2,15 @@
 
 namespace WebChat.Presistence.Repositories.BaseRepository;
 
+/// <summary>
+/// BaseMongoRepository for Communicating with Database
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 05-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="database"></param>
+/// <param name="collectionName"></param>
 public class BaseMongoRepository<T>(
     IMongoDatabase database,
     string collectionName) : IBaseMongoRepository<T> where T : class

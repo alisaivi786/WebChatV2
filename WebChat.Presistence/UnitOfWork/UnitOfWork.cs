@@ -7,6 +7,7 @@ using WebChat.Presistence.Repositories;
 namespace WebChat.Presistence.UnitOfWork;
 
 /// <summary>
+/// UnitOfWork provide base to communicate with database with same context.
 /// Developer: ALI RAZA MUSHTAQ
 /// Date: 30-Jan-2024
 /// alisaivi786@gmail.com
@@ -24,18 +25,32 @@ public class UnitOfWork : IUnitOfWork,IDisposable
         IHttpContextAccessor httpContextAccessor,
         AppSettings applicationSettings)
     {
+        #region Dependencies Init()
         _context = context;
         _httpContextAccessor = httpContextAccessor;
         _applicationSettings = applicationSettings;
-        _configuration = configuration;
+        _configuration = configuration; 
+        #endregion
 
+        #region UserRepository
         UserRepository = new UserRepository(
-            context: _context,
-            configuration: _configuration,
-            httpContextAccessor: _httpContextAccessor,
-            appSettings: _applicationSettings);
+          context: _context,
+          configuration: _configuration,
+          httpContextAccessor: _httpContextAccessor,
+          appSettings: _applicationSettings);
+        #endregion
+
+        #region MessageRepository
+        MessageRepository = new MessageRepository(
+         context: _context,
+         configuration: _configuration,
+         httpContextAccessor: _httpContextAccessor,
+         appSettings: _applicationSettings); 
+        #endregion
     }
     public IUserRepository UserRepository { get; }
+
+    public IMessageRepository MessageRepository { get; }
 
     public async Task SaveAsync()
     {

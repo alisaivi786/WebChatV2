@@ -16,3 +16,9 @@ global using System.ComponentModel.DataAnnotations;
 
 global using WebChat.Common.Enums.DB;
 global using WebChat.Common.Enums.API;
+
+global using WebChat.Application.ApplicationSettings;
+global using WebChat.Application.Contracts.Presistence.IRepositories;
+global using WebChat.Common.Dto.RequestDtos.Message;
+global using WebChat.Common.Dto.ResponseDtos.Message;
+global using WebChat.Presistence.Repositories.BaseRepository;

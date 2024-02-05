@@ -11,5 +11,5 @@ public class BaseEntity
     public long? CreatedBy { get; set; } = null;
     public DateTime? DateModified { get; set; } = null;
     public long? ModifiedBy { get; set; } = null;
-    public bool? IsActive { get; set; } = true;
+    public bool IsActive { get; set; } = true;
 }
