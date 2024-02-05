@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import GroupsList from "./components/GroupsList.vue";
+import UserList from "./components/UserList.vue";
 import ChatMain from "./components/ChatMain.vue";
 import InfiniteScroll from "./components/InfiniteScroll.vue";
 
@@ -13,18 +13,17 @@ import InfiniteScroll from "./components/InfiniteScroll.vue";
     </div>
   </header>
   <main>
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
       <InfiniteScroll />
-    </div>
+    </div> -->
     <!-- Main app code goes here -->
     <div class="container-fluid chat-app-main mt-5">
       <div class="row">
-        <div class="col-md-3 group-list p-0">
-          <i class="fa-solid fa-user"></i>
-          <!-- <GroupsList /> -->
+        <div class="col-md-9 chat-main p-0">
+          <ChatMain />
         </div>
-        <div class="col-md-9 p-0 chat-main">
-          <!-- <ChatMain /> -->
+        <div class="col-md-3 p-0 user-list">
+          <UserList />
         </div>
       </div>
     </div>

@@ -4,8 +4,7 @@
       <span class="chat-username">{{ chat.userName }}</span>
       <span class="status-in-active"> </span>
     </div>
-    <div class="chat-message">
-      {{ chat.message }}
+    <div class="chat-message" v-html="chat.message">
     </div>
     <div class="chat-date">
       <i class="fa fa-clock-o clock-icon"></i> {{ chat.timestamp }}

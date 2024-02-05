@@ -1,57 +1,64 @@
-﻿namespace WebChat.API.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Swashbuckle.AspNetCore.Annotations;
+using WebChat.Application.Contracts.UnitOfWork;
+using WebChat.Application.Response;
+using WebChat.Common.Dto.ResponseDtos.Message;
+using WebChat.Common.Enums.API;
+using WebChat.Hubs;
+using WebChat.RabbitMQ;
 
-[Route("api/[controller]")]
-[ApiController]
-public class MessageController(IUnitOfWork unitOfWork) : ControllerBase
+namespace WebChat.API.Controllers
 {
-    private readonly IUnitOfWork unitOfWork = unitOfWork;
-
-    // GET api/message
-    [HttpGet("GetMessages")]
-    public async Task<IActionResult> GetMessageDetails()
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MessageController(IUnitOfWork unitOfWork) : ControllerBase
     {
-        var messages = await unitOfWork.MessageRepository.GetMessageDetailsAsync();
-        return Ok(messages);
-    }
-
-    // GET api/message/5
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-    {
-        var message = await unitOfWork.MessageRepository.GetSingleMessageDetailsAsync(id);
-        return Ok(message);
-    }
-
-    // POST api/message
-    [HttpPost("AddMessage")]
-    public async Task<IActionResult> Post([FromBody] AddMessageDto messageDto)
-    {
-        if (!ModelState.IsValid)
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
+      
+        [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<PageBaseDataResponse<List<MessageDetailDto>>>))]
+        [HttpPost("GetMessages")]
+        public async Task<IActionResult> GetMessageDetails(GetMessageReqDto reqest)
         {
-            return BadRequest(ModelState); // 400 Bad Request
+            var messages = await unitOfWork.MessageRepository.GetMessageDetailsAsync(reqest);
+            return Ok(messages);
         }
 
-        var response = await unitOfWork.MessageRepository.AddMessageAsync(messageDto);
-        return Ok(response);
-    }
-
-    // PUT api/message/5
-    [HttpPut("UpdateMessage")]
-    public async Task<IActionResult> Put([FromBody] UpdateMessageDto messageDto)
-    {
-        if (!ModelState.IsValid)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            return BadRequest(ModelState); // 400 Bad Request
+            var message = await unitOfWork.MessageRepository.GetSingleMessageDetailsAsync(id);
+            return Ok(message);
         }
-        var updatedMessage = await unitOfWork.MessageRepository.UpdateMessageAsync(messageDto);
-        return Ok(updatedMessage);
-    }
 
-    // DELETE api/message/5
-    [HttpDelete("DeleteMessage")]
-    public async Task<IActionResult> Delete(DeleteMessageDto request)
-    {
-        var deletedMessage = await unitOfWork.MessageRepository.DeleteMessageAsync(request);
-        return Ok(deletedMessage);
+        [HttpPost("AddMessage")]
+        public async Task<IActionResult> Post([FromBody] AddMessageReqDto messageDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // 400 Bad Request
+            }
+
+            var response = await unitOfWork.MessageRepository.AddMessageAsync(messageDto);
+            return Ok(response);
+        }
+
+        [HttpPost("UpdateMessage")]
+        public async Task<IActionResult> Put([FromBody] UpdateMessageReqDto messageDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // 400 Bad Request
+            }
+            var updatedMessage = await unitOfWork.MessageRepository.UpdateMessageAsync(messageDto);
+            return Ok(updatedMessage);
+        }
+
+        [HttpPost("DeleteMessage")]
+        public async Task<IActionResult> Delete(DeleteMessageReqDto request)
+        {
+            var deletedMessage = await unitOfWork.MessageRepository.DeleteMessageAsync(request);
+            return Ok(deletedMessage);
+        }
     }
 }

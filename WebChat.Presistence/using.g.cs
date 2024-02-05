@@ -22,3 +22,5 @@ global using WebChat.Application.Contracts.Presistence.IRepositories;
 global using WebChat.Common.Dto.RequestDtos.Message;
 global using WebChat.Common.Dto.ResponseDtos.Message;
 global using WebChat.Presistence.Repositories.BaseRepository;
+
+global using WebChat.Presistence.SeedConfiguration;

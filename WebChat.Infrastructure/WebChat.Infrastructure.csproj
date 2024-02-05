@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebChat.Presistence\WebChat.Presistence.csproj" />
     <ProjectReference Include="..\WebChat.RabbitMQ\WebChat.RabbitMQ.csproj" />
+    <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
   </ItemGroup>
 
 </Project>

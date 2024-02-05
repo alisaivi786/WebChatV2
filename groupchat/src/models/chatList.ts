@@ -1,6 +1,6 @@
-import type { ChatItem } from "./ChatItem";
+import type { ChatModel } from "./ChatModel";
 
-const chatList: ChatItem[] = [
+const chatList: ChatModel[] = [
     {
         chatId: 1,
         userId: 1,

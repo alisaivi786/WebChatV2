@@ -1,0 +1,278 @@
+$primary-blue: #556ee6;
+$color-white: #fff;
+$gray-light: #f5f5f8;
+$gray-lightest: #eff1fc;
+$gray-medium: #6c757d;
+$light-gray-border: #e1e1f1;
+$green-primary: #34c38f;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+
+
+.chat-app-main {
+  background-color: $color-white;
+  width: 95%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px $shadow-color;
+}
+
+.chat-heading {
+  font-weight: 500;
+}
+
+.group-list {
+  background-color: $gray-light;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  .group-list-items {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make sure the container takes up the full height */
+  }
+
+  .group-list-items li:last-child {
+    margin-top: auto;
+  }
+
+  .group-icon {
+    align-self: center;
+    max-width: 10%;
+    flex-grow: 0.2;
+  }
+
+  .group-detail {
+    flex-grow: 1;
+    padding-left: 1.5em;
+  }
+
+  .group-name {
+    font-weight: 500;
+  }
+
+  .group-icon img {
+    height: 25px;
+  }
+
+  .group-list ul {
+    padding: 0;
+  }
+
+  .group-item {
+    list-style-type: none;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  .group-item:hover {
+    background-color: $color-white;
+    border-top-left-radius: 10px;
+    cursor: pointer;
+  }
+
+  .group-last-chat-time {
+    font-size: 12px;
+    flex-grow: 0.3;
+  }
+
+  .group-list-items li:first-child {
+    padding-bottom: 0;
+  }
+
+  .group-list-items li:first-child:hover,
+  .group-list-items li:last-child:hover {
+    background-color: inherit;
+    cursor: inherit;
+    border-radius: inherit;
+  }
+}
+
+.loggedin-user img {
+  height: 50px;
+  border-radius: 30px;
+}
+
+.username {
+  font-weight: 500;
+}
+
+.user-online-status {
+  color: $gray-medium;
+}
+
+.status-active {
+  display: inline-block;
+  background-color: $green-primary;
+  height: 8px;
+  width: 8px;
+  border-radius: 15px;
+  margin-right: 0.5em;
+}
+
+.status-in-active {
+  display: inline-block;
+  background-color: $gray-medium;
+  height: 8px;
+  width: 8px;
+  border-radius: 15px;
+  margin-left: 0.5em;
+}
+
+.chat-main .group-heading {
+  font-weight: 500;
+  border-bottom: 1px solid $light-gray-border;
+  padding: 1em 1.5em;
+}
+
+.chat-detail {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 1.5em;
+  background-color: $gray-lightest;
+  width: fit-content;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  max-width: 87.8%;
+}
+
+.chat-username {
+  font-weight: bold;
+  color: $primary-blue;
+}
+
+.chat-message {
+  padding: 0.5em 0em;
+  padding-bottom: 1em;
+}
+
+.chat-date {
+  text-align: end;
+}
+
+.chat-messages {
+  height: 57vh;
+  overflow: auto;
+}
+
+.new-message {
+  display: flex;
+  padding-left: 1.5em;
+  padding-right: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.new-message-input {
+  width: 90%;
+  padding: 1em;
+}
+
+.new-message-btn {
+  padding: 1em;
+  padding-bottom: 0;
+  align-self: end;
+}
+
+.new-message-btn a {
+  color: $color-white;
+  background-color: $primary-blue;
+  border-radius: 15px;
+}
+
+.new-message-btn a:hover {
+  background-color: $primary-blue;
+  color: $color-white;
+}
+
+.new-message-btn a i {
+  font-size: 14px;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+.ck-editor__editable_inline {
+  height: 15vh;
+}
+
+.user-list {
+  background-color: $gray-light;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  .user-list-items {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make sure the container takes up the full height */
+  }
+
+  .user-list-items li:last-child {
+    margin-top: auto;
+  }
+
+  .user-icon {
+    align-self: center;
+    max-width: 10%;
+    flex-grow: 0.2;
+  }
+
+  .user-detail {
+    flex-grow: 1;
+    padding-left: 1.5em;
+  }
+
+  .user-name {
+    font-weight: 500;
+  }
+
+  .user-icon img {
+    height: 25px;
+  }
+
+  .user-list ul {
+    padding: 0;
+  }
+
+  .user-item {
+    list-style-type: none;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  .user-item:hover {
+    background-color: $color-white;
+    border-top-left-radius: 10px;
+    cursor: pointer;
+  }
+
+  .user-last-chat-time {
+    font-size: 12px;
+    flex-grow: 0.3;
+  }
+
+  .user-list-items {
+    padding-left: 0;
+  }
+
+  .user-list-items li:first-child {
+    padding-bottom: 0;
+  }
+
+  .user-list-items li:first-child:hover,
+  .user-list-items li:last-child:hover {
+    background-color: inherit;
+    cursor: inherit;
+    border-radius: inherit;
+  }
+
+  .private-message a {
+    font-size: 12px;
+    background-color: $primary-blue;
+    color: $color-white;
+  }
+}

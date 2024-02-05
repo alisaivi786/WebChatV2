@@ -1,25 +1,24 @@
+<!-- CKEditor.vue -->
 <template>
-    <textarea id="editor"></textarea>
-</template>
-
-<script>
-import { defineComponent } from 'vue';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic' 
-
-export default defineComponent({
-    data() {
-        return {
-            editor: null,
-        };
-    },    
-    mounted() {
-        ClassicEditor.create(document.querySelector('#editor'))
-            .then((editor) => {
-                this.editor = editor;
-            })
-            .catch((error) => {
-                console.error('Error creating editor:', error);
-            });
+    <div>
+      <ckeditor :editor="editor" v-model="editorData" />
+    </div>
+  </template>
+  
+  <script>
+  import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+  import CKEditor from '@ckeditor/ckeditor5-vue';
+  
+  export default {
+    components: {
+      ckeditor: CKEditor.component,
     },
-});
-</script>
+    data() {
+      return {
+        editor: ClassicEditor,
+        editorData: '<p>Your initial content here.</p>',
+      };
+    },
+  };
+  </script>
+  

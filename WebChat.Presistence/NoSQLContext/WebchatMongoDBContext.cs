@@ -9,6 +9,7 @@ public class WebchatMongoDBContext(IMongoDatabase database) : DbContext, IWebcha
     public DbSet<UserEntity> User { get; set; }
     public DbSet<GroupEntitiy> Group { get; set; }
     public DbSet<MessageEntity> Message { get; set; }
+    public DbSet<GroupUsersEntity> GroupUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

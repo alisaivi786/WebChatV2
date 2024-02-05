@@ -550,5 +550,33 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     #endregion
 
 
+    public async Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>> predicate = null)
+    {
+        IQueryable<T> query = Table;
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        int totalCount = await query.CountAsync();
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        return new PageBaseResponse<List<T>>
+        {
+            List = items,
+            PageNo = page,
+            TotalPage = totalPages,
+            TotalCount = totalCount
+           
+        };
+    }
+
 }
 #endregion

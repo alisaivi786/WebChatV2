@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebChat.RabbitMQ", "..\WebC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebChat.Infrastructure.Oracle", "..\WebChat.Infrastructure.Oracle\WebChat.Infrastructure.Oracle.csproj", "{5283346F-C6F4-4324-A13A-B270C3AA6A69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Redis", "..\WebChat.Redis\WebChat.Redis.csproj", "{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{5283346F-C6F4-4324-A13A-B270C3AA6A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5283346F-C6F4-4324-A13A-B270C3AA6A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5283346F-C6F4-4324-A13A-B270C3AA6A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{3FD11D49-EA1F-41E7-A719-565C2661A3D7} = {99723CD6-4F5C-40CF-9684-A174C2A0680E}
 		{CCA70A12-2915-4C52-901A-1E79718C3A3B} = {68C142C5-59AF-493B-B2B1-556CF7EC60C2}
 		{5283346F-C6F4-4324-A13A-B270C3AA6A69} = {99723CD6-4F5C-40CF-9684-A174C2A0680E}
+		{97BE7BF6-81D4-4AD6-9702-54F6EC30A308} = {68C142C5-59AF-493B-B2B1-556CF7EC60C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F48C1581-B7A4-4634-A225-EE742E183589}

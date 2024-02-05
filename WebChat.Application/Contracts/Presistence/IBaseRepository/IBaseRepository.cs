@@ -30,6 +30,7 @@ public interface IBaseRepository<T> where T : class
     Task<DbResponse<List<T>>> InsertWithSqlAsync(string sqlQuery, params object[] parameters);
     Task<IEnumerable<T>> SelectWithSqlAsync(string sqlQuery, params object[] parameters);
     Task<IEnumerable<T>> FilterWithSqlAsync(string sqlQuery, params object[] parameters);
+    Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>>? predicate = null);
 
 
 

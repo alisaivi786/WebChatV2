@@ -1,10 +1,9 @@
-﻿using WebChat.Presistence.SeedConfiguration;
-
-namespace WebChat.Presistence.DBContext;
+﻿namespace WebChat.Presistence.DBContext;
 
 public class WebchatDBContext(DbContextOptions<WebchatDBContext> options) : DbContext(options), IWebchatDBContext
 {
-    public DbSet<UserEntity> User { get ; set ; }
+    public DbSet<UserEntity> User { get; set; }
+    public DbSet<GroupUsersEntity> GroupUsers { get; set; }
     public DbSet<GroupEntitiy> Group { get; set; }
     public DbSet<MessageEntity> Message { get; set; }
 

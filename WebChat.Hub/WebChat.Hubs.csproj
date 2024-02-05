@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebChat.RabbitMQ\WebChat.RabbitMQ.csproj" />
+    <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
   </ItemGroup>
 
 </Project>

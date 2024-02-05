@@ -24,7 +24,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// <param name="reqest"></param>
     /// <returns>return True if Added Successfully</returns> 
     #endregion
-    public async Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageDto> reqest)
+    public async Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageReqDto> reqest)
     {
         #region ...
         #region Mapping Domain Entity with response
@@ -66,13 +66,15 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// <param name="reqest"></param>
     /// <returns>return True if Added Successfully</returns> 
     #endregion
-    public async Task<ApiResponse<bool>> AddMessageAsync(AddMessageDto reqest)
+    public async Task<ApiResponse<bool>> AddMessageAsync(AddMessageReqDto reqest)
     {
         #region ...
         #region Mapping with Domain Entity
         var entity = new MessageEntity
         {
-            Content = "Hey Team",
+            UserId = reqest.UserId,
+            GroupId = reqest.GroupId,
+            Content = reqest.Message,
             SentTime = DateTime.UtcNow,
         };
         #endregion
@@ -82,7 +84,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
         #endregion
 
         #region Response
-        if (res.Code != null && (int)res.Code != (int)DbCodeEnums.Failed)
+        if (res.Code != null && ((int)res.Code != (int)DbCodeEnums.Failed && (int)res.Code != (int)DbCodeEnums.DbException))
         {
             return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
         }
@@ -103,7 +105,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// <param name="reqest"></param>
     /// <returns>Return True if Message is Deleted</returns> 
     #endregion
-    public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageDto reqest)
+    public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageReqDto reqest)
     {
         #region ...
         #region Check Message Id Exist or not...
@@ -139,27 +141,40 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// </summary>
     /// <returns>Return List of Messages</returns> 
     #endregion
-    public async Task<ApiResponse<List<MessageDetailDto>>> GetMessageDetailsAsync()
+    public async Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> GetMessageDetailsAsync(GetMessageReqDto reqest)
     {
         #region ...
-        #region Get All Data From Database
-        var response = GetAll();
+
+        #region Predicate Filter
+        Expression<Func<MessageEntity, bool>> predicate = message => message.IsActive;
         #endregion
+
+        #region Get All Data From Database
+        var response = await GetPagedAsync(reqest.PageNo,reqest.PageSize, predicate);
+        #endregion
+
 
         #region Response
         if (response != null)
         {
-            var lst = response.Select(x => new MessageDetailDto
+            var lst = response.List.Select(x => new MessageDetailDto
             {
                 MessageId = x.Id,
                 UserId = x.UserId,
+                UserName   = x.User.UserName,
                 GroupId = x.GroupId,
+                GroupName = x.Group.Name,
                 Message = x.Content,
                 Time = x.DateCreated
+               
+
             }).ToList();
-            return new ApiResponse<List<MessageDetailDto>> { Data = lst, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+            var result = new PageBaseResponse<List<MessageDetailDto>>() 
+            { List = lst, PageNo = response.PageNo, TotalPage = response.TotalPage, TotalCount = response.TotalCount };
+
+            return new ApiResponse<PageBaseResponse<List<MessageDetailDto>>> { Data = result, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
         }
-        return new ApiResponse<List<MessageDetailDto>>();
+        return new ApiResponse<PageBaseResponse<List<MessageDetailDto>>>();
         #endregion 
         #endregion
     } 
@@ -193,7 +208,9 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
                 {
                     MessageId = x.Id,
                     UserId = x.UserId,
+                    UserName = x.User.UserName,
                     GroupId = x.GroupId,
+                    GroupName = x.Group.Name,
                     Message = x.Content,
                     Time = x.DateCreated
                 }).FirstOrDefault();
@@ -220,7 +237,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// <param name="reqest"></param>
     /// <returns>Return True if Updated</returns> 
     #endregion
-    public async Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageDto reqest)
+    public async Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageReqDto reqest)
     {
         #region ...
         #region Entity Mapping

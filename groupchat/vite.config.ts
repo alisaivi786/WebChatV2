@@ -5,6 +5,7 @@ import plugin from '@vitejs/plugin-vue';
 import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
+import { resolve } from 'path';
 
 const baseFolder =
     process.env.APPDATA !== undefined && process.env.APPDATA !== ''
@@ -39,6 +40,13 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin()],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          //additionalData: `@import "@/assets/styles/variables.scss";`, // Optional: Import a global SCSS file
+        },
+      },
+    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))

@@ -22,11 +22,11 @@ namespace WebChat.Application.Contracts.Presistence.IRepositories;
 #endregion
 public interface IMessageRepository : IBaseRepository<MessageEntity>
 {
-    Task<ApiResponse<List<MessageDetailDto>>> GetMessageDetailsAsync();
+    Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> GetMessageDetailsAsync(GetMessageReqDto reqest);
     Task<ApiResponse<MessageDetailDto>> GetSingleMessageDetailsAsync(long Id);
-    Task<ApiResponse<bool>> AddMessageAsync(AddMessageDto reqest);
-    Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageDto> reqest);
-    Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageDto reqest);
-    Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageDto reqest);
+    Task<ApiResponse<bool>> AddMessageAsync(AddMessageReqDto reqest);
+    Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageReqDto> reqest);
+    Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageReqDto reqest);
+    Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageReqDto reqest);
 } 
 #endregion
