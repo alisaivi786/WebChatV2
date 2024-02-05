@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using WebChat.Application.Contracts.UnitOfWork;
 using WebChat.Extension.Extensions;
@@ -5,6 +6,7 @@ using WebChat.Hubs;
 using WebChat.Infrastructure.DI.ApplicationInfrastructure;
 using WebChat.Infrastructure.DI.RabbitMQ;
 using WebChat.Infrastructure.DI.Redis;
+using WebChat.Presistence.DBContext;
 using WebChat.Presistence.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +46,9 @@ builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddControllers();
 var app = builder.Build();
+
+// Migrate the database
+app.EnsureMigration();
 
 app.UseRouting();
 

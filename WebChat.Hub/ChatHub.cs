@@ -34,7 +34,7 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
         MessageEntity messageEntity = new MessageEntity()
         {
             // RowId = Guid.NewGuid(),
-            GroupId = Convert.ToInt64(Context.ConnectionId),
+            GroupId = 1,//Convert.ToInt64(Context.ConnectionId),
             UserId = 15672,
             Content = routeOb?.Message.ToString(),// message,
             //DateCreated = DateTime.Now.ToUniversalTime(),
