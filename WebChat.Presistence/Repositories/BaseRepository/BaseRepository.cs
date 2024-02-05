@@ -1,5 +1,7 @@
 ﻿#region NameSpace
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using System.Data;
 using WebChat.Application.ApplicationSettings;
 
 namespace WebChat.Presistence.Repositories.BaseRepository;
@@ -88,7 +90,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="entities"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<List<T>>> AddMultipleAsync(IEnumerable<T> entities)
+    public async Task<DbResponse<List<T>>> AddMultipleAsync(List<T> entities)
     {
         #region ...
         try
@@ -391,8 +393,161 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
 
     #endregion
 
+    #region ExecuteSqlQueryAsync
+    #region ExecuteSqlQueryAsync Summary
+    /// <summary>
+    /// ExecuteSqlQueryAsync for Executing Raw Queries
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 05-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="sqlQuery"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns> 
+    #endregion
+    public async Task<IEnumerable<T>> ExecuteSqlQueryAsync(string sqlQuery, params object[] parameters)
+    {
+        var isolationLevel = IsolationLevel.ReadUncommitted; // Set the desired isolation level
+
+        await using var transaction = await _context.Database.BeginTransactionAsync(isolationLevel);
+        try
+        {
+            var result = await _context.Set<T>().FromSqlRaw(sqlQuery, parameters).ToListAsync();
+            await transaction.CommitAsync();
+            return result;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+    #endregion
+
+    #region ExecuteSqlNonQueryAsync
+    #region ExecuteSqlNonQueryAsync Summary
+    /// <summary>
+    /// ExecuteSqlNonQueryAsync for Executing Non-Query Raw SQL Queries (INSERT, UPDATE, DELETE)
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 05-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="sqlQuery"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns> 
+    #endregion
+    public async Task<int> ExecuteSqlNonQueryAsync(string sqlQuery, params object[] parameters)
+    {
+        var isolationLevel = IsolationLevel.ReadUncommitted; // Set the desired isolation level
+
+        await using var transaction = await _context.Database.BeginTransactionAsync(isolationLevel);
+        try
+        {
+            var result = await _context.Database.ExecuteSqlRawAsync(sqlQuery, parameters);
+            await transaction.CommitAsync();
+            return result;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+    #endregion
+
+    #region InsertWithSqlAsync
+    #region InsertWithSqlAsync Summary
+    /// <summary>
+    /// Insert records into the database using a raw SQL query.
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 05-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="sqlQuery"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns> 
+    #endregion
+    public async Task<DbResponse<List<T>>> InsertWithSqlAsync(string sqlQuery, params object[] parameters)
+    {
+        try
+        {
+            var result = await ExecuteSqlNonQueryAsync(sqlQuery, parameters);
+            return new DbResponse<List<T>>
+            {
+                MsgCode = DbMessageEnums.Inserted,
+                Code = result > 0 ? DbCodeEnums.Success : DbCodeEnums.Failed
+            };
+        }
+        catch (Exception ex)
+        {
+            // Handle generic exception
+            var genericError = new ErrorModel { Id = "GenericError", Message = ex.Message };
+            return new DbResponse<List<T>>
+            {
+                Code = DbCodeEnums.DbException,
+                MsgCode = DbMessageEnums.FailedPresistence,
+                Error = [genericError]
+            };
+        }
+    }
+    #endregion
+
+    #region SelectWithSqlAsync
+    #region SelectWithSqlAsync Summary
+    /// <summary>
+    /// Select records from the database using a raw SQL query.
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 05-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="sqlQuery"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns> 
+    #endregion
+    public async Task<IEnumerable<T>> SelectWithSqlAsync(string sqlQuery, params object[] parameters)
+    {
+        try
+        {
+            var result = await ExecuteSqlQueryAsync(sqlQuery, parameters);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            // Handle exception or log it
+            throw;
+        }
+    }
+    #endregion
+
+    #region FilterWithSqlAsync
+    #region FilterWithSqlAsync Summary
+    /// <summary>
+    /// Filter records from the database using a raw SQL query with parameters.
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 05-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="sqlQuery"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns> 
+    #endregion
+    public async Task<IEnumerable<T>> FilterWithSqlAsync(string sqlQuery, params object[] parameters)
+    {
+        try
+        {
+            var result = await ExecuteSqlQueryAsync(sqlQuery, parameters);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            // Handle exception or log it
+            throw;
+        }
+    }
+
+    
+    #endregion
 
 
-   
-} 
+}
 #endregion

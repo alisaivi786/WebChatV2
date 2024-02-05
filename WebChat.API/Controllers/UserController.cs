@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebChat.Application.Contracts.Presistence.IRepositories.Mongo;
 using WebChat.Application.Contracts.UnitOfWork;
+using WebChat.Common.Dto.ResponseDtos.Users;
 using WebChat.Domain.Entities;
 using WebChat.RabbitMQ;
 
@@ -15,16 +16,20 @@ public class UserController(IUnitOfWork unitOfWork,IRabbitMQProducer RabbitMQPro
     private readonly IRabbitMQProducer RabbitMQProducer  = RabbitMQProducer;
     private readonly IRabbitMQConsumer RabbitMQConsumer  = RabbitMQConsumer;
 
+
     [HttpPost("CreateUser")]
-    public async Task<IActionResult> PostData()
+    public async Task<IActionResult> CreateUser(AddUserDto request)
     {
-
-        UserEntity userEntity = new() { Name = "ALI RAZA MUSHTAQ" };
-        var response = await unitOfWork.UserRepository.AddAsync(userEntity);
-
+        var response = await unitOfWork.UserRepository.AddUserAsync(request);
         return Ok(response);
     }
 
+    [HttpPost("CreateBulkUsers")]
+    public async Task<IActionResult> CreateBulkUser(List<AddUserDto> request)
+    {
+        var response = await unitOfWork.UserRepository.AddBulkUserAsync(request);
+        return Ok(response);
+    }
 
     [HttpPost("Test")]
     public async Task<IActionResult> Test()

@@ -6,7 +6,7 @@ namespace WebChat.Application.Response;
 public class ApiResponse
 {
     private string? _msg;
-    public object? code { get; set; }
+    public object? Code { get; set; }
     public string Msg
     {
         get
