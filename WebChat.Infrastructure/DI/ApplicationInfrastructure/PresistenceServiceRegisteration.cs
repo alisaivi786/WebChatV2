@@ -55,14 +55,9 @@ public static class PersistenceServiceRegistration
 
             services.AddScoped<IWebchatDBContext>(provider => provider.GetRequiredService<WebchatDBContext>());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
         }
         return services;
     }
-
-    
-
-    
 }
 
 #endregion

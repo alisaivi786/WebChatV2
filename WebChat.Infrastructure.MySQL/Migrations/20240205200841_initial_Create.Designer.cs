@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChat.Presistence.DBContext;
 
@@ -10,9 +11,11 @@ using WebChat.Presistence.DBContext;
 namespace WebChat.Infrastructure.MySQL.Migrations
 {
     [DbContext(typeof(WebchatDBContext))]
-    partial class WebchatDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240205200841_initial_Create")]
+    partial class initial_Create
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

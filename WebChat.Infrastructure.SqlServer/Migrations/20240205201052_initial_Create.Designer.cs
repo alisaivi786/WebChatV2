@@ -2,17 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChat.Presistence.DBContext;
 
 #nullable disable
 
-namespace WebChat.Infrastructure.MySQL.Migrations
+namespace WebChat.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(WebchatDBContext))]
-    partial class WebchatDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240205201052_initial_Create")]
+    partial class initial_Create
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,7 +24,9 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("WebChat.Domain.Entities.GroupEntitiy", b =>
                 {
@@ -28,23 +34,25 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -55,7 +63,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 1L,
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4194),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4582),
                             IsActive = true,
                             Name = "TB-Admin"
                         });
@@ -67,20 +75,22 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
@@ -103,29 +113,31 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
                     b.Property<string>("Content")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("SentTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
@@ -144,7 +156,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 1L,
                             Content = "Hello Team",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4382),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4744),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -155,7 +167,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 2L,
                             Content = "Hey Ali!",
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4386),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4746),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -166,7 +178,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 3L,
                             Content = "I am Fine Poonam what about you?",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4388),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4749),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -177,7 +189,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 4L,
                             Content = "Good to hear you are good, thanks for asking i am also fine!.",
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4390),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4751),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -188,7 +200,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 5L,
                             Content = "hey Guys whats the update of our chat v1 Project???.",
                             CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4392),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4754),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -199,7 +211,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 6L,
                             Content = "Architecture of Project is done just doing some final tweaks and then update you here in group.",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4395),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4756),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -213,26 +225,28 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -243,7 +257,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 1L,
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3815),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4138),
                             IsActive = true,
                             PhoneNumber = "971505679899",
                             UserName = "Ali"
@@ -252,7 +266,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 2L,
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3823),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4145),
                             IsActive = true,
                             PhoneNumber = "971505679800",
                             UserName = "Poonam"
@@ -261,7 +275,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 3L,
                             CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3825),
+                            DateCreated = new DateTime(2024, 2, 5, 20, 10, 51, 592, DateTimeKind.Utc).AddTicks(4147),
                             IsActive = true,
                             PhoneNumber = "971505679888",
                             UserName = "Aymen"
