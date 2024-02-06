@@ -1,24 +1,28 @@
 export default class ChatModel {
-    chatId: number;
-    userId: number;
-    userName: string;
-    userStatus: string;
+    groupId: number;
+    groupName: string;
     message: string;
-    timestamp: string;
+    messageId: number;
+    time: string;
+    userId: number;
+    userName: number;
   
     constructor(
-      chatId: number,
-      userId: number,
-      userName: string,
-      userStatus: string,
-      message: string,
-      timestamp: string
+        groupId: number,
+        groupName: string,
+        message: string,
+        messageId: number,
+        time: string,
+        userId: number,
+        userName: number
     ) {
-      this.chatId = chatId;
+      this.groupId = groupId;
+      this.groupName = groupName;
+      this.message = message;
+      this.messageId = messageId;
+      this.message = message;
+      this.time = time;
       this.userId = userId;
       this.userName = userName;
-      this.userStatus = userStatus;
-      this.message = message;
-      this.timestamp = timestamp;
     }
   }

@@ -1,10 +1,15 @@
-﻿using WebChat.Application.ApplicationSettings;
-using WebChat.Application.Contracts.Presistence.IRepositories;
-using WebChat.Common.Dto.ResponseDtos.Users;
-using WebChat.Presistence.Repositories.BaseRepository;
+﻿namespace WebChat.Presistence.Repositories;
 
-namespace WebChat.Presistence.Repositories;
-
+/// <summary>
+/// User Repository
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 06-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
+/// <param name="context"></param>
+/// <param name="configuration"></param>
+/// <param name="httpContextAccessor"></param>
+/// <param name="appSettings"></param>
 public class UserRepository(
     WebchatDBContext context,
     IConfiguration configuration,

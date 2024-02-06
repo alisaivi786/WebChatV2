@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebChat.Domain\WebChat.Domain.csproj" />
-    <ProjectReference Include="..\WebChat.Extension\WebChat.Extension.csproj" />
   </ItemGroup>
 
 </Project>

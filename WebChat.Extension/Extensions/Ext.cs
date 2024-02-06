@@ -499,7 +499,7 @@ namespace WebChat.Extension.Extensions
                 return string.Empty;
             }
         }
-        public static string ParseToStrings<T>(this object obj)
+        public static string? ParseToStrings<T>(this object obj)
         {
             try
             {

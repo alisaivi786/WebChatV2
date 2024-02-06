@@ -35,6 +35,16 @@ public enum ApiCodeEnum
 
     #endregion
 
+    #region Network Abnormal
+
+    /// <summary>
+    /// 网络异常
+    /// </summary>
+    [Description("网络异常")]
+    NetworkAbnormal = 13,
+
+    #endregion
+
     #endregion
 
     // Add more API-related status codes as needed

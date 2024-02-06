@@ -10,7 +10,7 @@ namespace WebChat.Extension.Extensions
        
         public static Dictionary<int, string> EnumToDictionary(this Type enumType)
         {
-            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            Dictionary<int, string> dictionary = new();
             Type typeDescription = typeof(DescriptionAttribute);
             FieldInfo[] fields = enumType.GetFields();
             int sValue = 0;
@@ -19,7 +19,7 @@ namespace WebChat.Extension.Extensions
             {
                 if (field.FieldType.IsEnum)
                 {
-                    sValue = ((int)enumType.InvokeMember(field.Name, BindingFlags.GetField, null, null, null));
+                    sValue = (int)enumType.InvokeMember(field.Name, BindingFlags.GetField, null, null, null);
                     object[] arr = field.GetCustomAttributes(typeDescription, true);
                     if (arr.Length > 0)
                     {

@@ -1,8 +1,4 @@
-﻿using MongoDB.Driver;
-using System.Linq.Expressions;
-using WebChat.Application.Response;
-
-namespace WebChat.Application.Contracts.Presistence.IBaseRepository;
+﻿namespace WebChat.Application.Contracts.Presistence.IBaseRepository;
 
 #region IBaseMongoRepository Contract
 #region IBaseMongoRepository

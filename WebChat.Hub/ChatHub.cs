@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using WebChat.Common.Dto.RequestDtos.Message;
 using WebChat.Domain.Entities;
 using WebChat.RabbitMQ;
 using WebChat.Redis;
@@ -25,34 +26,32 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
     #endregion
 
     #region SendMessageAsync
-    public async Task SendMessageAsync(string message)
+    public async Task SendMessageAsync(string message) 
     {
         var ConnectionId = Context.ConnectionId;
 
         var routeOb = JsonConvert.DeserializeObject<dynamic>(message);
 
-        MessageEntity messageEntity = new MessageEntity()
+        AddMessageReqDto MessageReq = new AddMessageReqDto()
         {
-            // RowId = Guid.NewGuid(),
-            GroupId = Convert.ToInt64(Context.ConnectionId),
+            GroupId = 148, 
             UserId = 15672,
-            Content = routeOb?.Message.ToString(),// message,
-            //DateCreated = DateTime.Now.ToUniversalTime(),
-            SentTime = DateTime.Now.ToUniversalTime(),
+            Message = routeOb?.Message.ToString(),
+            SetTime = DateTime.Now,
         };
 
-        var messageEntityjson = JsonConvert.SerializeObject(messageEntity);
+        var MessageReqjson = JsonConvert.SerializeObject(MessageReq);
 
         
           Console.WriteLine("To: " + routeOb?.To.ToString());
         Console.WriteLine("Message Recieved on: " + Context.ConnectionId);
 
         #region [1] Publish to Queue
-        RabbitMQProducer.PublishMessageToRabbitMQ(messageEntityjson);
+        RabbitMQProducer.PublishMessageToRabbitMQ(MessageReqjson);
         #endregion
 
         #region [2] Push to Redis
-        RedisService.PushMessageToRedisAsync(message: messageEntityjson, roomId: messageEntity.GroupId.ToString());
+        RedisService.PushMessageToRedisAsync(message: MessageReqjson, roomId: MessageReq.GroupId.ToString());
         #endregion
 
         #region [3] Consume Queue & Sync with the database
@@ -62,14 +61,14 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
         if (routeOb.To.ToString() == string.Empty)
         {
             Console.WriteLine("Broadcast");
-            await Clients.All.SendAsync("ReceiveMessage", messageEntityjson);
+            await Clients.All.SendAsync("ReceiveMessage", MessageReqjson);
         }
         else
         {
             string toClient = routeOb.To;
             Console.WriteLine("Targeted on: " + toClient);
 
-            await Clients.Client(toClient).SendAsync("ReceiveMessage", messageEntityjson);
+            await Clients.Client(toClient).SendAsync("ReceiveMessage", MessageReqjson);
         }
     }
     #endregion

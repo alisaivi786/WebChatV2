@@ -24,3 +24,9 @@ global using WebChat.Common.Dto.ResponseDtos.Message;
 global using WebChat.Presistence.Repositories.BaseRepository;
 
 global using WebChat.Presistence.SeedConfiguration;
+global using WebChat.Common.IBaseResponse;
+global using WebChat.Common.Dto.ResponseDtos.Users;
+global using WebChat.Common.Dto.ResponseDtos.Group;
+global using MongoDB.Driver;
+global using System.Data;
+global using WebChat.Common.Dto.RequestDtos.Group;

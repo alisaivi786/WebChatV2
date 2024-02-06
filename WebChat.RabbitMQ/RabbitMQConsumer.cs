@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Amazon.Runtime.Internal;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using WebChat.Application.Contracts.UnitOfWork;
+using WebChat.Common.Dto.RequestDtos.Message;
 using WebChat.Domain.Entities;
 
 namespace WebChat.RabbitMQ;
@@ -41,43 +43,10 @@ public class RabbitMQConsumer(ConnectionFactory connectionFactory, IUnitOfWork u
 
             var messageJson = JsonConvert.DeserializeObject<dynamic>(message);
 
-            var messageEntity = JsonConvert.DeserializeObject<MessageEntity>(messageJson);
+            var messageEntity = JsonConvert.DeserializeObject<AddMessageReqDto>(messageJson);
 
-           //  var response = await unitOfWork.MessageRepository.AddAsync(messageEntity);
-        };
+            var response = await unitOfWork.MessageRepository.AddMessageAsync(messageEntity);
 
-        channel.BasicConsume(queue: "chat_queue",
-                              autoAck: true,
-                              consumer: consumer);
-    }
-
-    public void StartConsuming(Action<string> onMessageReceived)
-    {
-        //Create the RabbitMQ connection using connection factory details as i mentioned above
-        var connection = factory.CreateConnection();
-
-        //Here we create channel with session and model
-
-        var channel = connection.CreateModel();
-
-        //declare the queue after mentioning name and a few property related to that
-        channel.QueueDeclare(queue: "chat_queue",
-                 durable: false,
-                 exclusive: false,
-                 autoDelete: false,
-                 arguments: null);
-
-        var consumer = new EventingBasicConsumer(channel);
-        consumer.Received += (model, ea) =>
-        {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-
-            Console.WriteLine($"Start Consuming Message: {message}");
-
-            // ***********
-            // Sync message to SQL Database using Entity Framework Core
-            //************
         };
 
         channel.BasicConsume(queue: "chat_queue",

@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebChat.RabbitMQ", "..\WebC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebChat.Infrastructure.Oracle", "..\WebChat.Infrastructure.Oracle\WebChat.Infrastructure.Oracle.csproj", "{5283346F-C6F4-4324-A13A-B270C3AA6A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Redis", "..\WebChat.Redis\WebChat.Redis.csproj", "{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebChat.Redis", "..\WebChat.Redis\WebChat.Redis.csproj", "{97BE7BF6-81D4-4AD6-9702-54F6EC30A308}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

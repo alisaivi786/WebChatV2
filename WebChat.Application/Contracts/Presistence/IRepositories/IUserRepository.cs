@@ -1,8 +1,4 @@
-﻿using WebChat.Application.Contracts.Presistence.IBaseRepository;
-using WebChat.Application.Response;
-using WebChat.Common.Dto.ResponseDtos.Users;
-
-namespace WebChat.Application.Contracts.Presistence.IRepositories;
+﻿namespace WebChat.Application.Contracts.Presistence.IRepositories;
 
 #region IUserRepository Contract
 #region IUserRepository Contract Summary

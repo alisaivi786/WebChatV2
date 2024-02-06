@@ -7,7 +7,7 @@
         :mode="mode"
       />
       <Editor
-        style="height: 200px; overflow-y: hidden;"
+        style="height: 20vh; overflow-y: hidden;"
         v-model="valueHtml"
         @input="handleValueChange"
         :defaultConfig="editorConfig"
@@ -30,7 +30,7 @@ export default {
     const editorRef = shallowRef()
 
     // content HTML
-    const valueHtml = ref('<p>hello</p>')
+    const valueHtml = ref('')
 
     const handleValueChange = () => {
       $emit('input', valueHtml.value);
@@ -39,7 +39,7 @@ export default {
     // Simulate ajax async set HTML
     onMounted(() => {
         setTimeout(() => {
-            valueHtml.value = '<p>Ajax async set HTML.</p>'
+            //valueHtml.value = '<p>Ajax async set HTML.</p>'
         }, 1500)
     })
 

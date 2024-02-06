@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebChat.Application.Contracts.Presistence.IBaseRepository;
-using WebChat.Application.Response;
-using WebChat.Common.Dto.RequestDtos.Message;
-using WebChat.Common.Dto.ResponseDtos.Message;
-using WebChat.Common.Dto.ResponseDtos.Users;
-
-namespace WebChat.Application.Contracts.Presistence.IRepositories;
+﻿namespace WebChat.Application.Contracts.Presistence.IRepositories;
 
 #region IMessageRepository Contract
 #region IMessageRepository Contract Summary
@@ -25,7 +14,7 @@ public interface IMessageRepository : IBaseRepository<MessageEntity>
     Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> GetMessageDetailsAsync(GetMessageReqDto reqest);
     Task<ApiResponse<MessageDetailDto>> GetSingleMessageDetailsAsync(long Id);
     Task<ApiResponse<bool>> AddMessageAsync(AddMessageReqDto reqest);
-    Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageReqDto> reqest);
+    Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddBulkMessageReqDto> reqest);
     Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageReqDto reqest);
     Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageReqDto reqest);
 } 

@@ -1,10 +1,7 @@
 ﻿#region NameSpace
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
-using System.Data;
-using WebChat.Application.ApplicationSettings;
-
+using System.Linq.Dynamic.Core;
 namespace WebChat.Presistence.Repositories.BaseRepository;
+
 #endregion
 
 #region BaseRepository
@@ -550,13 +547,23 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     #endregion
 
 
-    public async Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>> predicate = null)
+    public async Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>>? predicate = null)
     {
         IQueryable<T> query = Table;
 
         if (predicate != null)
         {
             query = query.Where(predicate);
+        }
+
+
+        // Order by Id in descending order if the entity has an 'Id' property
+        var entityType = typeof(T);
+        var idProperty = entityType.GetProperty("Id");
+
+        if (idProperty != null)
+        {
+            query = query.AsQueryable().OrderBy($"{idProperty.Name} descending");
         }
 
         int totalCount = await query.CountAsync();

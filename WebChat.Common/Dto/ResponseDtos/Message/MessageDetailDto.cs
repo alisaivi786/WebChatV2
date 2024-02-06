@@ -1,5 +1,11 @@
 ﻿namespace WebChat.Common.Dto.ResponseDtos.Message;
 
+/// <summary>
+/// MessageDetailDto
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 06-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
 public class MessageDetailDto
 {
     public long MessageId { get; set; }

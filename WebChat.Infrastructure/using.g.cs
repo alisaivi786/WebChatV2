@@ -8,3 +8,5 @@ global using WebChat.Application.Contracts.Presistence.IRepositories.Mongo;
 global using WebChat.Presistence.Repositories.MongoRepositories;
 global using MongoDB.Driver;
 global using WebChat.Application.Contracts.Presistence.IDBContext;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.Extensions.Logging;

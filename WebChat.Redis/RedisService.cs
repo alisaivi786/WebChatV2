@@ -10,7 +10,7 @@ public class RedisService : IRedisService
     public void PushMessageToRedisAsync(string message, string roomId)
     {
         // Connection to the Redis server
-        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("47.91.115.74:6379");
+        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("47.91.115.74:6379"); //must change to read from appsettings file
 
         // Get a reference to the database
         IDatabase db = redis.GetDatabase(15);

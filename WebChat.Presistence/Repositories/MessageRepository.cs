@@ -24,7 +24,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     /// <param name="reqest"></param>
     /// <returns>return True if Added Successfully</returns> 
     #endregion
-    public async Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddMessageReqDto> reqest)
+    public async Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddBulkMessageReqDto> reqest)
     {
         #region ...
         #region Mapping Domain Entity with response
@@ -33,7 +33,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
 
             UserId = x.UserId,
             GroupId = x.GroupId,
-            Content = x.Message,
+            Content = x.Content,
             SentTime = DateTime.UtcNow,
             CreatedBy = x.UserId,
 
@@ -146,7 +146,7 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
         #region ...
 
         #region Predicate Filter
-        Expression<Func<MessageEntity, bool>> predicate = message => message.IsActive;
+        Expression<Func<MessageEntity, bool>>? predicate = message => message.IsActive;
         #endregion
 
         #region Get All Data From Database
@@ -157,20 +157,20 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
         #region Response
         if (response != null)
         {
-            var lst = response.List.Select(x => new MessageDetailDto
+            var lst = response?.List?.Select(x => new MessageDetailDto
             {
                 MessageId = x.Id,
                 UserId = x.UserId,
-                UserName   = x.User.UserName,
-                GroupId = x.GroupId,
-                GroupName = x.Group.Name,
-                Message = x.Content,
-                Time = x.DateCreated
+                UserName   = x?.User?.UserName,
+                GroupId = x?.GroupId,
+                GroupName = x?.Group?.Name,
+                Message = x?.Content,
+                Time = x?.DateCreated
                
 
             }).ToList();
             var result = new PageBaseResponse<List<MessageDetailDto>>() 
-            { List = lst, PageNo = response.PageNo, TotalPage = response.TotalPage, TotalCount = response.TotalCount };
+            { List = lst, PageNo = response?.PageNo, TotalPage = response?.TotalPage, TotalCount = response?.TotalCount };
 
             return new ApiResponse<PageBaseResponse<List<MessageDetailDto>>> { Data = result, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
         }
@@ -214,7 +214,16 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
                     Message = x.Content,
                     Time = x.DateCreated
                 }).FirstOrDefault();
-                return new ApiResponse<MessageDetailDto> { Data = lst, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+                if (lst != null)
+                {
+                    return new ApiResponse<MessageDetailDto> { Data = lst, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+                }
+                else
+                {
+                    return new ApiResponse<MessageDetailDto> { Data = lst, Code = ApiCodeEnum.Failed, MsgCode = ApiMessageEnum.NotFound };
+                }
+                
+
             }
         }
         #endregion

@@ -1,81 +1,193 @@
 <template>
   <div class="group-heading">Group 1</div>
-  <div class="chat-messages">
-    <template v-for="chat in chatList" :key="chat.chatId">
+  <div class="chat-messages" ref="chatMessages" id="chatMessages">
+    <template v-for="chat in chatList.slice().reverse()" :key="chat.chatId">
       <ChatItem :chat="chat" />
     </template>
+    <span v-if="isLoading">Loading...</span>
+    <span v-else-if="isError">Error: {{ error.message }}</span>
   </div>
-
-  <div class="row new-message">
-    <div class="col-md-11">
-      <!-- Wang Editor -->
-      <WangEditor ref="wangEditor"/>
-      <!-- END - Wang Editor-->
+  <div class="row align-items-center p-3 new-message-row">
+    <div class="col-lg-12">
+      <WangEditor ref="wangEditor" class="wang-editor" />
     </div>
-    <div class="col-md new-message-btn">
-      <a href="#" class="btn" @click="sendMessage">Send</a>
+    <div class="col-lg-12">
+      <a href="#" class="btn send-message-btn" @click="sendMessage">Send</a>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { useInfiniteQuery } from "vue-query";
+import * as signalR from "@microsoft/signalr";
 import ChatItem from "./ChatItem.vue";
-import chatList from "../models/chatList";
 import ChatModel from "../models/ChatModel";
 import WangEditor from "./WangEditor.vue";
+import { getAllMessages } from "@/services/apiService";
+import { ChatService } from "@/services/chatService";
 
 export default defineComponent({
   components: {
     ChatItem,
-    WangEditor
+    WangEditor,
   },
   data() {
     return {
-      chatList: [],
-      messageContent: "",
       chatItem: ChatModel,
-      editorData: "<p>Your initial content here.</p>",
+      chatService: new ChatService(),
+      connection: Object,
+      totalPage: 1,
+      isLoading: false,
+      isError: false,
     };
   },
-  watch: {
-    editorData(newVal) {
-      this.messageContent = newVal;
-    },
+  setup() {
+    const totalPage = ref(1);
+    const chatList = ref([]);
+
+    const scrollToBottom = () => {
+      requestAnimationFrame(() => {
+        const chatMessages = document.getElementById("chatMessages");
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: "smooth",
+        });
+      });
+    };
+
+    const isUserAtBottom = () => {
+      const chatMessages = document.getElementById("chatMessages");
+      return (
+        chatMessages.scrollHeight - chatMessages.clientHeight <=
+        chatMessages.scrollTop + 1
+      );
+    };
+
+    const fetchMessages = async ({ pageParam = 1 }) => {
+      console.log("fetchMessages", 'pageParam', pageParam, 'totalPage', totalPage.value);
+      if (pageParam > totalPage.value) return [];
+      if (pageParam === 1) {
+        // First page request, get all messages
+        try {
+          const response = await getAllMessages(pageParam);
+          chatList.value = response.data.list;
+          totalPage.value = response.data.totalPage;
+
+          scrollToBottom();
+
+          return response.data.list;
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+          return [];
+        }
+      } else {
+        // Fetch next page
+        try {
+          const response = await getAllMessages(pageParam);
+          chatList.value.push(...response.data.list); // Append new data to the existing list
+          return response.data.list;
+        } catch (error) {
+          console.error("Error fetching next page:", error);
+          return [];
+        }
+      }
+    };
+
+    function useMessagesInfiniteQuery() {
+      return useInfiniteQuery("messages", fetchMessages, {
+        getNextPageParam: (lastPage, allPages) => {
+          // Calculate the next page number
+          return allPages.length + 1;
+        },
+      });
+    }
+
+    const {
+      data,
+      error,
+      fetchNextPage,
+      hasNextPage,
+      isFetching,
+      isFetchingNextPage,
+      isLoading,
+      isError,
+    } = useMessagesInfiniteQuery();
+
+    const handleScroll = () => {
+      const chatMessages = document.getElementById("chatMessages");
+      if (
+        chatMessages.scrollTop === 0 &&
+        !isFetchingNextPage.value &&
+        hasNextPage.value
+      ) {
+        fetchNextPage.value();
+        window.scrollTo({
+          top: 50,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    return { handleScroll, chatList, isLoading, isError, scrollToBottom };
   },
   methods: {
-    getTimeIn12HourFormat() {
-      const now = new Date();
-      const hours = now.getHours() % 12 || 12; // Ensure 12-hour format without leading zero
-      const minutes = now.getMinutes().toString().padStart(2, "0"); // Add leading zero if needed
-      const meridiem = now.getHours() >= 12 ? "PM" : "AM";
-
-      return `${hours}:${minutes} ${meridiem}`;
-    },
-    handleEditorInput(value) {
-      // Update editorData when the "input" event occurs
-      //this.editorData = event.editor.getData();
-      this.messageContent = value;
-    },
     sendMessage() {
-      
-      console.log(this.$refs.wangEditor);
+      const editorContent = this.$refs.wangEditor.valueHtml;
 
-      // console.log(this.editor);
-      // this.chatItem = new ChatModel();
-      // this.chatItem.chatId = 1;
-      // this.chatItem.userId = 1;
-      // this.chatItem.userName = "Xalo";
-      // this.chatItem.userStatus = "Active";
-      // this.chatItem.message = this.editorData;
-      // this.chatItem.timestamp = this.getTimeIn12HourFormat();
+      if (!editorContent) {
+        console.error("Editor content is empty.");
+        return;
+      }
 
-      // this.chatList.push(this.chatItem);
-      // this.editorData = "";
+      const messagePayload = JSON.stringify({
+        From: this.chatService.connection.connectionId,
+        To: "",
+        Message: editorContent,
+      });
+
+      console.log("messagePayload", messagePayload);
+
+      this.chatService
+        .sendMessage(messagePayload)
+        .then(() => {
+          this.$refs.wangEditor.valueHtml = "";
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+        });
     },
   },
   mounted() {
-    this.chatList = chatList;
+    const chatMessages = this.$refs.chatMessages;
+    chatMessages.addEventListener("scroll", this.handleScroll);
+
+    this.chatService.startConnection().then(() => {
+      this.chatService.setupReceiveMessageHandler((message) => {
+        console.log("Received message:", message);
+
+        const messageObj = JSON.parse(message);
+
+        this.chatItem = new ChatModel({
+          Content: messageObj.Content,
+          SentTime: messageObj.SentTime,
+          GroupId: messageObj.GroupId,
+          Group: messageObj.Group,
+          UserId: messageObj.UserId,
+          User: messageObj.User,
+          Id: messageObj.Id,
+          DateCreated: messageObj.DateCreated,
+          CreatedBy: messageObj.CreatedBy,
+          DateModified: messageObj.DateModified,
+          ModifiedBy: messageObj.ModifiedBy,
+          IsActive: messageObj.IsActive,
+        });
+
+        this.chatList.push(this.chatItem);
+
+        this.scrollToBottom();
+      });
+    });
   },
 });
 </script>

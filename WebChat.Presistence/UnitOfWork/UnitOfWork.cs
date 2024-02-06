@@ -45,12 +45,21 @@ public class UnitOfWork : IUnitOfWork,IDisposable
          context: _context,
          configuration: _configuration,
          httpContextAccessor: _httpContextAccessor,
+         appSettings: _applicationSettings);
+        #endregion
+
+        #region GroupRepository
+        GroupRepository = new GroupRepository(
+         context: _context,
+         configuration: _configuration,
+         httpContextAccessor: _httpContextAccessor,
          appSettings: _applicationSettings); 
         #endregion
     }
     public IUserRepository UserRepository { get; }
 
     public IMessageRepository MessageRepository { get; }
+    public IGroupRepository GroupRepository { get; }
 
     public async Task SaveAsync()
     {

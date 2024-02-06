@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebChat.Extension\WebChat.Extension.csproj" />
+  </ItemGroup>
+
 </Project>
