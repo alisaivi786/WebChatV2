@@ -1,5 +1,13 @@
 
 
+using Microsoft.Extensions.DependencyInjection;
+//using Asp.Net.Core.HealthCheck.ConfigureServices;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Driver.Core.Configuration;
+using WebChat.Infrastructure.Health;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -16,6 +24,9 @@ builder.Services.AddSingleton(AppSetting);
 // Add Persistence Infrastructure
 builder.Services.AddPersistenceInfrastructure(applicationSettings: AppSetting);
 
+builder.Services.ApiVersionInfrastructure();
+
+
 //Add Cors
 builder.Services.AddCors();
 
@@ -31,32 +42,52 @@ builder.Services.AddRegisterRedis(AppSetting);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// Add Swagger Infrastructure
+builder.Services.AddSwaggerWithVersioning();
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Add HealthCheck
+builder.Services.AddHealthChecks()
+    //.AddCheck<SqlHealthCheck>("SQL-Server", HealthStatus.Unhealthy)
+    .AddMySql(AppSetting.MySqlConnectionString)
+    .AddRedis(AppSetting.RedisConnectionString)
+    .AddRabbitMQ(rabbitConnectionString: $"amqp://{AppSetting.RabbitMqUserName}:{AppSetting.RabbitMqPassword}@{AppSetting.RabbitMqHost}:5672/")
+    ;
+
+builder.Services.AddHealthChecksUI()
+    .AddInMemoryStorage();
+
 var app = builder.Build();
 
 // Migrate the database
 app.EnsureMigration();
 
 app.UseCors(builder => builder
-                    .WithOrigins("null","http://localhost:8080", "https://localhost:5173")
+                    .WithOrigins("null","http://localhost:8080", "https://localhost:5173", "https://localhost:5177")
                     .AllowAnyHeader()
                     .AllowAnyMethod().AllowCredentials());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsTest())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerWithUI();
 }
 
 
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+app.UseHealthChecks("/health", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+});
+
+app.MapHealthChecksUI();
+
 
 app.UseEndpoints(endpoints =>
 {

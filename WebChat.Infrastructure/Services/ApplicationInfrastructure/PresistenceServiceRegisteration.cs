@@ -1,5 +1,5 @@
 ﻿#region NameSpace
-namespace WebChat.Infrastructure.DI.ApplicationInfrastructure;
+namespace WebChat.Infrastructure.Services.ApplicationInfrastructure;
 #endregion
 
 #region PersistenceServiceRegistration
@@ -55,9 +55,14 @@ public static class PersistenceServiceRegistration
 
             services.AddScoped<IWebchatDBContext>(provider => provider.GetRequiredService<WebchatDBContext>());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         }
         return services;
     }
+
+
+
+
 }
 
 #endregion

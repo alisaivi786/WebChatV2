@@ -1,4 +1,4 @@
-﻿namespace WebChat.Infrastructure.DI.ApplicationInfrastructure;
+﻿namespace WebChat.Infrastructure.Services.ApplicationInfrastructure;
 
 /// <summary>
 /// Register Mongo Repositories

@@ -51,4 +51,9 @@ public class AppSettings(IConfiguration configuration)
     public string? RabbitMqUserName { get; set; } = configuration["RabbitMq:UserName"];
     public string? RabbitMqPassword { get; set; } = configuration["RabbitMq:Password"];
     #endregion
+
+    #region HealthCheck
+    public string? HealthCheckUI { get; set; } = configuration["HealthChecksUI:CustomHealth:HealthCheckUI"];
+    public string? HealthCheckURL { get; set; } = configuration["HealthChecksUI:CustomHealth:HealthCheckURL"]; 
+    #endregion
 }

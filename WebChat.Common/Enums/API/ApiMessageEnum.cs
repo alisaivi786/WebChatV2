@@ -43,6 +43,26 @@ public enum ApiMessageEnum
 
     #endregion
 
+    #region Invalid API Version
+
+    /// <summary>
+    /// Represents the message for a Invalid API Version operation.
+    /// </summary>
+    [Description("Invalid API version specified.")]
+    InValidVersion = 2,
+
+    #endregion
+
+    #region Valid API Version
+
+    /// <summary>
+    /// Represents the message for a valid API Version operation.
+    /// </summary>
+    [Description("Valid API version.")]
+    ValidVersion = 3,
+
+    #endregion
+
     #region Authentication and Authorization
 
     /// <summary>

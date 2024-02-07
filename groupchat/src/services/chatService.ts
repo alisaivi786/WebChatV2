@@ -6,7 +6,7 @@ export class ChatService {
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(API_BASE_URL + "/chatHub")
+      .withUrl(`${API_BASE_URL}/chatHub`)
       .build();
   }
 

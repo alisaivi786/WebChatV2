@@ -4,7 +4,7 @@ using StackExchange.Redis;
 using WebChat.RabbitMQ;
 using WebChat.Redis;
 
-namespace WebChat.Infrastructure.DI.Redis;
+namespace WebChat.Infrastructure.Services.Redis;
 
 public static class RegisterRedis
 {

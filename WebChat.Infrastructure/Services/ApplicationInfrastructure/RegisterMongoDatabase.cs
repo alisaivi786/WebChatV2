@@ -1,4 +1,4 @@
-﻿namespace WebChat.Infrastructure.DI.ApplicationInfrastructure;
+﻿namespace WebChat.Infrastructure.Services.ApplicationInfrastructure;
 
 /// <summary>
 /// Register Mongo Database
@@ -11,7 +11,7 @@ public static class RegisterMongoDatabase
     public static IServiceCollection AddMongoDbContext(this IServiceCollection services, string connectionString)
     {
         services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
-        services.AddScoped<IMongoDatabase>(provider =>
+        services.AddScoped(provider =>
         {
             var client = provider.GetRequiredService<IMongoClient>();
             return client.GetDatabase("WebChatV2");

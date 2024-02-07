@@ -10,3 +10,7 @@ global using MongoDB.Driver;
 global using WebChat.Application.Contracts.Presistence.IDBContext;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.Extensions.Logging;
+global using Asp.Versioning;
+global using WebChat.Application.Helpers;
+global using Microsoft.OpenApi.Models;
+global using Swashbuckle.AspNetCore.SwaggerGen;

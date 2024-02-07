@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using WebChat.Common.Dto.RequestDtos.Message;
-using WebChat.Domain.Entities;
+using WebChat.Common.Dto.ResponseDtos.Message;
 using WebChat.RabbitMQ;
 using WebChat.Redis;
 
@@ -32,12 +31,22 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
 
         var routeOb = JsonConvert.DeserializeObject<dynamic>(message);
 
-        AddMessageReqDto MessageReq = new AddMessageReqDto()
+        //AddMessageReqDto MessageReq = new AddMessageReqDto()
+        //{
+        //    GroupId = 148,
+        //    UserId = 15672,
+        //    Message = routeOb?.Message.ToString(),
+        //    SetTime = DateTime.Now,
+        //};
+
+        MessageDetailDto MessageReq = new MessageDetailDto()
         {
-            GroupId = 148, 
-            UserId = 15672,
+            GroupId = routeOb?.GroupId, //1,
+            GroupName = routeOb?.GroupName.ToString(), //"TB-Admin",
+            UserId = 3,
+            UserName = "Aymen",
             Message = routeOb?.Message.ToString(),
-            SetTime = DateTime.Now,
+            Time = routeOb?.TimeUTC
         };
 
         var MessageReqjson = JsonConvert.SerializeObject(MessageReq);
@@ -72,4 +81,5 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
         }
     }
     #endregion
+
 }

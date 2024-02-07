@@ -15,3 +15,4 @@ global using WebChat.Common.Dto.RequestDtos.Group;
 global using WebChat.Common.Dto.ResponseDtos.Group;
 global using WebChat.Common.Dto.ResponseDtos.Users;
 global using MongoDB.Driver;
+global using Asp.Versioning;

@@ -144,8 +144,9 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 .chat-message {
-  padding: 0.5em 0em;
-  padding-bottom: 1em;
+  // padding: 0.5em 0em;
+  padding-top: 0.3em;
+  
 }
 
 .chat-date {
@@ -156,7 +157,7 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 
 .chat-messages {
   // height: 51vh;
-  height: 47vh;
+  height: 56vh;
   overflow-y: auto;
 }
 
@@ -203,7 +204,7 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 .send-message-btn {
   background-color: $primary-blue;
   color: $color-white;
-  width: 10%;
+  // width: 10%;
   margin-top: 1%;
 
   &:hover {
@@ -220,9 +221,13 @@ $shadow-color: rgba(0, 0, 0, 0.1);
   }
 
   .chat-messages {
-    height: 25vh;
+    height: 50vh;
     overflow-y: auto;
   }
+
+  .w-e-modal{
+    left: 2% !important;
+   }
 }
 
 @media (max-width: 768px) {
@@ -344,4 +349,16 @@ blockquote {
     line-height: 1.5;
     margin: 10px 0;
     padding: 10px;
+}
+
+.chat-messages-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 93%;
+
+  .new-message-row{
+    border-top: 1px solid $light-gray-border;
+    margin-top: auto;
+  }
 }

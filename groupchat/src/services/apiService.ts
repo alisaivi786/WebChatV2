@@ -1,7 +1,7 @@
-import { API_BASE_URL } from '../store/constants.js';
+import { API_BASE_URL, API_VERSION } from '../store/constants.js';
 
 export async function getAllMessages(pageParam) {
-    const url = API_BASE_URL + "/api/Message/GetMessages"; // Replace URL with your actual API endpoint
+    const url = `${API_BASE_URL}/api/${API_VERSION}/Message/GetMessages`; // Replace URL with your actual API endpoint
     const requestBody = {
       timestamp: 9999999999,
       random: "stringstringstringstringstringst",
@@ -26,7 +26,7 @@ export async function getAllMessages(pageParam) {
       const data = await response.json();
       return data; // Return the fetched data
     } catch (error) {
-      throw new Error(`Error fetching messages: ${error.message}`);
+      throw new Error(`Error fetching messages: ${error}`);
     }
   }
   

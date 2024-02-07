@@ -5,10 +5,16 @@ html, body {
   margin: 0;
 }
 
-body {
-  /* background-color: #ccc; */
-}
-
 .ck-balloon-panel {
   display: none !important;
+}
+
+.btn-close svg {
+  display: none;
+}
+
+.w-e-modal{
+ position: fixed !important; 
+ top: 50% !important;
+ left: 25% !important;
 }

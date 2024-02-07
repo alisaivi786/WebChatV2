@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
-	  <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
-	  <PackageReference Include="MongoDB.Entities" Version="23.0.1" />
-	  <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+		<PackageReference Include="MongoDB.Entities" Version="23.0.1" />
+		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebChat.Presistence\WebChat.Presistence.csproj" />
-    <ProjectReference Include="..\WebChat.RabbitMQ\WebChat.RabbitMQ.csproj" />
-    <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
-  </ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WebChat.Presistence\WebChat.Presistence.csproj" />
+		<ProjectReference Include="..\WebChat.RabbitMQ\WebChat.RabbitMQ.csproj" />
+		<ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
+	</ItemGroup>
 
 </Project>

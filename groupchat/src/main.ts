@@ -3,11 +3,20 @@ import './assets/main.css'
 import './assets/main.scss'
 
 
-import ElementPlus from 'element-plus';
 import { VueQueryPlugin } from 'vue-query';
 import { createApp } from 'vue'
 import App from './App.vue'
 
+const vueQueryPluginOptions: VueQueryPluginOptions = {
+    queryClientConfig: {
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false,
+        },
+      },
+    },
+  };
+
 createApp(App)
-.use(VueQueryPlugin, ElementPlus)
+.use(VueQueryPlugin, vueQueryPluginOptions)
 .mount('#app')

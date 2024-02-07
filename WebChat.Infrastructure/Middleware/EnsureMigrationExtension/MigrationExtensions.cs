@@ -1,4 +1,4 @@
-﻿namespace WebChat.Infrastructure.EnsureMigrationExtension;
+﻿namespace WebChat.Infrastructure.Middleware.EnsureMigrationExtension;
 
 public static class MigrationExtensions
 {

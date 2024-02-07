@@ -1,4 +1,8 @@
-﻿namespace WebChat.Presistence.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Drawing.Printing;
+
+namespace WebChat.Presistence.Repositories;
 
 /// <summary>
 /// MessageRepository for Message Entity Comunication with Database
@@ -12,6 +16,7 @@
 /// <param name="appSettings"></param>
 public class MessageRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, AppSettings appSettings) : BaseRepository<MessageEntity>(context, configuration, httpContextAccessor, appSettings), IMessageRepository
 {
+    private readonly WebchatDBContext Ado = context;
 
     #region Add Bulk Message Async
     #region Add Bulk Message Async Summary
@@ -145,6 +150,8 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
     {
         #region ...
 
+        //return await QueryRawSqlAsync(reqest);
+
         #region Predicate Filter
         Expression<Func<MessageEntity, bool>>? predicate = message => message.IsActive;
         #endregion
@@ -275,6 +282,67 @@ public class MessageRepository(WebchatDBContext context, IConfiguration configur
         #endregion 
         #endregion
 
-    } 
+    }
     #endregion
+
+
+    private async Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> QueryRawSqlAsync(GetMessageReqDto reqest)
+    {
+        #region ...
+
+        var response = await Ado
+                            .Message
+                            .FromSqlRaw("SELECT * FROM Message AS m")
+                            .OrderBy(m => m.Id)
+                            .Skip((reqest.PageNo - 1) * reqest.PageSize)
+                            .Take(reqest.PageSize)
+                            .ToListAsync();
+
+
+        #region response
+        //var response = await Ado
+        //    .Database
+        //    .SqlQuery<MessageEntity>($"SELECT * FROM Message AS o")
+        //    .OrderBy(o => o.Id)
+        //    .Skip((reqest.PageNo - 1) * reqest.PageSize)
+        //    .Take(reqest.PageSize)
+        //    .ToListAsync();
+        #endregion
+
+        #region responseCount
+        var totalCount = await Ado
+          .Database
+          .SqlQuery<MessageEntity>($"SELECT o.Id FROM Message AS o")
+      .CountAsync();
+        #endregion
+
+        #region totalCount
+        var totalPages = (int)Math.Ceiling((double)totalCount / reqest.PageSize); 
+        #endregion
+
+        #region Response
+        if (response != null)
+        {
+            var lst = response?.Select(x => new MessageDetailDto
+            {
+                MessageId = x.Id,
+                UserId = x.UserId,
+                UserName = x?.User?.UserName,
+                GroupId = x?.GroupId,
+                GroupName = x?.Group?.Name,
+                Message = x?.Content,
+                Time = x?.DateCreated
+
+
+            }).ToList();
+            var result = new PageBaseResponse<List<MessageDetailDto>>()
+            { List = lst, PageNo = reqest.PageNo, TotalPage = totalPages, TotalCount = totalCount };
+
+            return new ApiResponse<PageBaseResponse<List<MessageDetailDto>>> { Data = result, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+        }
+        return new ApiResponse<PageBaseResponse<List<MessageDetailDto>>>();
+        #endregion 
+
+        #endregion
+    }
 }

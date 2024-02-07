@@ -2,14 +2,14 @@
 using RabbitMQ.Client;
 using WebChat.RabbitMQ;
 
-namespace WebChat.Infrastructure.DI.RabbitMQ;
+namespace WebChat.Infrastructure.Services.RabbitMQ;
 
-public static  class RegisterRabbitMQ
+public static class RegisterRabbitMQ
 {
     public static IServiceCollection AddRegisterRabbitMQ(this IServiceCollection services, AppSettings appSettings)
     {
-      
-        services.AddSingleton<ConnectionFactory>(new ConnectionFactory
+
+        services.AddSingleton(new ConnectionFactory
         {
             HostName = appSettings.RabbitMqHost,
             UserName = appSettings.RabbitMqUserName,

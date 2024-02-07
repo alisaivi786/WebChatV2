@@ -55,7 +55,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 1L,
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4194),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7175),
                             IsActive = true,
                             Name = "TB-Admin"
                         });
@@ -144,7 +144,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 1L,
                             Content = "Hello Team",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4382),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7234),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -155,7 +155,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 2L,
                             Content = "Hey Ali!",
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4386),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7236),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -166,7 +166,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 3L,
                             Content = "I am Fine Poonam what about you?",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4388),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7268),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -177,7 +177,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 4L,
                             Content = "Good to hear you are good, thanks for asking i am also fine!.",
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4390),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7269),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -188,7 +188,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 5L,
                             Content = "hey Guys whats the update of our chat v1 Project???.",
                             CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4392),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7271),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -199,7 +199,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                             Id = 6L,
                             Content = "Architecture of Project is done just doing some final tweaks and then update you here in group.",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(4395),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7272),
                             GroupId = 1L,
                             IsActive = true,
                             SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -243,7 +243,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 1L,
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3815),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7033),
                             IsActive = true,
                             PhoneNumber = "971505679899",
                             UserName = "Ali"
@@ -252,7 +252,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 2L,
                             CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3823),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7041),
                             IsActive = true,
                             PhoneNumber = "971505679800",
                             UserName = "Poonam"
@@ -261,7 +261,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 3L,
                             CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 5, 20, 8, 38, 46, DateTimeKind.Utc).AddTicks(3825),
+                            DateCreated = new DateTime(2024, 2, 5, 12, 29, 1, 480, DateTimeKind.Utc).AddTicks(7042),
                             IsActive = true,
                             PhoneNumber = "971505679888",
                             UserName = "Aymen"
