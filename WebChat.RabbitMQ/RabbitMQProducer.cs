@@ -5,39 +5,66 @@ using System.Text;
 
 namespace WebChat.RabbitMQ;
 
-public class RabbitMQProducer(ConnectionFactory connectionFactory): IRabbitMQProducer
+public class RabbitMQProducer(ConnectionFactory connectionFactory) : IRabbitMQProducer
 {
     private readonly ConnectionFactory factory = connectionFactory;
 
-    public void PublishMessageToRabbitMQ<T>(T message)
+    public void PublishMessageToRabbitMQ<T>(T message, string queueName)
     {
-        //Here we specify the Rabbit MQ Server. we use rabbitmq docker image and use it
-        //var factory = new ConnectionFactory
-        //{
-        //    HostName = "localhost", // RabbitMQ server host
-        //    UserName = "guest",     // RabbitMQ username
-        //    Password = "guest"      // RabbitMQ password
-        //};
-
-        //Create the RabbitMQ connection using connection factory details as i mentioned above
         var connection = factory.CreateConnection();
 
-        //Here we create channel with session and model
-       
         var channel = connection.CreateModel();
 
-        //declare the queue after mentioning name and a few property related to that
-        channel.QueueDeclare(queue: "chat_queue",
+        channel.QueueDeclare(queue: queueName,
                  durable: false,
                  exclusive: false,
                  autoDelete: false,
                  arguments: null);
 
-        //Serialize the message
         var json = JsonConvert.SerializeObject(message);
         var body = Encoding.UTF8.GetBytes(json);
 
-        //put the data on to the product queue
-        channel.BasicPublish(exchange: "", routingKey: "chat_queue", body: body);
+        channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
+    }
+
+
+    public void PublishMessageToRabbitMQAcks<T>(T message, string queueName)
+    {
+        using (var connection = factory.CreateConnection())
+        using (var channel = connection.CreateModel())
+        {
+            // Enable publisher confirms
+            channel.ConfirmSelect();
+
+            // Set up a callback for confirms
+            channel.BasicAcks += (sender, args) =>
+            {
+                Console.WriteLine("Message delivered successfully.");
+                // Handle successful delivery
+            };
+            channel.BasicNacks += (sender, args) =>
+            {
+                Console.WriteLine("Message delivery failed.");
+                // Handle delivery failure
+            };
+
+            channel.QueueDeclare(queue: queueName,
+                                 durable: false,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
+
+            var json = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(json);
+
+            channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
+
+            // Wait for the confirms
+            if (!channel.WaitForConfirms(TimeSpan.FromSeconds(10)))
+            {
+                Console.WriteLine("Message delivery confirmation not received.");
+                // Handle the case where confirmation wasn't received within the timeout
+            }
+        }
     }
 }

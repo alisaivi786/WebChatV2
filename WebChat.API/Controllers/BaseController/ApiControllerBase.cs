@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace WebChat.API.Controllers;
+namespace WebChat.API.Controllers.BaseController;
 
 
 [Authorize(Roles = "Access_Token")]
@@ -24,7 +24,7 @@ public class ApiControllerBase : ApiEntranceControllerBase
 
     #region Show Message
 
-    public ApiResponse<M> ShowMsg<M>(bool result, M data = default(M))
+    public ApiResponse<M> ShowMsg<M>(bool result, M data = default)
     {
         if (result)
             return new ApiResponse<M>() { Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success, Data = data };

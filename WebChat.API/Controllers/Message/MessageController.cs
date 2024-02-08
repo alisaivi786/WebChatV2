@@ -1,5 +1,7 @@
 ﻿#region NameSpace
-namespace WebChat.API.Controllers;
+using WebChat.Redis;
+
+namespace WebChat.API.Controllers.Message;
 #endregion
 
 #region MessageController
@@ -8,10 +10,14 @@ namespace WebChat.API.Controllers;
 [Route("api/v{version:apiVersion}/Message")]
 [ApiController]
 #endregion
-public class MessageController(IUnitOfWork unitOfWork) : ControllerBase
+public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment environment, IRedisService RedisService) : ControllerBase
 {
     #region UnitOfWork Container
     private readonly IUnitOfWork unitOfWork = unitOfWork;
+    #endregion
+
+    #region WebHostEnvironment
+    private readonly IWebHostEnvironment _environment = environment;
     #endregion
 
     #region GetMessageDetails
@@ -93,5 +99,68 @@ public class MessageController(IUnitOfWork unitOfWork) : ControllerBase
         return Ok(response);
     }
     #endregion
-} 
+
+    #region UploadImage
+    [MapToApiVersion(1)]
+    [HttpPost("UploadImage")]
+    [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return StatusCode(400, new { Errno = 1, Message = "No file uploaded." });
+        }
+
+        try
+        {
+            var contentRoot = _environment.ContentRootPath;
+            // var uploadsFolder = Path.Combine(contentRoot, "Uploads");
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "Uploads");
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(" ", "_").Trim();
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/Uploads/{uniqueFileName}";
+
+            var result = new
+            {
+                Errno = 0,
+                Data = new
+                {
+                    Url = imageUrl,
+                    alt = file.FileName.Replace(" ", "_"),
+                    Href = ""
+                }
+            };
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Errno = 1, ex.Message });
+        }
+    }
+    #endregion
+
+    #region GetMessageDetailsRedis
+    [MapToApiVersion(1)]
+    [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<PageBaseDataResponse<List<MessageDetailDto>>>))]
+    [HttpPost("GetMessageDetailsRedis")]
+    public async Task<IActionResult> GetMessageDetailsRedis(GetMessageReqDtoRedis reqest)
+    {
+        var response = await RedisService.GetAllRecords(reqest.GroupId);
+        return Ok(response);
+    }
+    #endregion
+}
 #endregion

@@ -6,7 +6,7 @@
         <ChatItem :chat="chat" ref="messageRef" />
       </template>
       <span v-if="isLoading">Loading...</span>
-      <span v-else-if="isError">Error: {{ error.message }}</span>
+      <span v-else-if="isError">Error: {{ error }}</span>
     </div>
     <div class="row align-items-center p-3 new-message-row">
       <div class="col-lg-12">
@@ -38,9 +38,7 @@ export default defineComponent({
       chatItem: ChatModel,
       chatService: new ChatService(),
       connection: Object,
-      totalPage: 1,
-      isLoading: false,
-      isError: false,
+      totalPage: 1
     };
   },
   setup() {
@@ -50,7 +48,6 @@ export default defineComponent({
     let oldChatHeight = ref(0);
 
     const scrollToBottom = () => {
-      console.log(chatMessages.scrollHeight);
       requestAnimationFrame(() => {
         const chatMessages = document.getElementById("chatMessages");
         chatMessages.scrollTo({
@@ -97,7 +94,6 @@ export default defineComponent({
       oldChatHeight.value = chatMessages.scrollHeight;
 
       if (pageParam === 1) {
-        // First page request, get all messages
         try {
           const response = await getAllMessages(pageParam);
           chatList.value = mapToChatModel(response.data.list);
@@ -111,10 +107,9 @@ export default defineComponent({
           return [];
         }
       } else {
-        // Fetch next page
         try {
           const response = await getAllMessages(pageParam);
-          chatList.value.push(...response.data.list); // Append new data to the existing list
+          chatList.value.push(...response.data.list);
           scrollToPosition(scrollPosition.value);
           return response.data.list;
         } catch (error) {
@@ -127,18 +122,14 @@ export default defineComponent({
     function useMessagesInfiniteQuery() {
       return useInfiniteQuery("messages", fetchMessages, {
         getNextPageParam: (lastPage, allPages) => {
-          // Calculate the next page number
           return allPages.length + 1;
         },
       });
     }
 
     const {
-      data,
-      error,
       fetchNextPage,
       hasNextPage,
-      isFetching,
       isFetchingNextPage,
       isLoading,
       isError,
@@ -163,6 +154,21 @@ export default defineComponent({
     return { handleScroll, chatList, isLoading, isError, scrollToBottom };
   },
   methods: {
+    addMessageToList(messageObj) {
+      this.chatItem = new ChatModel(
+        messageObj.GroupId,
+        messageObj.GroupName,
+        messageObj.Message,
+        messageObj.MessageId,
+        messageObj.Time,
+        messageObj.UserId,
+        messageObj.UserName
+      );
+
+      this.chatList.unshift(this.chatItem);
+
+      this.scrollToBottom();
+    },
     sendMessage() {
       const editorContent = this.$refs.wangEditor.valueHtml;
 
@@ -177,16 +183,27 @@ export default defineComponent({
         Message: editorContent,
         GroupId: 1,
         GroupName: "TB-Admin",
-        TimeUTC: new Date(Date.now()).toISOString()
+        TimeUTC: new Date(Date.now()).toISOString(),
       });
 
       console.log("messagePayload", messagePayload);
+
+      const messageObj = Object;
+      messageObj.GroupId = 1;
+      messageObj.GroupName = "TB-Admin";
+      messageObj.Message = editorContent;
+      messageObj.MessageId = 0;
+      messageObj.Time = new Date().toISOString().replace("Z", "");
+      messageObj.UserId = 1;
+      messageObj.UserName = "Aymen";
+
+      this.addMessageToList(messageObj);
 
       this.chatService
         .sendMessage(messagePayload)
         .then(() => {
           this.$refs.wangEditor.valueHtml = "";
-          this.$refs.wangEditor.editorRef.focus();
+          //this.$refs.wangEditor.editorRef.focus();
         })
         .catch((error) => {
           console.error("Error sending message:", error);
@@ -201,20 +218,8 @@ export default defineComponent({
       this.chatService.setupReceiveMessageHandler((message) => {
         console.log("Received message:", message);
 
-        const messageObj = JSON.parse(message);
-        this.chatItem = new ChatModel(
-          messageObj.GroupId,
-          messageObj.GroupName,
-          messageObj.Message,
-          messageObj.MessageId,
-          messageObj.Time,
-          messageObj.UserId,
-          messageObj.UserName
-        );
-
-        this.chatList.unshift(this.chatItem);
-
-        this.scrollToBottom();
+        // const messageObj = JSON.parse(message);
+        // this.addMessageToList(messageObj);
       });
     });
   },

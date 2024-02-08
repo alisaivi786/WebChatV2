@@ -30,3 +30,5 @@ global using WebChat.Common.Dto.ResponseDtos.Group;
 global using MongoDB.Driver;
 global using System.Data;
 global using WebChat.Common.Dto.RequestDtos.Group;
+global using WebChat.Application.Contracts.UnitOfWork;
+global using WebChat.Presistence.Repositories;

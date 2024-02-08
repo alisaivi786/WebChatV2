@@ -18,6 +18,6 @@ public enum ApiVersionCode
     /// <summary>
     /// Version V2
     /// </summary>
-    v2 = 2,
+    //v2 = 2,
 } 
 #endregion

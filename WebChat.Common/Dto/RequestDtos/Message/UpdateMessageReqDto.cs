@@ -1,7 +1,11 @@
-﻿using WebChat.Common.IBaseRequest;
+﻿namespace WebChat.Common.Dto.RequestDtos.Message;
 
-namespace WebChat.Common.Dto.RequestDtos.Message;
-
+/// <summary>
+/// Get Update Message Request Dto
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 07-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
 public class UpdateMessageReqDto : ApiRequest
 {
     public long MessageId { get; set; }

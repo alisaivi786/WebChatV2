@@ -24,7 +24,10 @@ public enum DbMessageEnums
     Failed = 1,
 
     [Description("Presistence Data Failed")]
-    FailedPresistence = -2,
+    FailedPresistence = -2, 
+    
+    [Description("Canceled Operation")]
+    CanceledOperation = -2,
     #endregion
 
     #region ... DB Operation Range 2~30

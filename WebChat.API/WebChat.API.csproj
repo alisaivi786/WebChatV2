@@ -25,6 +25,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="8.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\WebChat.Infrastructure.Oracle\WebChat.Infrastructure.Oracle.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.SqlServer\WebChat.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure\WebChat.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 
 </Project>

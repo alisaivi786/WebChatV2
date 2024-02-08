@@ -1,4 +1,7 @@
-﻿namespace WebChat.Common.Dto.ResponseDtos.Message;
+﻿using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
+
+namespace WebChat.Common.Dto.ResponseDtos.Message;
 
 /// <summary>
 /// MessageDetailDto

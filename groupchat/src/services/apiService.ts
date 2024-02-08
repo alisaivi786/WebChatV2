@@ -1,6 +1,6 @@
-import { API_BASE_URL, API_VERSION } from '../store/constants.js';
+import { API_BASE_URL, API_VERSION } from '../store/constants';
 
-export async function getAllMessages(pageParam) {
+export async function getAllMessages(pageParam : any) {
     const url = `${API_BASE_URL}/api/${API_VERSION}/Message/GetMessages`; // Replace URL with your actual API endpoint
     const requestBody = {
       timestamp: 9999999999,

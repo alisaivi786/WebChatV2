@@ -31,5 +31,12 @@ public class ApiResponse
 public class ApiResponse<T> : ApiResponse
 {
     public T? Data { get; set; }
-} 
+}
+#endregion
+
+#region Extended ApiResponse with List
+public class ApiResponseWithList<T> : ApiResponse
+{
+    public List<T>? List { get; set; }
+}
 #endregion

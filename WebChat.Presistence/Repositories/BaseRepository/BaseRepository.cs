@@ -33,8 +33,6 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
 
     #region Entity Table
     public DbSet<T> Table { get; set; } = context.Set<T>();
-
-    DbSet<T> IBaseRepository<T>.Table => throw new NotImplementedException();
     #endregion
 
     #region AddAsync
@@ -48,12 +46,24 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="entity"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<T>> AddAsync(T entity)
+    public async Task<DbResponse<T>> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         try
         {
+            // Check for cancellation before starting the operation
+            if (cancellationToken.IsCancellationRequested)
+            {
+                var genericError = new ErrorModel { Id = "Cancellation", Message = "Operation canceled." };
+                return new DbResponse<T>
+                {
+                    Code = DbCodeEnums.Canceled,
+                    MsgCode = DbMessageEnums.CanceledOperation,
+                    Error = [genericError]
+                };
+            }
+
             var e = Table.Add(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             var dbResponse = new DbResponse<T>()
             {
@@ -64,9 +74,18 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
 
             return dbResponse;
         }
+        catch (OperationCanceledException ex)
+        {
+            var genericError = new ErrorModel { Id = "Cancellation", Message = ex.Message };
+            return new DbResponse<T>
+            {
+                Code = DbCodeEnums.Canceled,
+                MsgCode = DbMessageEnums.CanceledOperation,
+                Error = [genericError]
+            };
+        }
         catch (Exception ex)
         {
-            // Handle generic exception
             var genericError = new ErrorModel { Id = "GenericError", Message = ex.Message };
             return new DbResponse<T>
             {
@@ -76,6 +95,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
             };
         }
     }
+
     #endregion
 
     #region AddMultipleAsync
@@ -89,7 +109,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="entities"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<List<T>>> AddMultipleAsync(List<T> entities)
+    public async Task<DbResponse<List<T>>> AddMultipleAsync(List<T> entities, CancellationToken cancellationToken = default)
     {
         #region ...
         try
@@ -128,7 +148,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// Date: 30-Jan-2024
     /// alisaivi786@gmail.com
     /// </summary>
-    /// <returns>Return List of Entity Response</returns> 
+    /// <returns>List of Entity Response</returns> 
     #endregion
     public IQueryable<T> GetAll()
     {
@@ -147,7 +167,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="predicate"></param>
     /// <returns>Return List of Entity Response</returns> 
     #endregion
-    public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate)
+    public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Table.Where(predicate);
     }
@@ -162,9 +182,9 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// alisaivi786@gmail.com
     /// </summary>
     /// <param name="Id"></param>
-    /// <returns>Return Entity Result</returns> 
+    /// <returns>Entity Result</returns> 
     #endregion
-    public async Task<T?> GetAvailableAsync(long Id)
+    public async Task<T?> GetAvailableAsync(long Id, CancellationToken cancellationToken = default)
     {
         #region ...
         var response = await Table.FindAsync(Id);
@@ -184,7 +204,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="id"></param>
     /// <returns>Return Entity Result</returns>  
     #endregion
-    public async Task<DbResponse<T>> GetByIdAsync(long id)
+    public async Task<DbResponse<T>> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         #region ...
         try
@@ -234,7 +254,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception> 
     #endregion
-    public Task<DbResponse<List<T>>> RemoveRangeAsync(IEnumerable<T> entities)
+    public Task<DbResponse<List<T>>> RemoveRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
         #region ...
         throw new NotImplementedException();
@@ -254,7 +274,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="updatedBy"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<T>> UpdateAsync(T entity, long updatedBy)
+    public async Task<DbResponse<T>> UpdateAsync(T entity, long updatedBy, CancellationToken cancellationToken = default)
     {
         #region ...
         if (entity is BaseEntity baseEntity)
@@ -283,7 +303,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="updatedBy"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<DbResponse<List<T>>> UpdateMultipleAsync(IEnumerable<T> entities, long updatedBy)
+    public async Task<DbResponse<List<T>>> UpdateMultipleAsync(IEnumerable<T> entities, long updatedBy, CancellationToken cancellationToken = default)
     {
         #region ...
         try
@@ -338,7 +358,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="deletedBy"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<DbResponse<T>> DeleteAsync(long id, long deletedBy)
+    public async Task<DbResponse<T>> DeleteAsync(long id, long deletedBy, CancellationToken cancellationToken = default)
     {
         #region ...
         var entity = await GetByIdAsync(id);
@@ -364,7 +384,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="entity"></param>
     /// <returns>Return Db Operation Response</returns> 
     #endregion
-    public async Task<DbResponse<bool>> DeletePermanentlyAsync(T entity)
+    public async Task<DbResponse<bool>> DeletePermanentlyAsync(T entity, CancellationToken cancellationToken = default)
     {
         #region ...
         try
@@ -404,7 +424,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="parameters"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<IEnumerable<T>> ExecuteSqlQueryAsync(string sqlQuery, params object[] parameters)
+    public async Task<IEnumerable<T>> ExecuteSqlQueryAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters)
     {
         var isolationLevel = IsolationLevel.ReadUncommitted; // Set the desired isolation level
 
@@ -435,7 +455,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="parameters"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<int> ExecuteSqlNonQueryAsync(string sqlQuery, params object[] parameters)
+    public async Task<int> ExecuteSqlNonQueryAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters)
     {
         var isolationLevel = IsolationLevel.ReadUncommitted; // Set the desired isolation level
 
@@ -466,11 +486,11 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="parameters"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<DbResponse<List<T>>> InsertWithSqlAsync(string sqlQuery, params object[] parameters)
+    public async Task<DbResponse<List<T>>> InsertWithSqlAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters)
     {
         try
         {
-            var result = await ExecuteSqlNonQueryAsync(sqlQuery, parameters);
+            var result = await ExecuteSqlNonQueryAsync(sqlQuery, cancellationToken, parameters);
             return new DbResponse<List<T>>
             {
                 MsgCode = DbMessageEnums.Inserted,
@@ -503,11 +523,11 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="parameters"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<IEnumerable<T>> SelectWithSqlAsync(string sqlQuery, params object[] parameters)
+    public async Task<IEnumerable<T>> SelectWithSqlAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters)
     {
         try
         {
-            var result = await ExecuteSqlQueryAsync(sqlQuery, parameters);
+            var result = await ExecuteSqlQueryAsync(sqlQuery, cancellationToken, parameters);
             return result;
         }
         catch (Exception ex)
@@ -530,11 +550,11 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     /// <param name="parameters"></param>
     /// <returns></returns> 
     #endregion
-    public async Task<IEnumerable<T>> FilterWithSqlAsync(string sqlQuery, params object[] parameters)
+    public async Task<IEnumerable<T>> FilterWithSqlAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters)
     {
         try
         {
-            var result = await ExecuteSqlQueryAsync(sqlQuery, parameters);
+            var result = await ExecuteSqlQueryAsync(sqlQuery, cancellationToken, parameters);
             return result;
         }
         catch (Exception ex)
@@ -547,7 +567,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     #endregion
 
 
-    public async Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>>? predicate = null)
+    public async Task<PageBaseResponse<List<T>>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = Table;
 

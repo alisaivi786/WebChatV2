@@ -1,4 +1,4 @@
-﻿namespace WebChat.API.Controllers;
+﻿namespace WebChat.API.Controllers.BaseController;
 
 public class ApiEntranceControllerBase : ControllerBase
 {
@@ -13,7 +13,7 @@ public class ApiEntranceControllerBase : ControllerBase
 
         // Additional custom validation logic if needed
 
-        return null; 
+        return null;
     }
 
     public async Task<T> ExecAsync<T>(Func<Task<T>> func, string msg) where T : ApiResponse, new()
@@ -29,7 +29,7 @@ public class ApiEntranceControllerBase : ControllerBase
         }
     }
 
-   
+
     public async Task<T> ExecAsync<T, M>(M request, Func<StringBuilder, Task<T>> func, bool isWriteResult = true)
         where T : ApiResponse, new() where M : ApiRequest, new()
     {

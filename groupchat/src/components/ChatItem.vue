@@ -24,7 +24,7 @@ export default defineComponent({
   },
   methods: {
     getTimeIn12HourFormat(datetime) {
-      const date = new Date(datetime.replace("Z",""));
+      const date = new Date(datetime);
       const hours = date.getHours() % 12 || 12; // Ensure 12-hour format without leading zero
       const minutes = date.getMinutes().toString().padStart(2, "0"); // Add leading zero if needed
       const meridiem = date.getHours() >= 12 ? "PM" : "AM";

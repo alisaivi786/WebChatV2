@@ -13,7 +13,7 @@ const baseFolder =
         : `${process.env.HOME}/.aspnet/https`;
 
 const certificateArg = process.argv.map(arg => arg.match(/--name=(?<value>.+)/i)).filter(Boolean)[0];
-const certificateName = certificateArg ? certificateArg.groups.value : "GroupChat";
+const certificateName = certificateArg?.groups?.value ?? "GroupChat";
 
 if (!certificateName) {
     console.error('Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.')
@@ -40,6 +40,9 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin()],
+    build: {
+        assetsDir: 'src/assets', // Include 'src/assets' here
+      },
     css: {
       preprocessorOptions: {
         scss: {

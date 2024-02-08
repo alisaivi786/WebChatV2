@@ -25,19 +25,11 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
     #endregion
 
     #region SendMessageAsync
-    public async Task SendMessageAsync(string message) 
+    public async Task SendMessageAsync(string message)
     {
         var ConnectionId = Context.ConnectionId;
 
         var routeOb = JsonConvert.DeserializeObject<dynamic>(message);
-
-        //AddMessageReqDto MessageReq = new AddMessageReqDto()
-        //{
-        //    GroupId = 148,
-        //    UserId = 15672,
-        //    Message = routeOb?.Message.ToString(),
-        //    SetTime = DateTime.Now,
-        //};
 
         MessageDetailDto MessageReq = new MessageDetailDto()
         {
@@ -51,12 +43,11 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
 
         var MessageReqjson = JsonConvert.SerializeObject(MessageReq);
 
-        
-          Console.WriteLine("To: " + routeOb?.To.ToString());
         Console.WriteLine("Message Recieved on: " + Context.ConnectionId);
 
         #region [1] Publish to Queue
-        RabbitMQProducer.PublishMessageToRabbitMQ(MessageReqjson);
+        //RabbitMQProducer.PublishMessageToRabbitMQ(MessageReq, queueName: "chat_queue");
+        RabbitMQProducer.PublishMessageToRabbitMQAcks(MessageReq, queueName: "chat_queue");
         #endregion
 
         #region [2] Push to Redis
@@ -64,21 +55,10 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
         #endregion
 
         #region [3] Consume Queue & Sync with the database
-        await RabbitMQConsumer.StartConsuming();
+      await RabbitMQConsumer.StartConsuming(queueName:"chat_queue");
         #endregion
 
-        if (routeOb.To.ToString() == string.Empty)
-        {
-            Console.WriteLine("Broadcast");
-            await Clients.All.SendAsync("ReceiveMessage", MessageReqjson);
-        }
-        else
-        {
-            string toClient = routeOb.To;
-            Console.WriteLine("Targeted on: " + toClient);
-
-            await Clients.Client(toClient).SendAsync("ReceiveMessage", MessageReqjson);
-        }
+        await Clients.All.SendAsync("ReceiveMessage", MessageReqjson);
     }
     #endregion
 

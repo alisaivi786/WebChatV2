@@ -1,6 +1,4 @@
-﻿using Amazon.Runtime.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -16,82 +14,53 @@ public class RabbitMQConsumer : IRabbitMQConsumer
     private IServiceScopeFactory _serviceScopeFactory;
     private IServiceScope scope;
     private IUnitOfWork unitOfWork;
-    //private  IMessageRepository messageRepository;
-    //private  WebchatDBContext _context;
-    //private  IConfiguration? _configuration;
-    //private  IHttpContextAccessor? _httpContextAccessor;
-    //private  AppSettings _applicationSettings;
+
+    #region Constructor Initialization 
     public RabbitMQConsumer(ConnectionFactory connectionFactory, IServiceScopeFactory serviceScopeFactory)
     {
         factory = connectionFactory;
         _serviceScopeFactory = serviceScopeFactory;
         scope = _serviceScopeFactory.CreateScope();
         unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-        //_context = scope.ServiceProvider.GetRequiredService<WebchatDBContext>();
-        //_applicationSettings = scope.ServiceProvider.GetRequiredService<AppSettings>();
-        //messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
-        //unitOfWork = new UnitOfWork(context: _context, configuration: _configuration, httpContextAccessor: _httpContextAccessor, applicationSettings: _applicationSettings);
     }
+    #endregion
 
     #region StartConsuming
-    public async Task StartConsuming()
+    public async Task StartConsuming(string queueName)
     {
         var connection = factory.CreateConnection();
         Console.WriteLine("RabbitMQ Connection Established");
 
         var channel = connection.CreateModel();
 
-        try
+        channel.QueueDeclare(queue: queueName,
+              durable: false,
+              exclusive: false,
+              autoDelete: false,
+              arguments: null);
+
+        var consumer = new EventingBasicConsumer(channel);
+        consumer.Received += async (model, ea) =>
         {
-            channel.QueueDeclare(queue: "chat_queue",
-                 durable: false,
-                 exclusive: false,
-                 autoDelete: false,
-                 arguments: null);
+            Console.WriteLine("Message Receiving");
 
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (model, ea) =>
-            {
-                Console.WriteLine("Message Reciving");
+            var body = ea.Body.ToArray();
+            var messageJson = Encoding.UTF8.GetString(body);
 
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
-                Console.WriteLine($"Start Consuming Message: {message}");
+            var message = JsonConvert.DeserializeObject<AddMessageReqDto>(messageJson);
 
 
-                var messageJson = JsonConvert.DeserializeObject<dynamic>(message);
+            #region Sync with Database
+            scope = _serviceScopeFactory.CreateScope();
+            unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-                var messageEntity = JsonConvert.DeserializeObject<AddMessageReqDto>(messageJson);
+            var response = await unitOfWork.MessageRepository.AddMessageAsync(message);
+            #endregion
+        };
 
-                scope = _serviceScopeFactory.CreateScope();
-                unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                //_context = scope.ServiceProvider.GetRequiredService<WebchatDBContext>();
-                //_applicationSettings = scope.ServiceProvider.GetRequiredService<AppSettings>();
-                //messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
-                //unitOfWork = new UnitOfWork(context: _context, configuration: _configuration, httpContextAccessor: _httpContextAccessor, applicationSettings: _applicationSettings);
-
-                var response = await unitOfWork.MessageRepository.AddMessageAsync(messageEntity);
-
-            };
-
-            channel.BasicConsume(queue: "chat_queue",
-                                  autoAck: true,
-                                  consumer: consumer);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error declaring queue: {ex.Message}");
-        }
+        channel.BasicConsume(queue: queueName,
+                              autoAck: true,
+                              consumer: consumer);
     }
     #endregion
-
-    private IUnitOfWork GetUnitOfWork()
-    {
-        using var scope = _serviceScopeFactory.CreateScope();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-        // Use unitOfWork for database operations
-
-        return unitOfWork;
-    }
 }

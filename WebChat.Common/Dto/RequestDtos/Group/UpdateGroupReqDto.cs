@@ -1,6 +1,4 @@
-﻿using WebChat.Common.IBaseRequest;
-
-namespace WebChat.Common.Dto.RequestDtos.Group;
+﻿namespace WebChat.Common.Dto.RequestDtos.Group;
 
 /// <summary>
 /// Update Group

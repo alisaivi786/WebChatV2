@@ -27,6 +27,9 @@ public enum DbCodeEnums
 
     [Description("DbException")]
     DbException = 2,
+    
+    [Description("Canceled")]
+    Canceled = 3,
 }
 
 #endregion

@@ -28,6 +28,7 @@
 import { defineComponent } from "vue";
 import UserItem from "./UserItem.vue";
 import { usersList } from "../models/usersList";
+import userImage from "../assets/images/user.png";
 
 export default defineComponent({
   components: {
@@ -40,7 +41,7 @@ export default defineComponent({
         id: 1,
         username: "Pablo Escalo",
         userStatus: 1,
-        userImage: "../src/assets/images/user.png",
+        userImage: userImage,
       },
     };
   },

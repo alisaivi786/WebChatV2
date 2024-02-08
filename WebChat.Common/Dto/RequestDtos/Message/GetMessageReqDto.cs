@@ -1,6 +1,4 @@
-﻿using WebChat.Common.IBaseRequest;
-
-namespace WebChat.Common.Dto.RequestDtos.Message;
+﻿namespace WebChat.Common.Dto.RequestDtos.Message;
 
 /// <summary>
 /// Get Message Req DTO

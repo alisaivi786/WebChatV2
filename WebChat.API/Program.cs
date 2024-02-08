@@ -1,12 +1,4 @@
-
-
-using Microsoft.Extensions.DependencyInjection;
-//using Asp.Net.Core.HealthCheck.ConfigureServices;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using MongoDB.Driver.Core.Configuration;
-using WebChat.Infrastructure.Health;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using WebChat.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,16 +57,25 @@ var app = builder.Build();
 app.EnsureMigration();
 
 app.UseCors(builder => builder
-                    .WithOrigins("null","http://localhost:8080", "https://localhost:5173", "https://localhost:5177")
+                    .WithOrigins(
+                    "null",
+                    "http://localhost:8080", 
+                    "https://localhost:5173", 
+                    "https://localhost:5177",
+                    "http://localhost:8001"
+                    )
                     .AllowAnyHeader()
                     .AllowAnyMethod().AllowCredentials());
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsTest())
+if (app.Environment.IsProduction() || app.Environment.IsDevelopment() || app.Environment.IsTest())
 {
     app.UseSwaggerWithUI();
 }
 
+app.UseStaticFiles();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseRouting();
 app.UseHttpsRedirection();
@@ -95,5 +96,7 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapControllers();
+
+
 
 app.Run();

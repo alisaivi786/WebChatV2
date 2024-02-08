@@ -4,5 +4,5 @@ namespace WebChat.RabbitMQ;
 
 public interface IRabbitMQConsumer
 {
-    public Task StartConsuming();
+    public Task StartConsuming(string queueName);
 }

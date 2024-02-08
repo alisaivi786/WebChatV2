@@ -18,28 +18,23 @@
 </template>
 
 <script>
-import "@wangeditor/editor/dist/css/style.css"; // import css
+import "@wangeditor/editor/dist/css/style.css";
 
 import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import { API_BASE_URL, API_VERSION } from '../store/constants';
 
 export default {
   components: { Editor, Toolbar },
   setup() {
-    // editor instance, use `shallowRef`
     const editorRef = shallowRef();
-
-    // content HTML
     const valueHtml = ref("");
 
     const handleValueChange = () => {
-      //$emit("input", valueHtml.value);
     };
 
-    // Simulate ajax async set HTML
     onMounted(() => {
       setTimeout(() => {
-        //valueHtml.value = '<p>Ajax async set HTML.</p>'
       }, 1500);
     });
 
@@ -69,22 +64,25 @@ export default {
         key: "group-image",
         title: "editor.image",
         iconSvg: IMAGE_SVG,
-        menuKeys: ["insertImage", "uploadImage"], // Include uploadImage
-        uploadImage: {
-          server: "https://localhost:5173/api/upload", // Your server endpoint for image upload
-          fieldName: "image", // Field name used to send the image file
-        },
+        menuKeys: ["insertImage", "uploadImage"], 
       },
     ];
     const editorConfig = { placeholder: "Type here...", MENU_CONF: {} };
 
     editorConfig.MENU_CONF["uploadImage"] = {
-      server: "https://localhost:5173/api/upload-image",
-      fieldName: "upload-image",
-      // other config...
+      server: `${API_BASE_URL}/api/${API_VERSION}/Message/Upload`,
+      fieldName: "file",
+      onSuccess(file, res) {
+        console.log(`${file.name} uploaded`, res);
+      },
+      onFailed(file, res) {
+        console.log(`${file.name} failed`, res);
+      },
+      onError(file, err, res) {
+        console.log(`${file.name} error`, err, res);
+      },
     };
 
-    // Timely destroy `editor` before vue component destroy.
     onBeforeUnmount(() => {
       const editor = editorRef.value;
       if (editor == null) return;
@@ -98,7 +96,7 @@ export default {
 
     return {
       editorRef,
-      mode: "default", // or 'simple'
+      mode: "default",
       valueHtml,
       handleValueChange,
       toolbarConfig,

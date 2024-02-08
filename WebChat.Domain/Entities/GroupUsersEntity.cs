@@ -6,7 +6,7 @@ public class GroupUsersEntity : BaseEntity
     public long GroupId { get; set; }
     public virtual GroupEntitiy? Group { get; set; }
 
-    [ForeignKey("UserId")]
+    //[ForeignKey("UserId")]
     public long UserId { get; set; }
-    public virtual UserEntity? User { get; set; }
+    //public virtual UserEntity? User { get; set; }
 }

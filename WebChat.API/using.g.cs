@@ -24,3 +24,7 @@ global using Asp.Versioning;
 global using WebChat.Infrastructure.Middleware.SwaggerUI;
 global using WebChat.Infrastructure.Services.ApiVersionExtension;
 global using WebChat.Infrastructure.Services.SwaggerExtension;
+global using HealthChecks.UI.Client;
+global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+global using WebChat.Common.Dto.RequestDtos.GroupUser;
+global using WebChat.Common.Dto.ResponseDtos.GroupUser;

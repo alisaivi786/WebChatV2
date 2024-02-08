@@ -1,34 +1,32 @@
 ﻿
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using System.Text;
+using WebChat.Common.Dto.RequestDtos.Message;
+using WebChat.Common.Dto.ResponseDtos.Message;
 
 namespace WebChat.Redis;
 
 public class RedisService : IRedisService
 {
+    private const string redisConnection = "localhost:6379";
+
     #region PushMessageToRedisAsync
     public void PushMessageToRedisAsync(string message, string roomId)
     {
-        // Connection to the Redis server
-        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("47.91.115.74:6379"); //must change to read from appsettings file
+        //  ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("47.91.115.74:6379,abortConnect=false,connectTimeout=5000,connectRetry=3,syncTimeout=2000"); //must change to read from appsettings file
+        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnection); //must change to read from appsettings file
 
-        // Get a reference to the database
         IDatabase db = redis.GetDatabase(15);
 
-        // For simplicity, let's use a single chat room with a key "chatroom"
         string chatRoomKey = $"chatroom:{roomId}";
 
-        // Convert Message object to JSON string
-        string jsonMessage = JsonConvert.SerializeObject(message);
+       // string jsonMessage = JsonConvert.SerializeObject(message);
 
-        // Simulate two users sending messages to the chat room
-        SendMessage(db, chatRoomKey, "message", jsonMessage);
+        SendMessage(db, chatRoomKey, "message", message);
 
-        // Retrieve, display, and trim the list to keep only the latest 100 messages
-        //RetrieveDisplayAndTrimMessages(db, chatRoomKey, 100);
-        RetrieveDisplayAndTrimMessages(db, chatRoomKey, 10);
+        RetrieveDisplayAndTrimMessages(db, chatRoomKey, 100);
 
-        // Close the Redis connection
         redis.Close();
     }
     #endregion
@@ -36,16 +34,8 @@ public class RedisService : IRedisService
     #region RetrieveDisplayAndTrimMessages
     private void RetrieveDisplayAndTrimMessages(IDatabase db, string chatRoomKey, int messageCountToKeep)
     {
-        // Retrieve all messages from the Redis list
         RedisValue[] messages = db.ListRange(chatRoomKey);
 
-        // Display the messages (you can modify this part based on your needs)
-        foreach (var message in messages)
-        {
-            Console.WriteLine($"Message: {message}");
-        }
-
-        // Trim the list to keep only the latest 100 messages
         db.ListTrim(chatRoomKey, -messageCountToKeep, -1);
     }
     #endregion
@@ -53,32 +43,38 @@ public class RedisService : IRedisService
     #region SendMessage
     static void SendMessage(IDatabase db, string chatRoomKey, string userName, string message)
     {
-        // Create a unique message ID
         long messageId = db.ListLength(chatRoomKey) + 1;
 
-        // Format the message with user name and content
-        string formattedMessage = $"{userName}: {message}";
+        string formattedMessage = $"{message}";
 
-        // Add the message to the Redis list
         db.ListRightPush(chatRoomKey, formattedMessage);
 
         Console.WriteLine($"Message sent by {userName}: {message}");
     }
     #endregion
 
-    #region RetrieveAndDisplayMessages
-    static void RetrieveAndDisplayMessages(IDatabase db, string chatRoomKey)
+    public async Task<List<MessageDetailDto>> GetAllRecords(int roomId)
     {
-        // Retrieve all messages from the Redis list
-        var messages = db.ListRange(chatRoomKey);
+        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnection); //must change to read from appsettings file
 
-        Console.WriteLine("Chat Room Messages:");
+        IDatabase db = redis.GetDatabase(15);
 
-        // Display each message
-        foreach (var message in messages)
+        var key = $"chatroom:{roomId}";
+        var records = await db.ListRangeAsync(key);
+
+        // return records.Select(r => JsonConvert.DeserializeObject<MessageDetailDto>(r.ToString())).ToList();
+
+        var x = records.Select(r =>
         {
-            Console.WriteLine(message);
-        }
+            // Remove the outer quotes and then deserialize the inner JSON
+            var innerJson = r.ToString().Trim('"');
+
+            // Deserialize the inner JSON
+            var messageDetailDto = JsonConvert.DeserializeObject<MessageDetailDto>(innerJson);
+
+            return messageDetailDto;
+        }).ToList();
+
+        return x;
     }
-    #endregion
 }

@@ -63,6 +63,16 @@ public enum ApiMessageEnum
 
     #endregion
 
+    #region Exception Occured
+
+    /// <summary>
+    /// Represents the message for a valid API Version operation.
+    /// </summary>
+    [Description("Excpetion Occured.")]
+    Exception = 4,
+
+    #endregion
+
     #region Authentication and Authorization
 
     /// <summary>

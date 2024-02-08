@@ -1,5 +1,5 @@
 import * as signalR from "@microsoft/signalr";
-import { API_BASE_URL } from '../store/constants.js';
+import { API_BASE_URL } from '../store/constants';
 
 export class ChatService {
   connection: signalR.HubConnection;

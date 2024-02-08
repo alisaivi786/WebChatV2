@@ -5,7 +5,7 @@ export default class ChatModel {
     messageId: number;
     time: string;
     userId: number;
-    userName: number;
+    userName: string;
   
     constructor(
         groupId: number,
@@ -14,7 +14,7 @@ export default class ChatModel {
         messageId: number,
         time: string,
         userId: number,
-        userName: number
+        userName: string
     ) {
       this.groupId = groupId;
       this.groupName = groupName;

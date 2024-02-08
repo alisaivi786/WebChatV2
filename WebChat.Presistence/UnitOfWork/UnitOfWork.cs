@@ -1,10 +1,4 @@
-﻿using MongoDB.Driver;
-using WebChat.Application.ApplicationSettings;
-using WebChat.Application.Contracts.Presistence.IRepositories;
-using WebChat.Application.Contracts.UnitOfWork;
-using WebChat.Presistence.Repositories;
-
-namespace WebChat.Presistence.UnitOfWork;
+﻿namespace WebChat.Presistence.UnitOfWork;
 
 /// <summary>
 /// UnitOfWork provide base to communicate with database with same context.
@@ -53,13 +47,23 @@ public class UnitOfWork : IUnitOfWork,IDisposable
          context: _context,
          configuration: _configuration,
          httpContextAccessor: _httpContextAccessor,
-         appSettings: _applicationSettings); 
+         appSettings: _applicationSettings);
+        #endregion
+
+        #region GroupUserRepository
+        GroupUserRepository = new GroupUserRepository(
+         context: _context,
+         configuration: _configuration,
+         httpContextAccessor: _httpContextAccessor,
+         appSettings: _applicationSettings);
         #endregion
     }
     public IUserRepository UserRepository { get; }
 
     public IMessageRepository MessageRepository { get; }
     public IGroupRepository GroupRepository { get; }
+
+    public IGroupUserRepository GroupUserRepository { get; }
 
     public async Task SaveAsync()
     {
