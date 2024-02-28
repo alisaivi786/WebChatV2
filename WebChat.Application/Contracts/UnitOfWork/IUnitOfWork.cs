@@ -16,6 +16,7 @@ public interface IUnitOfWork : IDisposable
     IMessageRepository MessageRepository { get; }
     IGroupRepository GroupRepository { get; }
     IGroupUserRepository GroupUserRepository { get; }
+    ISubGroupRepository SubGroupRepository { get; }
 
     /// <summary>
     /// Asynchronously saves changes to the underlying database.

@@ -2,6 +2,8 @@
 
 public record AddUserDto
 {
-    public string? Name { get; init; }
-    public string? PhoneNumber { get; init; }
+    public long UserId { get; set; }
+    public string? UserName { get; set; }
+    public string? NickName { get; set; }
+    public string? Photo { get; set; }
 }

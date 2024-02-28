@@ -2,9 +2,9 @@
 using System.Data.SqlClient;
 namespace WebChat.Infrastructure.Health;
 
-public class SqlHealthCheck(AppSettings appSettings) : IHealthCheck
+public class SqlHealthCheck(IAppSettings appSettings) : IHealthCheck
 {
-    private readonly AppSettings AppSettings = appSettings;
+    private readonly IAppSettings AppSettings = appSettings;
 
     public async Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,

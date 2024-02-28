@@ -22,7 +22,7 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                 .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("WebChat.Domain.Entities.GroupEntitiy", b =>
+            modelBuilder.Entity("WebChat.Domain.Entities.GroupEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,12 +30,6 @@ namespace WebChat.Infrastructure.MySQL.Migrations
 
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -46,6 +40,15 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UtcDateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Group");
@@ -55,9 +58,37 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                         {
                             Id = 1L,
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7251),
                             IsActive = true,
-                            Name = "TB-Admin"
+                            Name = "Win",
+                            RowId = new Guid("a4826f73-dd5d-4cd9-b626-fa3ac034d68e"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4737)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedBy = 1L,
+                            IsActive = true,
+                            Name = "5D",
+                            RowId = new Guid("c3d258fa-f2da-43e9-bf2c-d44921cff0d3"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4745)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedBy = 1L,
+                            IsActive = true,
+                            Name = "K3",
+                            RowId = new Guid("630b9739-cbc4-4887-bdef-b9dd64057f86"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4746)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedBy = 1L,
+                            IsActive = true,
+                            Name = "TrxWin",
+                            RowId = new Guid("9f6ebb31-8bdb-432e-8a14-ffe3a441385d"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4748)
                         });
                 });
 
@@ -70,12 +101,6 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
@@ -85,14 +110,63 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<long>("SubGroupId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UtcDateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("SubGroupId");
+
                     b.ToTable("GroupUsers");
+                });
+
+            modelBuilder.Entity("WebChat.Domain.Entities.LoginInUserEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UtcDateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcLastLoginTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoginInUser");
                 });
 
             modelBuilder.Entity("WebChat.Domain.Entities.MessageEntity", b =>
@@ -107,11 +181,1040 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("DateCreated")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long?>("ModifiedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("SentTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateModified")
+                    b.Property<long>("SubGroupId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UUID")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UtcDateCreated")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubGroupId");
+
+                    b.ToTable("Message");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Content = "Hello Team!",
+                            IsActive = true,
+                            RowId = new Guid("777b5ec4-ffe7-4ac3-9ab2-4f4d5e3eec60"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4893),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4904)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Content = "Did you watch the recent cricket match?",
+                            IsActive = true,
+                            RowId = new Guid("11f744c1-6990-452b-ace2-85b2613222c9"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4905),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4906)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Content = "Yes, it was an exciting game!",
+                            IsActive = true,
+                            RowId = new Guid("b973a781-c707-443d-9670-b2a2ce61b1f8"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4907),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4912)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Content = "Who do you think will win the upcoming elections?",
+                            IsActive = true,
+                            RowId = new Guid("c6368a43-01b0-49fc-b5fe-d2cf98c206e7"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4913),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4914)
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Content = "I'm not sure, it's hard to predict.",
+                            IsActive = true,
+                            RowId = new Guid("842f0346-8be8-44fa-a6c7-d12d0a69c4f2"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4915),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4915)
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Content = "I think the cricket team needs better bowling.",
+                            IsActive = true,
+                            RowId = new Guid("7764e805-44e6-4b7b-8525-cfe0eed397e8"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4916),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4917)
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Content = "What's your favorite cricket team?",
+                            IsActive = true,
+                            RowId = new Guid("845c1d5c-b359-49a8-bc96-028bd3136c15"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4918),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4918)
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Content = "I support the national team!",
+                            IsActive = true,
+                            RowId = new Guid("36cf3d53-da97-42a8-b43e-be05ee658c23"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4919),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4920)
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Content = "Cricket is so popular, isn't it?",
+                            IsActive = true,
+                            RowId = new Guid("24ee3b2b-a6d8-4fd9-9b8b-a9960642c70a"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4921),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4921)
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Content = "I heard there's a new political party forming.",
+                            IsActive = true,
+                            RowId = new Guid("1f4cbcef-2c43-44f7-b086-bbd8b22919d7"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4922),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4923)
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Content = "Really? What's their agenda?",
+                            IsActive = true,
+                            RowId = new Guid("620cbd93-5423-4bc2-bc34-decd7b612a07"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4923),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4926)
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Content = "I hope they focus on education and healthcare.",
+                            IsActive = true,
+                            RowId = new Guid("1e295201-473f-4335-90ae-a2526f97b313"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4926),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4927)
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Content = "Have you ever been to a live cricket match?",
+                            IsActive = true,
+                            RowId = new Guid("cb102a02-807c-4ddd-935d-5702eafa9c81"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4928),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4928)
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Content = "Yes, the atmosphere is incredible!",
+                            IsActive = true,
+                            RowId = new Guid("4658a5fd-1371-4e19-ba75-d610985c18b2"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4929),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4930)
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Content = "Let's plan a movie night this weekend.",
+                            IsActive = true,
+                            RowId = new Guid("6d4d0cc2-35b2-4567-b15f-e36e80e930a4"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4931),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4931)
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Content = "Sure, I'm up for it!",
+                            IsActive = true,
+                            RowId = new Guid("75636188-042d-482d-bcd7-7d75d7f23e75"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4932),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4933)
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Content = "I'll bring the popcorn!",
+                            IsActive = true,
+                            RowId = new Guid("114cd239-2625-4cf4-b0d2-7aa0f832e118"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4934),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4934)
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            Content = "What's your take on the current economic situation?",
+                            IsActive = true,
+                            RowId = new Guid("5739ab86-93b5-481f-8bf9-75e1e05ff33e"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4935),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4936)
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            Content = "It's quite challenging, especially for small businesses.",
+                            IsActive = true,
+                            RowId = new Guid("f426212c-c681-4e49-b2f2-7556561ff3ff"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4936),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4938)
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            Content = "We should stay positive and support local businesses.",
+                            IsActive = true,
+                            RowId = new Guid("483520f1-634e-4658-9039-9e0bb643aa82"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4939),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4940)
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            Content = "What's your favorite cuisine?",
+                            IsActive = true,
+                            RowId = new Guid("c5d2ae00-a364-4b71-a805-0a39c6a53067"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4941),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4941)
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            Content = "I love Italian food!",
+                            IsActive = true,
+                            RowId = new Guid("1e2e8253-3626-40d4-a58c-d8eda1823ebf"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4942),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4943)
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            Content = "Mexican cuisine is my go-to choice.",
+                            IsActive = true,
+                            RowId = new Guid("a15b111d-6cd1-4bcd-a7bc-9c0eaa4de6d0"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4944),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4944)
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            Content = "Let's plan a potluck dinner!",
+                            IsActive = true,
+                            RowId = new Guid("0bed0d9a-402d-4e93-a958-b397df4f1fd0"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4945),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4946)
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            Content = "I'm in! I'll bring my famous lasagna.",
+                            IsActive = true,
+                            RowId = new Guid("33b83453-9187-41d1-abad-2e7accec7543"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4946),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4947)
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            Content = "Sounds delicious! I'll make guacamole.",
+                            IsActive = true,
+                            RowId = new Guid("a51aa104-112e-43a6-a432-117512a9ba0b"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4948),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4948)
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            Content = "Count me in too! I'll bring dessert.",
+                            IsActive = true,
+                            RowId = new Guid("53ba3c6b-da9b-419a-921d-ba0bdfd2e239"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4949),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4951)
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            Content = "Have you read any good books lately?",
+                            IsActive = true,
+                            RowId = new Guid("e72339de-195a-44d1-94f9-f6dea2a3b2f8"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4952),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4952)
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            Content = "I just finished a fantastic mystery novel.",
+                            IsActive = true,
+                            RowId = new Guid("78a01675-d0f0-4bad-84b7-ba9e10759c29"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4953),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4954)
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            Content = "I'm into science fiction. Any recommendations?",
+                            IsActive = true,
+                            RowId = new Guid("df356c3a-8675-4f9c-aeb3-787bb55bdd9f"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4954),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4955)
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            Content = "Let's organize a hiking trip next month.",
+                            IsActive = true,
+                            RowId = new Guid("b38bb287-1b4c-456f-8ef8-eb3ce11be068"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4984),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4984)
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            Content = "That sounds like a great idea! I'm in!",
+                            IsActive = true,
+                            RowId = new Guid("2206ed20-bfc8-4c69-801a-7629a36acf27"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4985),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4986)
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            Content = "Count me in too! I love nature hikes.",
+                            IsActive = true,
+                            RowId = new Guid("39a19fd9-9cce-4aff-ba27-5cf278024a36"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4987),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4987)
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            Content = "What's your favorite hiking trail?",
+                            IsActive = true,
+                            RowId = new Guid("c2b93078-7240-4bd5-9584-85aa4a3a5868"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4988),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4989)
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            Content = "I enjoy trails with scenic views and waterfalls.",
+                            IsActive = true,
+                            RowId = new Guid("91c53f28-5832-4e7b-90be-3a4f5ea03847"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4989),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4991)
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            Content = "I prefer challenging mountain trails. The more difficult, the better!",
+                            IsActive = true,
+                            RowId = new Guid("2c845c6e-744a-4a23-936e-0e46adc64c65"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4992),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4993)
+                        },
+                        new
+                        {
+                            Id = 37L,
+                            Content = "Have you tried rock climbing before?",
+                            IsActive = true,
+                            RowId = new Guid("ee83f727-883a-40b3-98ed-1df0a0d24d6f"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4994),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4994)
+                        },
+                        new
+                        {
+                            Id = 38L,
+                            Content = "Yes, it's an adrenaline rush! Highly recommend it.",
+                            IsActive = true,
+                            RowId = new Guid("560d2260-5bf6-4ef8-be6e-f7d65bce9a99"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4995),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4996)
+                        },
+                        new
+                        {
+                            Id = 39L,
+                            Content = "Rock climbing sounds exciting. I'll give it a try!",
+                            IsActive = true,
+                            RowId = new Guid("ff74a0a0-8c76-4bd8-961c-7639f692603f"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4997),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4997)
+                        },
+                        new
+                        {
+                            Id = 40L,
+                            Content = "What's your favorite season for outdoor activities?",
+                            IsActive = true,
+                            RowId = new Guid("5b658d53-e813-45f7-b922-c48182872ee7"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4998),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(4999)
+                        },
+                        new
+                        {
+                            Id = 41L,
+                            Content = "I love the fall season. The weather is perfect for hiking.",
+                            IsActive = true,
+                            RowId = new Guid("2577faac-158a-4b0f-9cf8-ee1a753a8263"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(4999),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5000)
+                        },
+                        new
+                        {
+                            Id = 42L,
+                            Content = "Summer is my favorite. Beach days and outdoor events!",
+                            IsActive = true,
+                            RowId = new Guid("408e0c48-6e4f-4a4a-b203-8366791c119e"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5001),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5002)
+                        },
+                        new
+                        {
+                            Id = 43L,
+                            Content = "Let's plan a beach day soon.",
+                            IsActive = true,
+                            RowId = new Guid("035e1701-7c04-4e5e-8eea-061fe5380914"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5002),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5004)
+                        },
+                        new
+                        {
+                            Id = 44L,
+                            Content = "I'm in! I miss the sound of ocean waves.",
+                            IsActive = true,
+                            RowId = new Guid("f5f0d707-ce0c-4d2f-87cd-adc617f2a43a"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5005),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5006)
+                        },
+                        new
+                        {
+                            Id = 45L,
+                            Content = "Count me in too! I'll bring the beach games.",
+                            IsActive = true,
+                            RowId = new Guid("c6a02767-2af0-496b-bd4e-9bad76eecebd"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5007),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5007)
+                        },
+                        new
+                        {
+                            Id = 46L,
+                            Content = "Have you ever tried scuba diving?",
+                            IsActive = true,
+                            RowId = new Guid("b5110d8c-0e86-4795-9b6c-b0d1cc515adf"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5008),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5009)
+                        },
+                        new
+                        {
+                            Id = 47L,
+                            Content = "Not yet, but it's on my bucket list!",
+                            IsActive = true,
+                            RowId = new Guid("62e9e147-22e5-4578-a9e8-4aa07657cb57"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5009),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5010)
+                        },
+                        new
+                        {
+                            Id = 48L,
+                            Content = "I've been scuba diving in some amazing locations.",
+                            IsActive = true,
+                            RowId = new Guid("62d516b5-0a18-4f12-9e35-877997d8ca58"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5011),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5012)
+                        },
+                        new
+                        {
+                            Id = 49L,
+                            Content = "Let's plan a game night with board games and snacks.",
+                            IsActive = true,
+                            RowId = new Guid("93169ede-baf0-4e2d-a08c-3775a986b0cd"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5012),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5013)
+                        },
+                        new
+                        {
+                            Id = 50L,
+                            Content = "I'm in! I have a collection of board games at home.",
+                            IsActive = true,
+                            RowId = new Guid("79bef1e4-0d93-431c-8616-377b5ae59278"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5014),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5014)
+                        },
+                        new
+                        {
+                            Id = 51L,
+                            Content = "Count me in too! I'll bring some homemade snacks.",
+                            IsActive = true,
+                            RowId = new Guid("0302f7dd-00af-4458-8840-6366260d2fea"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5015),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5017)
+                        },
+                        new
+                        {
+                            Id = 52L,
+                            Content = "Do you have any favorite board games?",
+                            IsActive = true,
+                            RowId = new Guid("1e1a236b-d2f0-4366-9eb5-9033c538ee89"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5018),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5018)
+                        },
+                        new
+                        {
+                            Id = 53L,
+                            Content = "I enjoy strategy games like Settlers of Catan.",
+                            IsActive = true,
+                            RowId = new Guid("2db29ef3-2ade-44aa-baea-75b597cda483"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5019),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5020)
+                        },
+                        new
+                        {
+                            Id = 54L,
+                            Content = "I love party games like Codenames. Always so much fun!",
+                            IsActive = true,
+                            RowId = new Guid("66bdd315-56c4-4acc-a2db-827b3c3f5fff"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5021),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5021)
+                        },
+                        new
+                        {
+                            Id = 55L,
+                            Content = "Let's share our favorite music playlists.",
+                            IsActive = true,
+                            RowId = new Guid("29f2b526-4178-448d-8536-1aeb35761578"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5022),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5023)
+                        },
+                        new
+                        {
+                            Id = 56L,
+                            Content = "I'm into indie rock. What about you?",
+                            IsActive = true,
+                            RowId = new Guid("2dc7150a-3456-43e1-881b-a3389d9c3971"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5023),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5024)
+                        },
+                        new
+                        {
+                            Id = 57L,
+                            Content = "I enjoy a mix of genres, but electronic music is my favorite.",
+                            IsActive = true,
+                            RowId = new Guid("08298624-273c-4f12-af43-a58e81354c19"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5025),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5025)
+                        },
+                        new
+                        {
+                            Id = 58L,
+                            Content = "Have you ever attended a music festival?",
+                            IsActive = true,
+                            RowId = new Guid("5026bd16-2217-4ee5-af93-7d27c0e624d9"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5026),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5027)
+                        },
+                        new
+                        {
+                            Id = 59L,
+                            Content = "Yes, the energy and live performances are unforgettable!",
+                            IsActive = true,
+                            RowId = new Guid("03731c75-1895-40da-adea-efa180abd2ab"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5028),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5029)
+                        },
+                        new
+                        {
+                            Id = 60L,
+                            Content = "I've been to a few. It's a unique experience every time.",
+                            IsActive = true,
+                            RowId = new Guid("e8371ee2-e829-4175-a1f1-f15f804ae9e1"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5030),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5031)
+                        },
+                        new
+                        {
+                            Id = 61L,
+                            Content = "Let's plan a weekend getaway to the mountains.",
+                            IsActive = true,
+                            RowId = new Guid("1cb95006-d805-4d1d-a01b-8c1e6c388481"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5031),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5032)
+                        },
+                        new
+                        {
+                            Id = 62L,
+                            Content = "I'm in! A cabin in the woods sounds perfect.",
+                            IsActive = true,
+                            RowId = new Guid("d0a27fc9-709e-41dc-a94c-135e669a1e65"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5033),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5034)
+                        },
+                        new
+                        {
+                            Id = 63L,
+                            Content = "Count me in too! I love the serenity of the mountains.",
+                            IsActive = true,
+                            RowId = new Guid("76d30ff2-d5df-4d92-b6b4-797ec1b07147"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5034),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5035)
+                        },
+                        new
+                        {
+                            Id = 64L,
+                            Content = "What's your favorite travel destination?",
+                            IsActive = true,
+                            RowId = new Guid("36e39f37-6424-4e48-a700-17c5185298e1"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5036),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5036)
+                        },
+                        new
+                        {
+                            Id = 65L,
+                            Content = "I love exploring European cities and their rich history.",
+                            IsActive = true,
+                            RowId = new Guid("11503470-4147-4146-a497-d559ec4e7158"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5037),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5038)
+                        },
+                        new
+                        {
+                            Id = 66L,
+                            Content = "Beach destinations are my favorite. I love the sun and sand.",
+                            IsActive = true,
+                            RowId = new Guid("fed28d00-2e9a-4863-a10d-3e8d5ea78869"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5038),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5039)
+                        },
+                        new
+                        {
+                            Id = 67L,
+                            Content = "Let's plan a photography day and capture the beauty around us.",
+                            IsActive = true,
+                            RowId = new Guid("47bec2d3-d051-41e9-add9-c185ad5475a6"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5040),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5042)
+                        },
+                        new
+                        {
+                            Id = 68L,
+                            Content = "Great idea! I'll bring my camera and some lenses.",
+                            IsActive = true,
+                            RowId = new Guid("91b3a5c3-d43c-42b1-a00d-3b43256f5abf"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5043),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5043)
+                        },
+                        new
+                        {
+                            Id = 69L,
+                            Content = "Count me in too! I love photography.",
+                            IsActive = true,
+                            RowId = new Guid("f36f4d73-8cba-4786-94cc-c91adb7bc4f8"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5044),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5045)
+                        },
+                        new
+                        {
+                            Id = 70L,
+                            Content = "Do you prefer digital or film photography?",
+                            IsActive = true,
+                            RowId = new Guid("04b75328-2aa7-4783-a7f0-6b5ab9ffbd1a"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5045),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5046)
+                        },
+                        new
+                        {
+                            Id = 71L,
+                            Content = "I love the convenience of digital photography.",
+                            IsActive = true,
+                            RowId = new Guid("7352d4c5-2562-441f-8fe8-371eedb7d1b9"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5047),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5047)
+                        },
+                        new
+                        {
+                            Id = 72L,
+                            Content = "Film photography has a unique charm. I enjoy both.",
+                            IsActive = true,
+                            RowId = new Guid("8dc0e1cf-5212-4261-8eaf-453155312fa1"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5048),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5049)
+                        },
+                        new
+                        {
+                            Id = 73L,
+                            Content = "Let's try a new restaurant together. Any cuisine preferences?",
+                            IsActive = true,
+                            RowId = new Guid("1042c243-00bc-4204-91b9-0d9bd82d4308"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5049),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5050)
+                        },
+                        new
+                        {
+                            Id = 74L,
+                            Content = "I'm a fan of Italian cuisine. Pasta and pizza are my weaknesses.",
+                            IsActive = true,
+                            RowId = new Guid("53fdca21-9da3-497c-aa97-be81f7aee294"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5051),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5051)
+                        },
+                        new
+                        {
+                            Id = 75L,
+                            Content = "I love exploring different cuisines. Surprise me!",
+                            IsActive = true,
+                            RowId = new Guid("ea0c01d8-fd91-4391-a0a4-505fbafaba3f"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5052),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5054)
+                        },
+                        new
+                        {
+                            Id = 76L,
+                            Content = "Have you ever participated in a charity run or walk?",
+                            IsActive = true,
+                            RowId = new Guid("cd829f13-73a0-46d7-9b40-d2125090843b"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5055),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5055)
+                        },
+                        new
+                        {
+                            Id = 77L,
+                            Content = "Yes, it's a great way to stay active and contribute to a cause.",
+                            IsActive = true,
+                            RowId = new Guid("cd10e258-ab70-490e-803a-fdc7c0437896"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5056),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5057)
+                        },
+                        new
+                        {
+                            Id = 78L,
+                            Content = "I've been part of a few. It's fulfilling to make a difference.",
+                            IsActive = true,
+                            RowId = new Guid("66192e55-7517-435d-aba7-fe5e2a5842d5"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5058),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5058)
+                        },
+                        new
+                        {
+                            Id = 79L,
+                            Content = "Let's plan a weekend brunch. Any favorite brunch spots?",
+                            IsActive = true,
+                            RowId = new Guid("d47e7cac-cdc7-4617-b793-fa58a52e345a"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5059),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5060)
+                        },
+                        new
+                        {
+                            Id = 80L,
+                            Content = "I know a cozy café with the best brunch menu!",
+                            IsActive = true,
+                            RowId = new Guid("d49cc126-6d0f-4a5b-9386-c7760f12b44b"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5060),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5061)
+                        },
+                        new
+                        {
+                            Id = 81L,
+                            Content = "I'm up for brunch! Let's try something new and exciting.",
+                            IsActive = true,
+                            RowId = new Guid("43fc8212-f724-45da-a08d-e2a22f34ab3a"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5062),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5062)
+                        },
+                        new
+                        {
+                            Id = 82L,
+                            Content = "What's your go-to workout routine?",
+                            IsActive = true,
+                            RowId = new Guid("1bcf72cd-4333-41ce-875c-32719e88ed00"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5082),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5083)
+                        },
+                        new
+                        {
+                            Id = 83L,
+                            Content = "I enjoy a mix of cardio and strength training.",
+                            IsActive = true,
+                            RowId = new Guid("974ff6bf-6522-4da8-85be-a2dbee5f05a3"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5084),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5086)
+                        },
+                        new
+                        {
+                            Id = 84L,
+                            Content = "Yoga is my go-to. It keeps me balanced and relaxed.",
+                            IsActive = true,
+                            RowId = new Guid("b20018d3-ea19-4ea2-bf47-4fa02712eed5"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5086),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5087)
+                        },
+                        new
+                        {
+                            Id = 85L,
+                            Content = "Let's plan a movie night. Any genre preferences?",
+                            IsActive = true,
+                            RowId = new Guid("e440c437-6fa9-4f4c-a52b-63a43f1055aa"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5088),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5088)
+                        },
+                        new
+                        {
+                            Id = 86L,
+                            Content = "I love sci-fi movies. The more futuristic, the better!",
+                            IsActive = true,
+                            RowId = new Guid("53fb149a-26c1-4f61-88b2-0c0f3f3960a9"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5089),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5090)
+                        },
+                        new
+                        {
+                            Id = 87L,
+                            Content = "I enjoy a good comedy. Laughter is the best medicine.",
+                            IsActive = true,
+                            RowId = new Guid("f39e4938-72a9-4722-9857-a6852c2c8e03"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5091),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5091)
+                        },
+                        new
+                        {
+                            Id = 88L,
+                            Content = "Have you ever tried bungee jumping or skydiving?",
+                            IsActive = true,
+                            RowId = new Guid("07612133-0323-4920-9b33-c4ff584a68f1"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5092),
+                            SubGroupId = 1L,
+                            UserId = 1L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5093)
+                        },
+                        new
+                        {
+                            Id = 89L,
+                            Content = "Not yet, but it's on my adventure bucket list!",
+                            IsActive = true,
+                            RowId = new Guid("757a1799-8e48-4fe6-971b-ce3259030840"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5094),
+                            SubGroupId = 1L,
+                            UserId = 2L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5094)
+                        },
+                        new
+                        {
+                            Id = 90L,
+                            Content = "I've tried both. The adrenaline rush is indescribable!",
+                            IsActive = true,
+                            RowId = new Guid("7a1168c1-4491-441c-97df-b0cad3565126"),
+                            SentTime = new DateTime(2024, 2, 27, 17, 25, 30, 741, DateTimeKind.Local).AddTicks(5095),
+                            SubGroupId = 1L,
+                            UserId = 3L,
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5096)
+                        });
+                });
+
+            modelBuilder.Entity("WebChat.Domain.Entities.SubGroupEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("GroupId")
                         .HasColumnType("bigint");
@@ -122,90 +1225,68 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("SentTime")
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UtcDateCreated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Message");
+                    b.ToTable("SubGroup");
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
-                            Content = "Hello Team",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7308),
                             GroupId = 1L,
                             IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 1L
+                            Name = "10 Minute",
+                            RowId = new Guid("3622bd64-5afa-4183-8cd0-2fd1f8bc09ac"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5189)
                         },
                         new
                         {
                             Id = 2L,
-                            Content = "Hey Ali!",
-                            CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7309),
-                            GroupId = 1L,
+                            CreatedBy = 1L,
+                            GroupId = 2L,
                             IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 2L
+                            Name = "10 Minute",
+                            RowId = new Guid("eb15ef6c-aa6a-4ac5-ba8b-f6d10b1e1368"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5191)
                         },
                         new
                         {
                             Id = 3L,
-                            Content = "I am Fine Poonam what about you?",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7310),
-                            GroupId = 1L,
+                            GroupId = 3L,
                             IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 1L
+                            Name = "10 Minute",
+                            RowId = new Guid("f8a99d90-1fc0-4769-9d21-f8baacff8fbb"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5193)
                         },
                         new
                         {
                             Id = 4L,
-                            Content = "Good to hear you are good, thanks for asking i am also fine!.",
-                            CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7311),
-                            GroupId = 1L,
-                            IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 2L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Content = "hey Guys whats the update of our chat v1 Project???.",
-                            CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7340),
-                            GroupId = 1L,
-                            IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 3L
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Content = "Architecture of Project is done just doing some final tweaks and then update you here in group.",
                             CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7340),
-                            GroupId = 1L,
+                            GroupId = 4L,
                             IsActive = true,
-                            SentTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = 1L
+                            Name = "10 Minute",
+                            RowId = new Guid("be4c92f9-3517-4bf6-8846-26ad8ef4842c"),
+                            UtcDateCreated = new DateTime(2024, 2, 27, 13, 25, 30, 741, DateTimeKind.Utc).AddTicks(5194)
                         });
                 });
 
-            modelBuilder.Entity("WebChat.Domain.Entities.UserEntity", b =>
+            modelBuilder.Entity("WebChat.Domain.Entities.UserDetailsEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,86 +1295,80 @@ namespace WebChat.Infrastructure.MySQL.Migrations
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<long?>("ModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("NickName")
                         .HasColumnType("longtext");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserPhoto")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UtcDateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcDateModified")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UtcLastLoginTime")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedBy = 1L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7076),
-                            IsActive = true,
-                            PhoneNumber = "971505679899",
-                            UserName = "Ali"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedBy = 2L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7086),
-                            IsActive = true,
-                            PhoneNumber = "971505679800",
-                            UserName = "Poonam"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedBy = 3L,
-                            DateCreated = new DateTime(2024, 2, 8, 13, 49, 6, 956, DateTimeKind.Utc).AddTicks(7087),
-                            IsActive = true,
-                            PhoneNumber = "971505679888",
-                            UserName = "Aymen"
-                        });
+                    b.ToTable("UserDetails");
                 });
 
             modelBuilder.Entity("WebChat.Domain.Entities.GroupUsersEntity", b =>
                 {
-                    b.HasOne("WebChat.Domain.Entities.GroupEntitiy", "Group")
+                    b.HasOne("WebChat.Domain.Entities.GroupEntity", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WebChat.Domain.Entities.SubGroupEntity", "SubGroup")
+                        .WithMany()
+                        .HasForeignKey("SubGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Group");
+
+                    b.Navigation("SubGroup");
                 });
 
             modelBuilder.Entity("WebChat.Domain.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("WebChat.Domain.Entities.GroupEntitiy", "Group")
+                    b.HasOne("WebChat.Domain.Entities.SubGroupEntity", "SubGroup")
+                        .WithMany()
+                        .HasForeignKey("SubGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubGroup");
+                });
+
+            modelBuilder.Entity("WebChat.Domain.Entities.SubGroupEntity", b =>
+                {
+                    b.HasOne("WebChat.Domain.Entities.GroupEntity", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebChat.Domain.Entities.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Group");
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

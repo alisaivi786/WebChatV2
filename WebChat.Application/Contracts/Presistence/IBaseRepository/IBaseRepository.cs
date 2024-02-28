@@ -21,10 +21,12 @@ public interface IBaseRepository<T> where T : class
     protected Task<DbResponse<List<T>>> UpdateMultipleAsync(IEnumerable<T> entities, long updatedBy, CancellationToken cancellationToken = default);
     protected Task<DbResponse<List<T>>> RemoveRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
     protected Task<DbResponse<bool>> DeletePermanentlyAsync(T entity, CancellationToken cancellationToken = default);
+    protected Task<DbResponse<bool>> DeleteByPredicateAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default);
     protected Task<DbResponse<T>> GetByIdAsync(long id, CancellationToken cancellationToken = default);
     protected IQueryable<T> GetAll();
     protected IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
     protected Task<T?> GetAvailableAsync(long Id, CancellationToken cancellationToken = default);
+    protected Task<T?> GetAvailablePredicateAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default);
     Task<IEnumerable<T>> ExecuteSqlQueryAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters);
     Task<DbResponse<List<T>>> InsertWithSqlAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters);
     Task<IEnumerable<T>> SelectWithSqlAsync(string sqlQuery, CancellationToken cancellationToken = default, params object[] parameters);

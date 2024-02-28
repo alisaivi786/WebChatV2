@@ -6,7 +6,7 @@
 /// Date: 06-Feb-2024
 /// alisaivi786@gmail.com
 /// </summary>
-public interface IGroupRepository : IBaseRepository<GroupEntitiy>
+public interface IGroupRepository : IBaseRepository<GroupEntity>
 {
     Task<ApiResponse<PageBaseResponse<List<GroupDetailRspDto>>>> GetGroupDetailsAsync(GetGroupReqDto reqest);
     Task<ApiResponse<GroupDetailRspDto>> GetSingleGroupDetailsAsync(long Id);

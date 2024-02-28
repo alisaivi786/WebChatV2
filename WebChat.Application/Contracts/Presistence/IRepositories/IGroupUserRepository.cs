@@ -17,6 +17,7 @@ public interface IGroupUserRepository : IBaseRepository<GroupUsersEntity>
     Task<ApiResponse<bool>> AddBulkGroupUserAsync(List<AddBulkGroupUserReqDto> reqest, CancellationToken cancellationToken = default);
     Task<ApiResponse<bool>> DeleteGroupUserAsync(DeleteGroupUserReqDto reqest, CancellationToken cancellationToken = default);
     Task<ApiResponse<bool>> UpdateGroupUserAsync(UpdateGroupUserReqDto reqest, CancellationToken cancellationToken = default);
+    Task<ApiResponse<bool>> DeleteGroupUserPredicateAsync(DeleteGroupUserReqDto reqest, CancellationToken cancellationToken = default);
 }
 
 #endregion

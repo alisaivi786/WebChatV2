@@ -2,33 +2,9 @@
 
 namespace WebChat.Presistence.SeedConfiguration;
 
-public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
+public class UserConfiguration : IEntityTypeConfiguration<UserDetailsEntity>
 {
-    public void Configure(EntityTypeBuilder<UserEntity> builder)
+    public void Configure(EntityTypeBuilder<UserDetailsEntity> builder)
     {
-        builder.HasData(
-             new UserEntity
-             {
-                 Id = 1,
-                 UserName = "Ali",
-                 PhoneNumber = "971505679899",
-                 CreatedBy = 1
-             },
-             new UserEntity
-             {
-                 Id = 2,
-                 UserName = "Poonam",
-                 PhoneNumber = "971505679800",
-                 CreatedBy = 2
-             },
-             new UserEntity
-             {
-                 Id = 3,
-                 UserName = "Aymen",
-                 PhoneNumber = "971505679888",
-                 CreatedBy = 3
-             }
-
-        );
     }
 }

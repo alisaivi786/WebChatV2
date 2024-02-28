@@ -13,21 +13,8 @@
 
   <ItemGroup>
 
-    <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Publisher.ApplicationInsights" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Publisher.Datadog" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Publisher.Seq" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.1" />
+    
+	 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,19 +31,24 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
     <PackageReference Include="MongoDB.Entities" Version="23.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JwtService\JwtService.csproj" />
     <ProjectReference Include="..\WebChat.Hub\WebChat.Hubs.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.MySQL\WebChat.Infrastructure.MySQL.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.Npgsql\WebChat.Infrastructure.Npgsql.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.Oracle\WebChat.Infrastructure.Oracle.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure.SqlServer\WebChat.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure\WebChat.Infrastructure.csproj" />
+    <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Middleware\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 

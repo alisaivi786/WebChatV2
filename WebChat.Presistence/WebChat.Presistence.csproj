@@ -28,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JwtService\JwtService.csproj" />
     <ProjectReference Include="..\WebChat.Application\WebChat.Application.csproj" />
+    <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
   </ItemGroup>
 
 </Project>

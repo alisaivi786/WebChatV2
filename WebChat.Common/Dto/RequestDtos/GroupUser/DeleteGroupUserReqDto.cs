@@ -8,5 +8,6 @@
 /// </summary>
 public class DeleteGroupUserReqDto : ApiRequest
 {
-    public long Id { get; set; }
+    public long? Id { get; set; }
+    public long? UserId { get; set; }
 }

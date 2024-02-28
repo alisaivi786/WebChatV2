@@ -8,4 +8,8 @@
 /// </summary>
 public class GetGroupUserReqDto : PageBaseRequest
 {
+    //Filter Properties
+    public long? UserId { get; set; }
+    public long? GroupId { get; set; }
+    public long? SubGroupId { get; set; }
 }

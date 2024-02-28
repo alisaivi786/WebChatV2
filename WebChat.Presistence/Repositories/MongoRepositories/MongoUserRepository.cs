@@ -12,7 +12,7 @@ namespace WebChat.Presistence.Repositories.MongoRepositories;
 /// </summary>
 /// <param name="database"></param>
 public class MongoUserRepository(IMongoDatabase database) 
-    : BaseMongoRepository<UserEntity>(database, "User"),IMongoUserRepository
+    : BaseMongoRepository<UserDetailsEntity>(database, "User"),IMongoUserRepository
 {
 
 }

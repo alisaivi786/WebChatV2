@@ -1,5 +1,7 @@
 ﻿#region NameSpace
+using System.Drawing.Printing;
 using System.Linq.Dynamic.Core;
+using WebChat.Redis;
 namespace WebChat.Presistence.Repositories.BaseRepository;
 
 #endregion
@@ -19,17 +21,19 @@ namespace WebChat.Presistence.Repositories.BaseRepository;
 /// <param name="httpContextAccessor"></param> 
 #endregion
 public class BaseRepository<T>(
-WebchatDBContext context,
-IConfiguration configuration,
-IHttpContextAccessor httpContextAccessor,
-AppSettings appSettings) : IBaseRepository<T> where T : class
+    WebchatDBContext context,
+    IConfiguration configuration,
+    IHttpContextAccessor httpContextAccessor,
+    IAppSettings appSettings) : IBaseRepository<T> where T : class
 {
     #region Class Level Properties
-    private readonly DbContext _context = context;// ?? throw new ArgumentNullException(nameof(context));
+    private readonly WebchatDBContext _context = context;// ?? throw new ArgumentNullException(nameof(context));
     private readonly IConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-    private readonly AppSettings _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+    private readonly IAppSettings _appSettings = appSettings;// ?? throw new ArgumentNullException(nameof(appSettings));
     #endregion
+    
+
 
     #region Entity Table
     public DbSet<T> Table { get; set; } = context.Set<T>();
@@ -193,6 +197,34 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
     }
     #endregion
 
+    #region GetAvailablePredicateAsync
+    #region GetAvailablePredicateAsync Summary
+    /// <summary>
+    /// Get Entity by using GetAvailablePredicateAsync
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 16-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>entity object</returns>
+    #endregion
+    public async Task<T?> GetAvailablePredicateAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
+    {
+        #region ...
+        IQueryable<T> query = Table;
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+        var entity = await query.FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+        return entity;
+        #endregion
+    }
+    #endregion
+
     #region GetByIdAsync
     #region GetByIdAsync Summary
     /// <summary>
@@ -280,7 +312,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
         if (entity is BaseEntity baseEntity)
         {
             baseEntity.ModifiedBy = updatedBy;
-            baseEntity.DateModified = DateTime.Now;
+            baseEntity.UtcDateModified = DateTime.UtcNow;
         }
 
         _ = Table.Attach(entity);
@@ -313,7 +345,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
                 if (entity is BaseEntity baseEntity)
                 {
                     baseEntity.ModifiedBy = updatedBy;
-                    baseEntity.DateModified = DateTime.Now;
+                    baseEntity.UtcDateModified = DateTime.UtcNow;
                 }
             }
 
@@ -411,6 +443,58 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
 
 
     #endregion
+
+    #region DeleteByPredicateAsync
+    #region DeleteByPredicateAsync Summary
+    /// <summary>
+    /// Delete Entity by using a predicate
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 16-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Boolean indicating whether the entity was deleted</returns>
+    #endregion
+    public async Task<DbResponse<bool>> DeleteByPredicateAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
+    {
+        #region ...
+        try
+        {
+            IQueryable<T> query = Table;
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            var entity = await query.FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            if (entity != null)
+            {
+                context.Remove(entity);
+                await context.SaveChangesAsync(cancellationToken);
+                return new DbResponse<bool> { Data = true, Code = DbCodeEnums.Success, MsgCode = DbMessageEnums.Deleted };
+            }
+            return new DbResponse<bool> { Data = false, Code = DbCodeEnums.Failed, MsgCode = DbMessageEnums.Failed };
+        }
+        catch (Exception ex)
+        {
+            // Handle generic exception
+            var genericError = new ErrorModel { Id = "GenericError", Message = ex.Message };
+            return new DbResponse<bool>
+            {
+                Data = false,
+                Code = DbCodeEnums.DbException,
+                MsgCode = DbMessageEnums.FailedPresistence,
+                Error = [genericError]
+            };
+        }
+
+        #endregion
+    }
+    #endregion
+
 
     #region ExecuteSqlQueryAsync
     #region ExecuteSqlQueryAsync Summary
@@ -560,7 +644,7 @@ AppSettings appSettings) : IBaseRepository<T> where T : class
         catch (Exception ex)
         {
             // Handle exception or log it
-            throw;
+            throw ex;
         }
     }
 

@@ -32,3 +32,17 @@ global using System.Data;
 global using WebChat.Common.Dto.RequestDtos.Group;
 global using WebChat.Application.Contracts.UnitOfWork;
 global using WebChat.Presistence.Repositories;
+global using WebChat.Common.Dto.RequestDtos.LoginInUser;
+global using WebChat.Common.Dto.ResponseDtos.LoginInUser;
+
+global using JwtService;
+global using WebChat.Common.Dto.RequestDtos.LotteryUsers;
+global using WebChat.Common.Dto.RequestDtos.User;
+global using WebChat.Common.Dto.ResponseDtos.LotteryUsers;
+global using WebChat.Extension.Extensions;
+global using WebChat.Presistence.Ado;
+
+global using WebChat.Common.Dto.RequestDtos.SubGroup;
+global using WebChat.Common.Dto.ResponseDtos.SubGroup;
+
+global using JwtService.Interface;

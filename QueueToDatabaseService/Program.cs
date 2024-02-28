@@ -1,4 +1,6 @@
 ﻿#region NameSpace
+
+
 namespace QueueToDatabaseService;
 #endregion
 
@@ -41,19 +43,43 @@ internal class Program
     #endregion
     private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseWindowsService()  // Use this line if you want to run as a Windows Service
+                .UseWindowsService()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    //config.SetBasePath(Directory.GetCurrentDirectory());
+                    //config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                    config.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+                    config.AddJsonFile(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "appsettings.json"), optional: true, reloadOnChange: true);
+
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddHttpContextAccessor();
                     services.AddHostedService<Worker>();
+                    // Load configuration
+                    var configuration = hostContext.Configuration;
+                    var AppSetting = new AppSettings(configuration);
+                    Console.WriteLine("DBProvider" + AppSetting.MySqlConnectionString);
+                    // Add AppSettings as a singleton service and pass the configuration to the constructor
+                    services.AddSingleton<IAppSettings>(AppSetting);
+                    // Add Persistence Infrastructure
+                    services.AddPersistenceInfrastructure(AppSetting);
+                    // Add Rabbit MQ
+                    services.AddRegisterRabbitMQ(AppSetting);
+                    // Add Redis
+                    services.AddRegisterRedis();
+
                 })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
+                    logging.AddEventLog();
                 });
+
     #endregion 
     #endregion
-} 
+}
 #endregion
 
 

@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AttributeHelper\" />
+    <ProjectReference Include="..\WebChat.Domain\WebChat.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebChat.Domain\WebChat.Domain.csproj" />
+    <Folder Include="AttributeHelper\" />
   </ItemGroup>
 
 </Project>

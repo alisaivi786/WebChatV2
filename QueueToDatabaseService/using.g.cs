@@ -2,3 +2,9 @@
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
 global using QueueToDatabaseService.WorkerService;
+global using Microsoft.Extensions.Configuration;
+global using System.Reflection;
+global using WebChat.Application.ApplicationSettings;
+global using WebChat.Infrastructure.Services.ApplicationInfrastructure;
+global using WebChat.Infrastructure.Services.RabbitMQ;
+global using WebChat.Infrastructure.Services.Redis;

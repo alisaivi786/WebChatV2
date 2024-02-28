@@ -14,8 +14,13 @@ public class MessageDetailDto
     public long MessageId { get; set; }
     public long? UserId { get; set; }
     public string? UserName { get; set; }
+    public string? NickName { get; set; }
+    public string? UserPhoto { get; set; }
+    public long? SubGroupId { get; set; }
+    public string? SubGroupName { get; set; }
     public long? GroupId { get; set; }
     public string? GroupName { get; set; }
     public string? Message { get; set; }
     public DateTime? Time { get; set; }
+    public string? UUID { get; set; }
 }

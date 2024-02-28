@@ -6,9 +6,8 @@ namespace WebChat.API.Controllers.Group;
 #region Attr
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}")]
-[ApiController]
 #endregion
-public class GroupController(IUnitOfWork unitOfWork) : ControllerBase
+public class GroupController(IUnitOfWork unitOfWork) : BaseAuthController
 {
     private readonly IUnitOfWork unitOfWork = unitOfWork;
 
@@ -23,7 +22,6 @@ public class GroupController(IUnitOfWork unitOfWork) : ControllerBase
         #endregion
     }
     #endregion
-
 
     #region Group-Id
     [HttpGet("Group-Id/{id}")]

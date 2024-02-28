@@ -11,11 +11,15 @@
 #endregion
 public interface IMessageRepository : IBaseRepository<MessageEntity>
 {
-    Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> GetMessageDetailsAsync(GetMessageReqDto reqest);
+    Task<ApiResponse<PageBaseResponse<List<MessageDetailDto>>>> GetMessageDetailsAsync(GetMessageReqDto reqest, long lastMessageId = 0);
     Task<ApiResponse<MessageDetailDto>> GetSingleMessageDetailsAsync(long Id);
     Task<ApiResponse<bool>> AddMessageAsync(AddMessageReqDto reqest);
     Task<ApiResponse<bool>> AddBulkMessageAsync(List<AddBulkMessageReqDto> reqest);
     Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageReqDto reqest);
     Task<ApiResponse<bool>> UpdateMessageAsync(UpdateMessageReqDto reqest);
-} 
+
+    Task<ApiResponse<MessageDetailDto>> GetSingleMessageDetailsByUUIDAsync(string uuid);
+
+    Task<PageBaseResponse<List<MessageDetailDto>>> GetMessageDetailsListAsync(GetMessageReqDto reqest, long lastMessageId = 0);
+}
 #endregion

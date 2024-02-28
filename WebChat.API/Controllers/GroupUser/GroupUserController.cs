@@ -2,8 +2,7 @@
 
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}")]
-[ApiController]
-public class GroupUserController(IUnitOfWork UnitOfWork) : ControllerBase
+public class GroupUserController(IUnitOfWork UnitOfWork) : BaseAuthController
 {
     private readonly IUnitOfWork unitOfWork = UnitOfWork;
 

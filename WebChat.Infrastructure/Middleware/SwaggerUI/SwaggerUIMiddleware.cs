@@ -32,6 +32,10 @@ public static class SwaggerUIMiddleware
             {
                 options.SwaggerEndpoint($"/swagger/{version}/swagger.json", $"Chat.API {version}");
             }
+
+            // Specify the Swagger UI endpoint and UI path
+            options.RoutePrefix = "api-doc";
+            options.DocumentTitle = "Chat Documentation";
         });
         #endregion
     }

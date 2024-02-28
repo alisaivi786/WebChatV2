@@ -6,10 +6,12 @@ public class WebchatMongoDBContext(IMongoDatabase database) : DbContext, IWebcha
 {
     private readonly IMongoDatabase _database = database;
 
-    public DbSet<UserEntity> User { get; set; }
-    public DbSet<GroupEntitiy> Group { get; set; }
+    public DbSet<UserDetailsEntity> UserDetails { get; set; }
+    public DbSet<GroupEntity> Group { get; set; }
+    public DbSet<SubGroupEntity> SubGroup { get; set; }
     public DbSet<MessageEntity> Message { get; set; }
     public DbSet<GroupUsersEntity> GroupUsers { get; set; }
+    public DbSet<LoginInUserEntity> LoginInUser { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

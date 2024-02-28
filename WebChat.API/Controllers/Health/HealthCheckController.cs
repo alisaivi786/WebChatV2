@@ -7,9 +7,9 @@ namespace WebChat.API.Controllers.Health
     [ApiVersion("2")]
     [Route("api/v{version:apiVersion}/Health")]
     [ApiController]
-    public class HealthCheckController(AppSettings _appSettings) : ControllerBase
+    public class HealthCheckController(IAppSettings _appSettings) : ControllerBase
     {
-        private readonly AppSettings appSettings = _appSettings;
+        private readonly IAppSettings appSettings = _appSettings;
 
         [HttpGet("status")]
         public async Task<IActionResult> Get()

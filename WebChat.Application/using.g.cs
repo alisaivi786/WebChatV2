@@ -18,3 +18,12 @@ global using MongoDB.Driver;
 global using Asp.Versioning;
 global using WebChat.Common.Dto.RequestDtos.GroupUser;
 global using WebChat.Common.Dto.ResponseDtos.GroupUser;
+
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.DependencyInjection;
+global using Newtonsoft.Json;
+global using System.Security.Claims;
+global using WebChat.Common.Dto.RequestDtos.LoginInUser;
+global using WebChat.Common.Dto.ResponseDtos.LoginInUser;
+global using WebChat.Common.Dto.RequestDtos.SubGroup;
+global using WebChat.Common.Dto.ResponseDtos.SubGroup;

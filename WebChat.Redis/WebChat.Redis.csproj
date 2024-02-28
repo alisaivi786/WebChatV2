@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebChat.Application\WebChat.Application.csproj" />
     <ProjectReference Include="..\WebChat.Common\WebChat.Common.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,6 @@
 ﻿#region NameSpace
+using System.Collections.Generic;
+using WebChat.Common.Dto.ResponseDtos.Users;
 using WebChat.Redis;
 
 namespace WebChat.API.Controllers.Message;
@@ -8,25 +10,83 @@ namespace WebChat.API.Controllers.Message;
 #region Controller Attribute
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/Message")]
-[ApiController]
 #endregion
-public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment environment, IRedisService RedisService) : ControllerBase
+public class MessageController(IRedisService RedisService) : BaseAuthController
 {
-    #region UnitOfWork Container
-    private readonly IUnitOfWork unitOfWork = unitOfWork;
-    #endregion
-
-    #region WebHostEnvironment
-    private readonly IWebHostEnvironment _environment = environment;
-    #endregion
+    private readonly IRedisService RedisService = RedisService;
 
     #region GetMessageDetails
     [MapToApiVersion(1)]
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<PageBaseDataResponse<List<MessageDetailDto>>>))]
     [HttpPost("GetMessages")]
-    public async Task<IActionResult> GetMessageDetails(GetMessageReqDto reqest)
+    public async Task<IActionResult> GetMessageDetails(GetMessageReqDto request)
     {
-        var response = await unitOfWork.MessageRepository.GetMessageDetailsAsync(reqest);
+        var roomId = $"[{request.SubGroupId}]";
+        var pagedList = new PageBaseResponse<List<MessageDetailDto>>();
+        var response = new ApiResponse<PageBaseResponse<List<MessageDetailDto>>>();
+
+        #region Check if redis is empty reead from db and push to redis
+        var count = await RedisService.GetRedisCount(roomId);
+
+        if (count == 0)
+        {
+            request.PageSize = Convert.ToInt32(AppSettings.RedisCharRoomLimit ?? "1000");
+
+            var dbMessagesList = await UnitOfWork.MessageRepository.GetMessageDetailsAsync(request, int.MaxValue);
+
+            await RedisService.PushMessagesList(dbMessagesList.Data.List, roomId);
+        }
+        #endregion
+
+        if (request.PageNo - 1 == 0)
+        {
+            var list = await RedisService.GetAllRedisMessages(roomId);
+
+            var mappedList = await RedisService.MapUsersDetailsList(list);
+
+            if (list.Count > 0)
+            {
+                var result = new PageBaseResponse<List<MessageDetailDto>>()
+                {
+                    List = [.. mappedList.OrderByDescending(x => x.Time)],
+                    PageNo = 1,
+                    TotalPage = 1,
+                    TotalCount = list.Count
+                };
+
+                response = new ApiResponse<PageBaseResponse<List<MessageDetailDto>>>
+                {
+                    Data = result,
+                    Code = ApiCodeEnum.Success,
+                    MsgCode = ApiMessageEnum.Success
+                };
+            }
+        }
+
+        if (response.Data == null)
+        {
+            if (request.PageNo != 1)
+            {
+                request.PageNo -= 1;
+            }
+
+            var lastMessage = await UnitOfWork.MessageRepository.GetSingleMessageDetailsByUUIDAsync(request.UUID);
+
+            var lastMessageId = lastMessage.Data?.MessageId ?? 0;
+
+            pagedList = await UnitOfWork.MessageRepository.GetMessageDetailsListAsync(request, lastMessageId);
+
+            #region Map User Name from Redis User Details to Message Details
+            var mappedList = await RedisService.MapUsersDetailsList(pagedList.List);
+
+            var result = new PageBaseResponse<List<MessageDetailDto>>()
+            { List = mappedList, PageNo = pagedList?.PageNo, TotalPage = pagedList?.TotalPage, TotalCount = pagedList?.TotalCount };
+            #endregion
+
+            response =
+             new ApiResponse<PageBaseResponse<List<MessageDetailDto>>> { Data = result, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+        }
+
         return Ok(response);
     }
     #endregion
@@ -37,7 +97,7 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
     public async Task<IActionResult> Get(int id)
     {
-        var response = await unitOfWork.MessageRepository.GetSingleMessageDetailsAsync(id);
+        var response = await UnitOfWork.MessageRepository.GetSingleMessageDetailsAsync(id);
         return Ok(response);
     }
     #endregion
@@ -53,7 +113,7 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
             return BadRequest(ModelState); // 400 Bad Request
         }
 
-        var response = await unitOfWork.MessageRepository.AddMessageAsync(reqest);
+        var response = await UnitOfWork.MessageRepository.AddMessageAsync(reqest);
         return Ok(response);
     }
     #endregion
@@ -69,7 +129,7 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
             return BadRequest(ModelState); // 400 Bad Request
         }
 
-        var response = await unitOfWork.MessageRepository.AddBulkMessageAsync(reqest);
+        var response = await UnitOfWork.MessageRepository.AddBulkMessageAsync(reqest);
         return Ok(response);
     }
     #endregion
@@ -84,7 +144,7 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
         {
             return BadRequest(ModelState); // 400 Bad Request
         }
-        var response = await unitOfWork.MessageRepository.UpdateMessageAsync(reqest);
+        var response = await UnitOfWork.MessageRepository.UpdateMessageAsync(reqest);
         return Ok(response);
     }
     #endregion
@@ -95,7 +155,7 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
     public async Task<IActionResult> Delete(DeleteMessageReqDto request)
     {
-        var response = await unitOfWork.MessageRepository.DeleteMessageAsync(request);
+        var response = await UnitOfWork.MessageRepository.DeleteMessageAsync(request);
         return Ok(response);
     }
     #endregion
@@ -113,9 +173,9 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
 
         try
         {
-            var contentRoot = _environment.ContentRootPath;
+            var contentRoot = Environment.ContentRootPath;
             // var uploadsFolder = Path.Combine(contentRoot, "Uploads");
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "Uploads");
+            var uploadsFolder = Path.Combine(Environment.WebRootPath, "Uploads");
 
             if (!Directory.Exists(uploadsFolder))
             {
@@ -152,13 +212,15 @@ public class MessageController(IUnitOfWork unitOfWork, IWebHostEnvironment envir
     }
     #endregion
 
-    #region GetMessageDetailsRedis
+    #region GetRedisMessages
     [MapToApiVersion(1)]
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<PageBaseDataResponse<List<MessageDetailDto>>>))]
-    [HttpPost("GetMessageDetailsRedis")]
-    public async Task<IActionResult> GetMessageDetailsRedis(GetMessageReqDtoRedis reqest)
+    [HttpPost("GetRedisMessages")]
+    public async Task<IActionResult> GetRedisMessages(GetMessageReqDtoRedis reqest)
     {
-        var response = await RedisService.GetAllRecords(reqest.GroupId);
+        var roomId = $"{reqest.GroupName}[{reqest.SubGroupId}]";
+
+        var response = await RedisService.GetAllRedisMessages(roomId);
         return Ok(response);
     }
     #endregion

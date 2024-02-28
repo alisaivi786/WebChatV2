@@ -11,11 +11,11 @@ namespace WebChat.Infrastructure.Services.ApplicationInfrastructure;
 /// </summary>
 public static class PersistenceServiceRegistration
 {
-    public static IServiceCollection AddPersistenceInfrastructure(this IServiceCollection services, AppSettings applicationSettings)
+    public static IServiceCollection AddPersistenceInfrastructure(this IServiceCollection services, IAppSettings applicationSettings)
     {
         var dbProvider = applicationSettings.DBProvider;
         var migrationAssembly = $"WebChat.Infrastructure.{dbProvider}";
-
+        Console.WriteLine("DBProvider: "+ dbProvider);
         if (!string.IsNullOrEmpty(dbProvider) && dbProvider == "Mongo")
         {
             // Register Mongo DB Context
@@ -46,11 +46,15 @@ public static class PersistenceServiceRegistration
                     applicationSettings.MySqlConnectionString,
                     b => b.MigrationsAssembly(migrationAssembly)),
 
-                "Oracle" => options.UseOracle(
-                    applicationSettings.OracleConnectionString,
-                    b => b.MigrationsAssembly(migrationAssembly)),
+                //"Oracle" => options.UseOracle(
+                //    applicationSettings.OracleConnectionString,
+                //    b => b.MigrationsAssembly(migrationAssembly)),
 
-                _ => throw new InvalidOperationException($"Unsupported DBProvider: {dbProvider}")
+                _ =>
+                    options.UseMySQL(
+                    applicationSettings.MySqlConnectionString,
+                    b => b.MigrationsAssembly(migrationAssembly)),
+                //throw new InvalidOperationException($"Unsupported DBProvider: {dbProvider}")
             });
 
             services.AddScoped<IWebchatDBContext>(provider => provider.GetRequiredService<WebchatDBContext>());

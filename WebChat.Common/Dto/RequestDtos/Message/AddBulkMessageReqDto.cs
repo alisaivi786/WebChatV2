@@ -9,7 +9,7 @@
 public class AddBulkMessageReqDto
 {
     public long UserId { get; set; }
-    public long GroupId { get; set; }
+    public long SubGroupId { get; set; }
     public string? Content { get; set; }
     public DateTime SetTime { get; set; }
 }

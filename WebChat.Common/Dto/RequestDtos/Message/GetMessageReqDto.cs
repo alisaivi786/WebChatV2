@@ -8,4 +8,6 @@
 /// </summary>
 public class GetMessageReqDto : PageBaseRequest
 {
+    public long SubGroupId { get; set; }
+    public string? UUID { get; set; }
 }

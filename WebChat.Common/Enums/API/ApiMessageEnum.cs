@@ -70,7 +70,51 @@ public enum ApiMessageEnum
     /// </summary>
     [Description("Excpetion Occured.")]
     Exception = 4,
+    #endregion
 
+    #region Model Validation
+
+    /// <summary>
+    /// Represents the message for a Model validation operation.
+    /// </summary>
+    [Description("Model Validation Error Occured..")]
+    ModelValidation = 5,
+
+    #endregion
+
+
+    #region Token Generation Failed
+
+    /// <summary>
+    /// Represents the message for a Failed to Get Token operation.
+    /// </summary>
+    [Description("Failed To GET Token")]
+    FailedToken = 6,
+
+    #endregion
+
+    #region Token Generation Success
+    /// <summary>
+    /// Represents the message for a Success to Get Token operation.
+    /// </summary>
+    [Description("Token Generated Successfully")]
+    SuccessToken = 7,
+    #endregion
+
+    #region Valid Token
+    /// <summary>
+    /// Represents the message for a Valid Token operation.
+    /// </summary>
+    [Description("Valid Token")]
+    ValidToken = 8,
+    #endregion
+
+    #region Valid Token
+    /// <summary>
+    /// Represents the message for a Invaalid Token operation.
+    /// </summary>
+    [Description("Invalid Token")]
+    InvalidToken = 9,
     #endregion
 
     #region Authentication and Authorization

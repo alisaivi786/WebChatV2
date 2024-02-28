@@ -1,6 +1,17 @@
 ﻿namespace WebChat.Presistence.Repositories;
 
-public class GroupRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, AppSettings appSettings) : BaseRepository<GroupEntitiy>(context, configuration, httpContextAccessor, appSettings), IGroupRepository
+/// <summary>
+/// GroupRepository
+/// Developer: ALI RAZA MUSHTAQ
+/// Date: 16-Feb-2024
+/// alisaivi786@gmail.com
+/// </summary>
+/// <param name="context"></param>
+/// <param name="configuration"></param>
+/// <param name="httpContextAccessor"></param>
+/// <param name="appSettings"></param>
+public class GroupRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IAppSettings appSettings) 
+    : BaseRepository<GroupEntity>(context, configuration, httpContextAccessor, appSettings), IGroupRepository
 {
     #region Add Bulk Group Async
     #region Add Bulk Group Async Summary
@@ -17,7 +28,7 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
     {
         #region ...
         #region Mapping Domain Entity with response
-        var entity = reqest.Select(x => new GroupEntitiy
+        var entity = reqest.Select(x => new GroupEntity
         {
             Name = x.Name,
             CreatedBy = 1,
@@ -55,7 +66,7 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
     {
         #region ...
         #region Mapping with Domain Entity
-        var entity = new GroupEntitiy
+        var entity = new GroupEntity
         {
             Name = reqest.Name,
         };
@@ -85,7 +96,7 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
     /// alisaivi786@gmail.com
     /// </summary>
     /// <param name="reqest"></param>
-    /// <returns>Return True if Message is Deleted</returns> 
+    /// <returns>Return True if Group is Deleted</returns> 
     #endregion
     public async Task<ApiResponse<bool>> DeleteGroupAsync(DeleteGroupReqDto reqest)
     {
@@ -127,7 +138,7 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
         #region ...
 
         #region Predicate Filter
-        Expression<Func<GroupEntitiy, bool>>? predicate = group => group.IsActive;
+        Expression<Func<GroupEntity, bool>>? predicate = group => group.IsActive;
         #endregion
 
         #region Get All Data From Database
@@ -170,7 +181,7 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
     {
         #region ...
         #region Predicate Filter
-        Expression<Func<GroupEntitiy, bool>> predicate = user => user.IsActive && user.Id == Id;
+        Expression<Func<GroupEntity, bool>> predicate = user => user.IsActive && user.Id == Id;
         #endregion
 
         #region Get Data Based on Filter from Database
@@ -219,12 +230,12 @@ public class GroupRepository(WebchatDBContext context, IConfiguration configurat
     {
         #region ...
         #region Entity Mapping
-        var entity = new GroupEntitiy
+        var entity = new GroupEntity
         {
             Id = reqest.GroupId,
             Name = reqest.Name,
             ModifiedBy = 1,
-            DateCreated = DateTime.UtcNow
+            UtcDateCreated = DateTime.UtcNow
         };
         #endregion
 

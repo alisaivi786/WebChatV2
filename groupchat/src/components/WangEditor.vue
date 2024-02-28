@@ -21,14 +21,15 @@
 import "@wangeditor/editor/dist/css/style.css";
 
 import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import { useStore } from "vuex";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { API_BASE_URL, API_VERSION } from '../store/constants';
 
 export default {
   components: { Editor, Toolbar },
   setup() {
     const editorRef = shallowRef();
     const valueHtml = ref("");
+    const store = useStore();
 
     const handleValueChange = () => {
     };
@@ -70,8 +71,12 @@ export default {
     const editorConfig = { placeholder: "Type here...", MENU_CONF: {} };
 
     editorConfig.MENU_CONF["uploadImage"] = {
-      server: `${API_BASE_URL}/api/${API_VERSION}/Message/Upload`,
+      server: `${import.meta.env.VITE_API_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/Message/UploadImage`,
       fieldName: "file",
+      headers: {
+        Accept: 'text/x-json',
+        Authorization: `Bearer ${store.state.accessToken}`
+      },
       onSuccess(file, res) {
         console.log(`${file.name} uploaded`, res);
       },
@@ -90,8 +95,7 @@ export default {
     });
 
     const handleCreated = (editor) => {
-      editorRef.value = editor;
-      console.log(editor.getMenuConfig("uploadImage"));
+      editorRef.value = editor;      
     };
 
     return {

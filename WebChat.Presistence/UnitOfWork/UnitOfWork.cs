@@ -1,4 +1,7 @@
-﻿namespace WebChat.Presistence.UnitOfWork;
+﻿using JwtService.Interface;
+using WebChat.Redis;
+
+namespace WebChat.Presistence.UnitOfWork;
 
 /// <summary>
 /// UnitOfWork provide base to communicate with database with same context.
@@ -8,70 +11,89 @@
 /// </summary>
 public class UnitOfWork : IUnitOfWork,IDisposable
 {
-    private readonly WebchatDBContext _context;
-    private readonly IConfiguration _configuration;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly AppSettings _applicationSettings;
+    private readonly WebchatDBContext Context;
+    private readonly IConfiguration Configuration;
+    private readonly IHttpContextAccessor HttpContextAccessor;
+    private readonly IAppSettings AppSettings;
+    private readonly IAuthService AuthService;
+    private readonly IRedisService RedisService;
 
     public UnitOfWork(
         WebchatDBContext context,
         IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor,
-        AppSettings applicationSettings)
+        IAppSettings applicationSettings,
+        IRedisService redisService,
+        IAuthService authService)
     {
         #region Dependencies Init()
-        _context = context;
-        _httpContextAccessor = httpContextAccessor;
-        _applicationSettings = applicationSettings;
-        _configuration = configuration; 
+        Context = context;
+        HttpContextAccessor = httpContextAccessor;
+        AppSettings = applicationSettings;
+        Configuration = configuration; 
+        AuthService = authService;
+        RedisService = redisService;
         #endregion
 
-        #region UserRepository
-        UserRepository = new UserRepository(
-          context: _context,
-          configuration: _configuration,
-          httpContextAccessor: _httpContextAccessor,
-          appSettings: _applicationSettings);
-        #endregion
+
 
         #region MessageRepository
         MessageRepository = new MessageRepository(
-         context: _context,
-         configuration: _configuration,
-         httpContextAccessor: _httpContextAccessor,
-         appSettings: _applicationSettings);
+         context: Context,
+         configuration: Configuration,
+         httpContextAccessor: HttpContextAccessor,
+         appSettings: AppSettings);
         #endregion
 
         #region GroupRepository
         GroupRepository = new GroupRepository(
-         context: _context,
-         configuration: _configuration,
-         httpContextAccessor: _httpContextAccessor,
-         appSettings: _applicationSettings);
+         context: Context,
+         configuration: Configuration,
+         httpContextAccessor: HttpContextAccessor,
+         appSettings: AppSettings);
+        #endregion
+
+        #region SubGroupRepository
+        SubGroupRepository = new SubGroupRepository(
+         context: Context,
+         configuration: Configuration,
+         httpContextAccessor: HttpContextAccessor,
+         appSettings: AppSettings);
         #endregion
 
         #region GroupUserRepository
         GroupUserRepository = new GroupUserRepository(
-         context: _context,
-         configuration: _configuration,
-         httpContextAccessor: _httpContextAccessor,
-         appSettings: _applicationSettings);
+         context: Context,
+         configuration: Configuration,
+         httpContextAccessor: HttpContextAccessor,
+         appSettings: AppSettings);
+        #endregion
+
+        #region UserRepository
+        UserRepository = new UserRepository(
+          context: Context,
+         configuration: Configuration,
+         httpContextAccessor: HttpContextAccessor,
+         appSettings: AppSettings,
+         authService: AuthService,
+         redisService: RedisService);
         #endregion
     }
     public IUserRepository UserRepository { get; }
 
     public IMessageRepository MessageRepository { get; }
     public IGroupRepository GroupRepository { get; }
+    public ISubGroupRepository SubGroupRepository { get; }
 
     public IGroupUserRepository GroupUserRepository { get; }
 
     public async Task SaveAsync()
     {
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
     }
     public async Task<int> SaveChangesAsync()
     {
-        return await _context.SaveChangesAsync();
+        return await Context.SaveChangesAsync();
     }
-    public void Dispose() => _context.Dispose();
+    public void Dispose() => Context.Dispose();
 }

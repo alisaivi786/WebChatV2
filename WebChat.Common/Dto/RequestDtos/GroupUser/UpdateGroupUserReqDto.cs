@@ -11,4 +11,5 @@ public class UpdateGroupUserReqDto : ApiRequest
     public long GroupUserId { get; set; }
     public long UserId { get; set; }
     public long GroupId { get; set; }
+    public long SubGroupId { get; set; }
 }

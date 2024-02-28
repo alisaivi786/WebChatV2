@@ -10,4 +10,5 @@ public class AddBulkGroupUserReqDto
 {
     public long UserId { get; set; }
     public long GroupId { get; set; }
+    public long SubGroupId { get; set; }
 }

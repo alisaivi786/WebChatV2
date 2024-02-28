@@ -8,13 +8,32 @@
 
 	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
 		<PackageReference Include="MongoDB.Entities" Version="23.0.1" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 
+		<PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Network" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Publisher.ApplicationInsights" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Publisher.Datadog" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Publisher.Seq" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Uris" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.1" />
+
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

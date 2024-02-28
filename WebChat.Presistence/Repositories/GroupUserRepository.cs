@@ -1,9 +1,19 @@
 ﻿using WebChat.Common.Dto.RequestDtos.GroupUser;
 using WebChat.Common.Dto.ResponseDtos.GroupUser;
+using WebChat.Extension.Extensions;
 
 namespace WebChat.Presistence.Repositories;
 
-public class GroupUserRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, AppSettings appSettings) : BaseRepository<GroupUsersEntity>(context, configuration, httpContextAccessor, appSettings), IGroupUserRepository
+public class GroupUserRepository(
+    WebchatDBContext context, 
+    IConfiguration configuration, 
+    IHttpContextAccessor httpContextAccessor, 
+    IAppSettings appSettings) 
+    : BaseRepository<GroupUsersEntity>(
+        context, 
+        configuration, 
+        httpContextAccessor, 
+        appSettings), IGroupUserRepository
 {
     #region AddBulkGroupUserAsync
     #region Summary
@@ -26,6 +36,7 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
 
             UserId = x.UserId,
             GroupId = x.GroupId,
+            SubGroupId = x.SubGroupId,
             CreatedBy = x.UserId,
 
         }).ToList();
@@ -66,19 +77,27 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
         {
             UserId = reqest.UserId,
             GroupId = reqest.GroupId,
+            SubGroupId = reqest.SubGroupId,
             CreatedBy = reqest.UserId
         };
         #endregion
 
-        #region Add Entity into Database...
-        var res = await AddAsync(entity, cancellationToken);
-        #endregion
+        Expression<Func<GroupUsersEntity, bool>> predicate = user => user.UserId == reqest.UserId;
 
-        #region Response
-        if (res.Code != null && ((int)res.Code != (int)DbCodeEnums.Failed && (int)res.Code != (int)DbCodeEnums.DbException))
+        var exist = await GetAvailablePredicateAsync(predicate);
+        if(exist == null)
         {
-            return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+            #region Add Entity into Database...
+            var res = await AddAsync(entity, cancellationToken);
+            #endregion
+
+            #region Response
+            if (res.Code != null && ((int)res.Code != (int)DbCodeEnums.Failed && (int)res.Code != (int)DbCodeEnums.DbException))
+            {
+                return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+            }
         }
+       
         return new ApiResponse<bool> { Data = false };
         #endregion 
         #endregion
@@ -101,7 +120,8 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
     {
         #region ...
         #region Check Message Id Exist or not...
-        var entity = await GetAvailableAsync(reqest.Id, cancellationToken);
+        var entity = await GetAvailableAsync(reqest.Id?? -1, cancellationToken);
+
         #endregion
 
         #region Delete Permanentaly from database
@@ -140,12 +160,26 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
 
         #region Predicate Filter
         Expression<Func<GroupUsersEntity, bool>>? predicate = message => message.IsActive;
+
+        if (reqest.UserId != null)
+        {
+            predicate = predicate.AndAlso(message=> message.UserId == reqest.UserId);
+        }
+
+        if (reqest.GroupId != null)
+        {
+            predicate = predicate.AndAlso(message => message.GroupId == reqest.GroupId);
+        }
+
+        if (reqest.SubGroupId != null)
+        {
+            predicate = predicate.AndAlso(message => message.GroupId == reqest.SubGroupId);
+        }
         #endregion
 
         #region Get All Data From Database
         var response = await GetPagedAsync(reqest.PageNo, reqest.PageSize, predicate, cancellationToken);
         #endregion
-
 
         #region Response
         if (response != null)
@@ -156,6 +190,8 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
                 UserId = x.UserId,
                 GroupId = x?.GroupId,
                 GroupName = x?.Group?.Name,
+                SubGroupId = x?.SubGroupId,
+                SubGroupName = x?.SubGroup?.Name,
 
             }).ToList();
             var result = new PageBaseResponse<List<GroupUserDetailDto>>()
@@ -200,6 +236,8 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
                     UserId = x.UserId,
                     GroupId = x.GroupId,
                     GroupName = x.Group.Name,
+                    SubGroupId = x.SubGroupId,
+                    SubGroupName = x.SubGroup.Name,
                 }).FirstOrDefault();
                 if (lst != null)
                 {
@@ -243,8 +281,9 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
             Id = reqest.GroupUserId,
             UserId = reqest.UserId,
             GroupId = reqest.GroupId,
+            SubGroupId = reqest.SubGroupId,
             ModifiedBy = reqest.UserId,
-            DateModified = DateTime.UtcNow,
+            UtcDateModified = DateTime.UtcNow,
         };
         #endregion
 
@@ -259,6 +298,46 @@ public class GroupUserRepository(WebchatDBContext context, IConfiguration config
         }
         return new ApiResponse<bool> { Data = false };
         #endregion 
+        #endregion
+    }
+    #endregion
+
+    #region DeleteGroupUserPredicateAsync
+    #region Summary
+    /// <summary>
+    /// DeleteGroupUserPredicateAsync
+    /// Developer: ALI RAZA MUSHTAQ
+    /// Date: 16-Feb-2024
+    /// alisaivi786@gmail.com
+    /// </summary>
+    /// <param name="reqest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Operation completed successfully.</returns> 
+    #endregion
+    public async Task<ApiResponse<bool>> DeleteGroupUserPredicateAsync(DeleteGroupUserReqDto reqest, CancellationToken cancellationToken = default)
+    {
+        #region ...
+        #region Check Message Id Exist or not...
+        Expression<Func<GroupUsersEntity, bool>>? predicate = g => g.UserId == reqest.UserId;
+
+        var entity = await GetAvailablePredicateAsync(predicate, cancellationToken);
+
+        #endregion
+
+        #region Delete Permanentaly from database
+        if (entity != null)
+        {
+            var response = await DeletePermanentlyAsync(entity, cancellationToken);
+            if (response.Code != null && (int)response.Code != (int)DbCodeEnums.Failed)
+            {
+                return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+            }
+        }
+        #endregion
+
+        #region Default Response
+        return new ApiResponse<bool> { Data = false };
+        #endregion
         #endregion
     }
     #endregion

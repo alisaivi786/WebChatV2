@@ -16,6 +16,7 @@ namespace WebChat.Infrastructure.Services.SwaggerExtension;
 #endregion
 public static class SwaggerExtensions
 {
+    private static readonly string[] value = new[] { "Bearer " };
     #region AddSwaggerWithVersioning
     #region AddSwaggerWithVersioning Summary
     /// <summary>
@@ -52,6 +53,26 @@ public static class SwaggerExtensions
             #endregion
 
             //options.SchemaFilter<HideSchemaFilter>();
+
+            // Add JWT Authentication
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "JWT Authentication",
+                Description = "Enter your JWT token",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            };
+
+            options.AddSecurityDefinition("Bearer", securityScheme);
+
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { securityScheme, value }
+            };
+
+            options.AddSecurityRequirement(securityRequirement);
 
             #endregion
 

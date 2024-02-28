@@ -9,7 +9,7 @@ namespace WebChat.Application.ApplicationSettings;
 /// alisaivi786@gmail.com
 /// </summary>
 /// <param name="configuration"></param>
-public class AppSettings(IConfiguration configuration)
+public class AppSettings(IConfiguration configuration) : IAppSettings
 {
     public string? AppEnvironment { get; set; } = configuration["AppInfo:AppEnvironment"];
 
@@ -44,12 +44,14 @@ public class AppSettings(IConfiguration configuration)
 
     #region Redis Settings
     public string? RedisConnectionString { get; set; } = configuration["Redis:ConnectionString"];
+    public string? RedisCharRoomLimit { get; set; } = configuration["Redis:ChatRoomLimit"];
     #endregion
 
     #region RabbitMQ Setting
     public string? RabbitMqHost { get; set; } = configuration["RabbitMq:Host"];
     public string? RabbitMqUserName { get; set; } = configuration["RabbitMq:UserName"];
     public string? RabbitMqPassword { get; set; } = configuration["RabbitMq:Password"];
+    public string? ManagementApiUrl { get; set; } = configuration["RabbitMq:ManagementApiUrl"];
     #endregion
 
     #region HealthCheck

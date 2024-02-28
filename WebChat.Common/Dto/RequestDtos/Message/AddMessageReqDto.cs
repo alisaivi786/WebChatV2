@@ -9,7 +9,8 @@
 public class AddMessageReqDto : ApiRequest
 {
     public long UserId { get; set; }
-    public long GroupId { get; set; }
+    public long SubGroupId { get; set; }
     public string? Message { get; set; }
     public DateTime SetTime { get; set; }
+    public string? UUID { get; set; }
 }

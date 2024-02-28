@@ -1,56 +1,105 @@
 <template>
-  <ul class="user-list-items">
-    <li class="user-item">
+  <div class="users-list-main">
+    <div class="user-item">
       <span class="chat-heading">Users</span>
-    </li>
-    <template v-for="user in usersList" :key="user.userId">
-      <UserItem :user="user" />
-    </template>
-    <li class="user-item loggedin-user">
-      <div class="row">
-        <div class="col-md-3">
-          <img v-bind:src="loggedInUser.userImage" alt="User Icon" />
+    </div>
+    <ul class="user-list-items">
+      <template v-if="isLoading">Loading...</template>
+      <template v-if="!isLoading">
+        <template v-for="user in $store.state.userList" :key="user.userId">
+          <UserItem :user="convertToUserModel(user)" />
+        </template>
+      </template>
+    </ul>
+    <hr>
+    <ul class="loggedin-user" v-if="$store.state.loggedInUser.nickName">
+      <li>
+        <div class="row">
+          <div class="col-md-3 text-center">
+            <img
+              v-bind:src="$store.state.loggedInUser.userPhoto"
+              alt="User Icon"
+            />
+          </div>
+          <div class="col-md-4 p-0">
+            <span class="username">{{
+              $store.state.loggedInUser.nickName
+            }}</span>
+            <br />
+            <span class="user-online-status">
+              <span class="status-active"> </span>
+              Active
+            </span>
+          </div>
+          <div class="col-md-5 dropdown dropup ml-auto text-end">
+            <button
+              class="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Options
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" :href="`/user/${uuid}`">View Profile</a></li>
+              <li><a class="dropdown-item" href="/">Logout</a></li>
+            </ul>
+          </div>
         </div>
-        <div class="col-md-9 p-0">
-          <span class="username">{{ loggedInUser.username }}</span>
-          <br />
-          <span class="user-online-status">
-            <span class="status-active"> </span>
-            Active
-          </span>
-        </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import UserItem from "./UserItem.vue";
-import { usersList } from "../models/usersList";
-import userImage from "../assets/images/user.png";
+import UserModel from "../models/UserModel";
 
 export default defineComponent({
   components: {
     UserItem,
   },
+  props: {
+    uuid: String,
+    userId: String,
+    groupId: String,
+    subGroupId: String,
+  },
   data() {
     return {
       usersList: [],
-      loggedInUser: {
-        id: 1,
-        username: "Pablo Escalo",
-        userStatus: 1,
-        userImage: userImage,
-      },
+      isLoading: false,
+      loggedInUser: UserModel,
     };
   },
+  methods: {
+    async getAllUsers() {
+      this.isLoading = true;
+      await this.$store.dispatch("fetchAllUsers", {
+        subGroupId: this.subGroupId,
+      });
+      this.isLoading = false;
+    },
+    convertToUserModel(user) {
+      // Assuming user is in the expected format, create a UserModel instance
+      return new UserModel(
+        user.userId,
+        user.userName,
+        user.nickName,
+        user.groupId,
+        user.groupName,
+        user.subGroupId,
+        user.subGroupName,
+        user.userPhoto
+      );
+    },
+  },
   mounted() {
-    this.usersList = usersList;
+    this.getAllUsers();
   },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

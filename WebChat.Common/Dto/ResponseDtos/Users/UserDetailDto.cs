@@ -1,8 +1,11 @@
 ﻿namespace WebChat.Common.Dto.ResponseDtos.Users;
 
-public record UserDetailDto
+public class UserDetailDto
 {
-    public int Id { get; init; }
-    public string? Name { get; init; }
-    public string? PhoneNumber { get; init; }
+    public long Id { get; set; }
+    public int UserId { get; set; }
+    public Guid? RowId { get; set; }
+    public string? UserName { get; set; }
+    public string? NickName { get; set; }
+    public string? UserPhoto { get; set; }
 }
