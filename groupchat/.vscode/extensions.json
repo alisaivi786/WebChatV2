@@ -1,7 +1,27 @@
+//{
+//  "recommendations": [
+//    "Vue.volar",
+//    "Vue.vscode-typescript-vue-plugin",
+//    "dbaeumer.vscode-eslint"
+//  ]
+//}
+
 {
-  "recommendations": [
-    "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin",
-    "dbaeumer.vscode-eslint"
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "edge",
+      "request": "launch",
+      "name": "localhost (Edge)",
+      "url": "https://localhost:5173",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "localhost (Chrome)",
+      "url": "https://localhost:5173",
+      "webRoot": "${workspaceFolder}"
+    }
   ]
 }

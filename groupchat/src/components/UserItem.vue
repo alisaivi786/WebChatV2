@@ -1,10 +1,10 @@
 <template>  
   <li class="user-item">
       <div class="row">
-        <div class="col-md-2 user-icon">
+        <div class="col-lg-3 user-icon">
           <img v-bind:src="user.userPhoto" alt="user Icon" />
         </div>
-        <div class="col-md-8 user-detail">
+        <div class="col-lg-7 user-detail">
           <span class="user-name">{{ user.nickName }}</span>
           <br />
           <span class="user-online-status">
@@ -12,7 +12,7 @@
             Active
           </span>
         </div>
-        <div class="col-md-2 private-message">
+        <div class="col-lg-2 private-message">
             <a href="#" class="btn"><i class="fas fa-paper-plane" title="Send Message"></i></a>
         </div>
       </div>

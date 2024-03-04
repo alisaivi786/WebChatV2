@@ -21,7 +21,7 @@ public interface IUserRepository : IBaseRepository<UserDetailsEntity>
     Task<ApiResponse<bool>> AddUserAsync(AddUserDto reqest);
     Task<ApiResponse<bool>> AddBulkUserAsync(List<AddUserDto> reqest);
     Task<ApiResponse<bool>> DeleteUserAsync(DeleteUserDto reqest);
-    Task<ApiResponse<bool>> UpdateUserAsync(UpdateUserDto reqest);
+    Task<ApiResponse<bool>> UpdateUserAsync(UpdateUserReqDto reqest);
     Task<object> Login(LoginReqDTO reqest);
 }
 

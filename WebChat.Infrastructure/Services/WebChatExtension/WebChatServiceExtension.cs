@@ -67,6 +67,9 @@ public static class WebChatServiceExtension
             .AddRabbitMQ(rabbitConnectionString: $"amqp://{AppSetting.RabbitMqUserName}:{AppSetting.RabbitMqPassword}@{AppSetting.RabbitMqHost}:5672/");
         services.AddHealthChecksUI()
             .AddInMemoryStorage();
+
+        //services.AddHostedService<BackgroundProcess>();
+
         #region Return Service
         return services;
         #endregion 

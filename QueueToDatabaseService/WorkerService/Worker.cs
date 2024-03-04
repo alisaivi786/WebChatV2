@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 using WebChat.RabbitMQ;
 
-namespace QueueToDatabaseService.WorkerService; 
+namespace QueueToDatabaseService.WorkerService;
 #endregion
 
 #region Worker
@@ -17,7 +17,7 @@ namespace QueueToDatabaseService.WorkerService;
 /// <param name="logger"></param> 
 #endregion
 internal class Worker(
-    ILogger<Worker> logger, 
+    ILogger<Worker> logger,
     IRabbitMQConsumer RabbitMQConsumer,
     IConfiguration configuration
     ) : BackgroundService
@@ -46,7 +46,9 @@ internal class Worker(
 
             // Uncomment the line below if you want to perform some background processing.
             // Your actual background processing logic should go here.
+
             await DoBackgroundWorkWithCode(stoppingToken);
+            // await DoBackgroundWorkWithApiCall(stoppingToken);
         }
     }
     #endregion
@@ -91,8 +93,6 @@ internal class Worker(
 
             Console.WriteLine($"Error: {ex.Message}");
         }
-        
-
     }
     #endregion
 

@@ -56,6 +56,12 @@ export default defineConfig({
         }
     },
     server: {
+        proxy: {
+            '^/Health': {
+                target: 'https://localhost:7071/',
+                secure: false
+            }
+        },
         port: 5173,
         https: {
             key: fs.readFileSync(keyFilePath),

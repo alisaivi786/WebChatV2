@@ -1,5 +1,6 @@
 ﻿
 
+using SharpCompress.Common;
 using System.Threading;
 using WebChat.Common.Dto.RequestDtos.GroupUser;
 using WebChat.Redis;
@@ -19,38 +20,44 @@ namespace WebChat.Presistence.Repositories;
 /// <param name="appSettings"></param>
 /// <param name="authService"></param> 
 #endregion
-public class UserRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IAppSettings appSettings, IAuthService authService, IRedisService redisService)
-    : BaseRepository<UserDetailsEntity>(context, configuration, httpContextAccessor,appSettings: appSettings), IUserRepository
+public class UserRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IAppSettings appSettings, IAuthService authService,
+    IRedisService redisService,
+    IRedisService2<object> redisService2
+    )
+    : BaseRepository<UserDetailsEntity>(context, configuration, httpContextAccessor, appSettings: appSettings), IUserRepository
 {
     private readonly IAppSettings appSettings = appSettings;
     private readonly IRedisService RedisService = redisService;
 
+    private readonly IRedisService2<object> RedisService2 = redisService2;
+
     #region LoginInUserRepository
-    public ILoginInUserRepository LoginInUserRepository = new LoginInUserRepository(context,configuration,httpContextAccessor,appSettings);
+    public ILoginInUserRepository LoginInUserRepository = new LoginInUserRepository(context, configuration, httpContextAccessor, appSettings);
     #endregion
 
     #region GroupUserRepository
-    public IGroupUserRepository GroupUserRepository = new GroupUserRepository(context,configuration,httpContextAccessor,appSettings);
+    public IGroupUserRepository GroupUserRepository = new GroupUserRepository(context, configuration, httpContextAccessor, appSettings);
     #endregion
 
     private readonly IAuthService AuthService = authService;
 
     public async Task<object> Login(LoginReqDTO reqest)
     {
-        if(true
+        if (true
             //&& !string.IsNullOrWhiteSpace(reqest.Password) 
-            ) {
+            )
+        {
 
             // Call Lottery DB to Authenticate the Users:
             using AdoNetDatabase<LotteryUserDetailsRspDto> Ado = new(appSettings);
             var lotteryResponse = Ado
                 .GetSingleRow<LotteryUserDetailsRspDto>(
-                "lottery.dbo.VW_Chat_User_Details", 
-                ["UserId", "UserName", "Password","NickName", "UserPhoto"], 
+                "lottery.dbo.VW_Chat_User_Details",
+                ["UserId", "UserName", "Password", "NickName", "UserPhoto"],
                 $"UserName='{reqest.UserName}'");
 
-            if(
-                lotteryResponse != null && lotteryResponse.UserId != 0 
+            if (
+                lotteryResponse != null && lotteryResponse.UserId != 0
                 //&& reqest.Password.Equals(lotteryResponse.Password) Later we Check Password to verifiy the Users
                 )
             {
@@ -94,7 +101,8 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
     {
         #region Binding Request with Domain Entity Model
         //============================================================
-        var entity = reqest.Select(x => new UserDetailsEntity {
+        var entity = reqest.Select(x => new UserDetailsEntity
+        {
             UserName = x.UserName,
             NickName = x.NickName,
             UserId = Convert.ToInt32(x.UserId),
@@ -160,7 +168,7 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
         else
         {
             exist.UtcLastLoginTime = DateTime.UtcNow;
-            var response = await UpdateAsync(exist,reqest.UserId);
+            var response = await UpdateAsync(exist, reqest.UserId);
             if (response != null && response.Code != null && (int)response.Code == (int)DbCodeEnums.Success)
             {
                 return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
@@ -179,12 +187,13 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
 
     public async Task<ApiResponse<List<GetuserDetailsRspDto>>> GetLotteryUserDetailsAsync(GetUserDetailsReqDto request)
     {
-        using AdoNetDatabase<GetuserDetailsRspDto> database = new (appSettings);
-        
+        using AdoNetDatabase<GetuserDetailsRspDto> database = new(appSettings);
+
         List<GetuserDetailsRspDto> result = database
             .SelectData("lottery.dbo.tab_Users", new[] { "UserId", "UserName", "NickName", "UserPhoto" }, request.ListOfUserIds);
-        
-        if(result.Count > 0) {
+
+        if (result.Count > 0)
+        {
             return new ApiResponse<List<GetuserDetailsRspDto>> { Data = result, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
         }
 
@@ -198,14 +207,14 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
         // Check Exisit Record
         //Expression<Func<LoginInUserEntity, bool>> predicate = user => user.UserId == reqest.UserId;
 
-        
+
 
         #region Predicate Filter
         Expression<Func<UserDetailsEntity, bool>> predicate = user => user.IsActive && user.RowId == RowId;
         #endregion
 
         var exist = await GetAvailablePredicateAsync(predicate, cancellationToken);
-        if(exist != null)
+        if (exist != null)
         {
             #region Get Data Based on Filter from Database
             if (predicate != null)
@@ -247,17 +256,18 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
     {
         var response = GetAll();
 
-        if(response != null)
+        if (response != null)
         {
             List<object> userList =
             [
                 .. response.Select(userDetails => (object)userDetails),
             ];
 
-            // Now you can pass userList to the PushListObjectToCache method
-            var redis = RedisService.PushListObjectToCache(CommonCacheKey.cacheKey_users_usersdetails, userList);
-
-
+            #region PushUserDetailsToRedis
+           // var redis = RedisService.PushListObjectToCache(CommonCacheKey.cacheKey_users_usersdetails, userList); 
+           // var redis = await RedisService2.PushOrReplaceObject(CommonCacheKey.cacheKey_users_usersdetails, userList, "UserId");
+            var redis = await RedisService2.PushOrReplaceObjectList(CommonCacheKey.cacheKey_users_usersdetails2, userList, "UserId");
+            #endregion
 
             var responseResult = response.Select(x => new UserDetailDto
             {
@@ -276,8 +286,26 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
 
     }
 
-    public Task<ApiResponse<bool>> UpdateUserAsync(UpdateUserDto reqest)
+    public async Task<ApiResponse<bool>> UpdateUserAsync(UpdateUserReqDto reqest)
     {
-        throw new NotImplementedException();
+        Expression<Func<UserDetailsEntity, bool>> predicate = user => user.RowId == reqest.RowId;
+
+        var exist = await GetAvailablePredicateAsync(predicate);
+        if (exist != null)
+        {
+            exist.UserName = reqest.UserName;
+            exist.NickName = reqest.NickName;
+            exist.UserPhoto = reqest.UserPhoto;
+            exist.ModifiedBy = exist.UserId;
+            exist.UtcDateModified = DateTime.UtcNow;
+            var response = await UpdateAsync(exist, Convert.ToInt64(exist.UserId));
+            if (response != null && response.Code != null && (int)response.Code == (int)DbCodeEnums.Success)
+            {
+                return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
+            }
+        }
+
+        return new ApiResponse<bool> { Data = false };
+
     }
 }

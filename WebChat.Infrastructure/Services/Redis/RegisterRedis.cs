@@ -1,5 +1,6 @@
 ﻿using StackExchange.Redis;
 using WebChat.Redis;
+using WebChat.Redis.RedisHelper;
 
 namespace WebChat.Infrastructure.Services.Redis;
 
@@ -17,6 +18,12 @@ public static class RegisterRedis
 
         //services.AddScoped<IRedisService, RedisService>();
         services.AddSingleton<IRedisService, RedisService>();
+        // services.AddSingleton<IRedisService2<T>, RedisService2<T>>();
+
+        services.AddSingleton(typeof(IRedisService2<>), typeof(RedisService2<>));
+
+        services.AddSingleton<IUserDetailsService, UserDetailsService>();
+
         Console.WriteLine("--> Register RedisService");
 
         return services;

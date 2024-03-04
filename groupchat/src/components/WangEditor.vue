@@ -7,12 +7,13 @@
       :mode="mode"
     />
     <Editor
-      style="height: 20vh; overflow-y: hidden"
+      style="height: 10vh; overflow-y: auto"
       v-model="valueHtml"
       @input="handleValueChange"
       :defaultConfig="editorConfig"
       :mode="mode"
       @onCreated="handleCreated"
+      @keydown="handleKeyDown"
     />
   </div>
 </template>
@@ -26,12 +27,20 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 
 export default {
   components: { Editor, Toolbar },
-  setup() {
+  props: ['sendMessage'],
+  setup(props) {
     const editorRef = shallowRef();
     const valueHtml = ref("");
     const store = useStore();
 
     const handleValueChange = () => {
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        //props.sendMessage();
+        //event.preventDefault();
+      }
     };
 
     onMounted(() => {
@@ -71,7 +80,7 @@ export default {
     const editorConfig = { placeholder: "Type here...", MENU_CONF: {} };
 
     editorConfig.MENU_CONF["uploadImage"] = {
-      server: `${import.meta.env.VITE_API_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/Message/UploadImage`,
+      server: `${import.meta.env.VITE_UPLOAD_IMAGE_API_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/Message/UploadImage`,
       fieldName: "file",
       headers: {
         Accept: 'text/x-json',
@@ -103,6 +112,7 @@ export default {
       mode: "default",
       valueHtml,
       handleValueChange,
+      handleKeyDown,
       toolbarConfig,
       editorConfig,
       handleCreated,

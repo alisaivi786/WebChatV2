@@ -1,10 +1,18 @@
 <template>
   <div class="group-heading">
-    {{ $store.state.groupData.groupName }} - {{ $store.state.groupData.subGroupName }}
-   <!-- Group Id : {{ groupId }} - {{ groupName }} - Sub group Id : {{ subGroupId }} - User Id : {{ userId }} -->
+    {{ $store.state.groupData.groupName }} -
+    {{ $store.state.groupData.subGroupName }}
   </div>
-  <div class="chat-messages-col">
+  <div class="chat-messages-col chat-messages-bg">
     <div class="chat-messages" ref="chatMessages" id="chatMessages">
+      <div
+        class="d-flex justify-content-center spinner-custom"
+        v-if="loadingMoreMessages && !isLoading"
+      >
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <div class="chat-container" v-if="!isLoading && chatList.length == 0">
         <div class="chat-empty">No messages yet, start the conversation!</div>
       </div>
@@ -24,15 +32,24 @@
           class="chat-item"
         />
       </template>
-      <div class="latest-message-caret">
+      <div
+        class="latest-message-caret"
+        v-if="showLatestMessageButton"
+        @click="scrollToBottom"
+      >
         <i class="fa fa-angle-down"></i>
       </div>
-      <span v-if="isLoading">Loading...</span>
+
+      <div class="d-flex justify-content-center spinner-custom" v-if="isLoading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <span v-else-if="isError">Error: {{ error }}</span>
     </div>
-    <div class="row align-items-center p-3 new-message-row">
+    <div class="row align-items-center p-3 new-message-row bg-transparent">
       <div class="col-lg-12">
-        <WangEditor ref="wangEditor" class="wang-editor" />
+        <WangEditor :sendMessage="sendMessage" ref="wangEditor" class="wang-editor" />
       </div>
       <div class="col-lg-12">
         <button class="btn send-message-btn" @click="sendMessage">Send</button>
@@ -43,13 +60,13 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { useStore } from "vuex";
 import { useInfiniteQuery } from "vue-query";
 import { v4 as uuidv4 } from "uuid";
 import ChatItem from "./ChatItem.vue";
 import ChatModel from "../models/ChatModel";
 import WangEditor from "./WangEditor.vue";
-import { getAllMessages } from "@/services/apiService";
+import { apiService } from "@/services/apiService";
+import { getAllMessagesRoute } from "@/services/routes";
 import { ChatHub } from "@/services/chatHub";
 
 export default defineComponent({
@@ -71,14 +88,15 @@ export default defineComponent({
     };
   },
   setup(props) {
-    const store = useStore();
     const totalPage = ref(1);
     const chatList = ref([]);
     const scrollPosition = ref(0);
     let oldChatHeight = ref(0);
     const isWindowFocused = ref(true);
+    const showLatestMessageButton = ref(false);
+    const loadingMoreMessages = ref(false);
 
-    const scrollToBottom = () => {      
+    const scrollToBottom = () => {
       requestAnimationFrame(() => {
         const chatMessages = document.getElementById("chatMessages");
         chatMessages.scrollTo({
@@ -102,20 +120,20 @@ export default defineComponent({
       const formattedData = [];
 
       data.forEach((item) => {
-        const chatModel = new ChatModel(
-          item.groupId,
-          item.groupName,
-          item.subGroupId,
-          item.subGroupName,
-          item.message,
-          item.messageId,
-          item.time,
-          item.userId,
-          item.userName,
-          item.nickName,
-          item.userPhoto,
-          item.uuid
-        );
+        const chatModel = new ChatModel({
+          groupId: item.groupId,
+          groupName: item.groupName,
+          subGroupId: item.subGroupId,
+          subGroupName: item.subGroupName,
+          message: item.message,
+          messageId: item.messageId,
+          time: item.time,
+          userId: item.userId,
+          userName: item.userName,
+          nickName: item.nickName,
+          userPhoto: item.userPhoto,
+          uuid: item.uuid,
+        });
 
         formattedData.push(chatModel);
       });
@@ -136,27 +154,28 @@ export default defineComponent({
       // if (pageParam > totalPage.value) return [];
 
       oldChatHeight.value = chatMessages.scrollHeight;
-
-      const accessToken = store.state.accessToken;
-
+      loadingMoreMessages.value = true;
       if (pageParam === 1) {
         try {
-          const response = await getAllMessages(         
-            props.subGroupId,   
-            "",
-            pageParam,
-            props.groupName,
-            accessToken
-          );
+          const params = {
+            GroupName: props.groupName,
+            SubGroupId: props.subGroupId,
+            UUID: "",
+            pageNo: pageParam,
+          };
+
+          const response = await apiService(getAllMessagesRoute, params);
+
           chatList.value = mapToChatModel(response.data.list).reverse();
           totalPage.value = response.data.totalPage;
 
           setTimeout(() => {
             scrollToBottom();
           }, 100);
-
+          loadingMoreMessages.value = false;
           return response.data.list;
-        } catch (error) {
+        } catch (error) {          
+          loadingMoreMessages.value = false;
           console.error("Error fetching messages:", error);
           return [];
         }
@@ -164,19 +183,24 @@ export default defineComponent({
         try {
           const oldestMessage = getLastMessage();
 
-          const response = await getAllMessages(    
-            props.subGroupId,
-            oldestMessage.uuid,
-            pageParam,
-            props.groupName,
-            accessToken
-          );
+          const params = {
+            GroupName: props.groupName,
+            SubGroupId: props.subGroupId,
+            UUID: oldestMessage.uuid,
+            pageNo: 2,
+          };
+
+          const response = await apiService(getAllMessagesRoute, params);
+
           chatList.value.unshift(
             ...mapToChatModel(response.data.list.reverse())
           );
-          scrollToPosition(scrollPosition.value);
+          if (response.data.list.length > 0)
+            scrollToPosition(scrollPosition.value);
+          loadingMoreMessages.value = false;
           return response.data.list;
         } catch (error) {
+          loadingMoreMessages.value = false;
           console.error("Error fetching next page:", error);
           return [];
         }
@@ -202,6 +226,14 @@ export default defineComponent({
     const handleScroll = () => {
       const chatMessages = document.getElementById("chatMessages");
       scrollPosition.value = chatMessages.scrollTop;
+
+      const scrollFromBottom =
+        chatMessages.scrollHeight -
+        chatMessages.clientHeight -
+        chatMessages.scrollTop;
+
+      if (scrollFromBottom > 900) showLatestMessageButton.value = true;
+      else showLatestMessageButton.value = false;
 
       logTopVisibleElement();
       if (
@@ -254,13 +286,11 @@ export default defineComponent({
       chatList.value.push(messageObj);
       scrollToBottom();
     };
-    
+
     const getLastMessage = () => {
-      if(chatList.value.length > 1)
-        return chatList.value[0];
-      else
-        return new ChatModel();
-    }
+      if (chatList.value.length > 1) return chatList.value[0];
+      else return new ChatModel();
+    };
 
     const markChatAsFailed = (messageObj) => {
       let element = chatList.value.find(
@@ -282,6 +312,8 @@ export default defineComponent({
       markChatAsFailed,
       isWindowFocused,
       getLastMessage,
+      showLatestMessageButton,
+      loadingMoreMessages,
     };
   },
   methods: {
@@ -293,10 +325,10 @@ export default defineComponent({
     },
     getDateClass(item) {
       return new Date(item.time).toDateString().replaceAll(" ", "-");
-    },    
+    },
     async getSubGroupDetail() {
       try {
-        await this.$store.dispatch('fetchSubGroupById', this.subGroupId);
+        await this.$store.dispatch("fetchSubGroupById", this.subGroupId);
       } catch (error) {
         console.error(error);
       }
@@ -312,21 +344,18 @@ export default defineComponent({
         return;
       }
 
-      const messageObj = new ChatModel(
-        1, // GroupId
-        this.groupName,
-        this.subGroupId,
-        "10 Minute", // sub group name
-        editorContent,
-        0, // MessageId
-        new Date().toISOString(),//.replace("Z", ""), // Time
-        this.$store.state.loggedInUser.userId, // UserId
-        "Aymen", // Username
-        "", // NickName
-        "", // UserPhoto
-        uuidv4(),
-        true // isCurrentUser
-      );
+      const messageObj = new ChatModel({
+        groupId: 1, // GroupId
+        groupName: this.groupName,
+        subGroupId: this.subGroupId,
+        subGroupName: "10 Minute", // sub group name
+        message: editorContent,
+        time: new Date().toISOString(), // Time
+        userId: this.$store.state.loggedInUser.userId, // UserId
+        uuid: uuidv4(),
+        isCurrentUser: true,
+      });
+
       this.addMessageToList(messageObj);
 
       const messagePayload = JSON.stringify({
@@ -361,7 +390,10 @@ export default defineComponent({
     chatMessages.addEventListener("scroll", this.handleScroll);
 
     this.chatHub.startConnection().then(() => {
-      this.chatHub.joinGroup(this.subGroupId, this.$store.state.loggedInUser.userId.toString());
+      this.chatHub.joinGroup(
+        this.subGroupId,
+        this.$store.state.loggedInUser.userId.toString()
+      );
 
       this.chatHub.setupReceiveMessageHandler((userId, message) => {
         console.log("Received message:", message);
@@ -374,20 +406,20 @@ export default defineComponent({
 
         if (!found)
           this.addMessageToList(
-            new ChatModel(
-              messageObj.GroupId,
-              messageObj.GroupName,
-              messageObj.SubGroupId,
-              messageObj.SubGroupName,
-              messageObj.Message,
-              messageObj.MessageId,
-              messageObj.Time,
-              messageObj.UserId,
-              messageObj.UserName,
-              messageObj.NickName,
-              messageObj.UserPhoto,
-              messageObj.UUID
-            )
+            new ChatModel({
+              groupId: messageObj.GroupId,
+              groupName: messageObj.GroupName,
+              subGroupId: messageObj.SubGroupId,
+              subGroupName: messageObj.SubGroupName,
+              message: messageObj.Message,
+              messageId: messageObj.MessageId,
+              time: messageObj.Time,
+              userId: messageObj.UserId,
+              userName: messageObj.UserName,
+              nickName: messageObj.NickName,
+              userPhoto: messageObj.UserPhoto,
+              uuid: messageObj.UUID,
+            })
           );
       });
 
@@ -396,14 +428,14 @@ export default defineComponent({
         console.log("User connected:", connectionId);
       });
     });
-    
-    window.addEventListener("focus", () => {
-        this.isWindowFocused = true;
-      });
 
-      window.addEventListener("blur", () => {
-        this.isWindowFocused = false;
-      });
+    window.addEventListener("focus", () => {
+      this.isWindowFocused = true;
+    });
+
+    window.addEventListener("blur", () => {
+      this.isWindowFocused = false;
+    });
 
     this.getSubGroupDetail();
   },

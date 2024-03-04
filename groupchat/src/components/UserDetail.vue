@@ -9,24 +9,19 @@
       </div>
     </div>
     <div v-else-if="!editing" class="row">
-      <div class="col-md-2">
-        <div class="card shadow-sm">
+      <div class="col-md-3">
+        <div class="card shadow-sm user-avatar">
           <img
             :src="$store.state.loggedInUser.userPhoto"
             class="card-img-top rounded-circle"
             alt="User Photo"
           />
-          <div class="card-body text-center">
-            <h5 class="card-title mb-0">
-              {{ $store.state.loggedInUser.userName }}
-            </h5>
-          </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <h4>Member Name</h4>
+      <div class="col-md-8">
+        <h5>Member Name</h5>
         <p>{{ $store.state.loggedInUser.userName }}</p>
-        <h4>Nickname</h4>
+        <h5>Nickname</h5>
         <p>{{ $store.state.loggedInUser.nickName }}</p>
       </div>
       <div class="col-md-1">
@@ -38,22 +33,31 @@
       </div>
     </div>
     <div v-else class="row">
-      <div class="col-md-2">
-        <div class="card shadow-sm">
+      <div class="col-md-3">
+        <div class="card shadow-sm user-avatar">
           <img
             :src="$store.state.loggedInUser.userPhoto"
             class="card-img-top rounded-circle"
             alt="User Photo"
           />
-          <div class="card-body text-center">
-            <input type="file" class="form-control" @change="handleFileChange($event)" />
+          <div class="card-body text-center" v-if="!imageUploading">
+            <input
+              type="file"
+              class="form-control"
+              @change="handleFileChange($event)"
+            />
+          </div>
+          <div class="d-flex justify-content-center mt-1" v-if="imageUploading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <h4>Member Name</h4>
+      <div class="col-md-8">
+        <h5>Member Name</h5>
         <input type="text" class="mb-3 form-control" v-model="userName" />
-        <h4>Nickname</h4>
+        <h5>Nickname</h5>
         <input type="text" class="form-control" v-model="nickName" />
       </div>
       <div class="col-md-1">
@@ -62,6 +66,11 @@
             Save
           </button>
         </div>
+        <div class="d-flex justify-content-center mt-1" v-if="userUpdating">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -70,11 +79,17 @@
 <script>
 import { defineComponent } from "vue";
 import UserModel from "../models/UserModel";
+import { apiService, uploadApiService } from "../services/apiService";
+import { uploadImageRoute, updateUserDetailsRoute } from "../services/routes";
 
 export default defineComponent({
   data() {
     return {
       loggedInUser: UserModel,
+      newUserAvatarURL: String,
+      imageUploading: false,
+      userUpdating: false,
+      params: Object,
       editing: false,
       userPhoto: "",
       userName: "",
@@ -84,8 +99,11 @@ export default defineComponent({
   methods: {
     async getCurrentUserDetails() {
       try {
-        await this.$store.dispatch('fetchAccessToken');
-        await this.$store.dispatch("fetchCurrentUserDetails", this.$route.params.uuid);
+        await this.$store.dispatch("fetchAccessToken");
+        await this.$store.dispatch(
+          "fetchCurrentUserDetails",
+          this.$route.params.uuid
+        );
       } catch (error) {
         console.error(error);
       }
@@ -93,35 +111,50 @@ export default defineComponent({
     toggleEdit() {
       this.editing = !this.editing;
       if (this.editing) {
-        // Initialize input values with current user details
         this.userPhoto = this.$store.state.loggedInUser.userPhoto;
         this.userName = this.$store.state.loggedInUser.userName;
         this.nickName = this.$store.state.loggedInUser.nickName;
       }
     },
-    handleFileChange(event) {
-      // Update editedUser with the selected file
+    async handleFileChange(event) {
+      this.imageUploading = true;
       const file = event.target.files[0];
       if (file) {
-        this.editedUser.userPhoto = URL.createObjectURL(file);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const data = await uploadApiService(uploadImageRoute, formData);
+          console.log("Image uploaded successfully:", data);
+          this.newUserAvatarURL = data.data.url;
+          this.$store.state.loggedInUser.userPhoto = this.newUserAvatarURL;
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        } finally {
+          this.imageUploading = false;
+        }
       }
     },
     async saveChanges() {
-      // Perform API call with updated details
-      const updatedDetails = {
-        userPhoto: this.userPhoto,
+        this.userUpdating = true;
+      this.params = {
+        timestamp: 9999999999,
+        random: "stringstringstringstringstringst",
+        signature: "string",
+        rowId: this.$store.state.loggedInUser.rowId,
         userName: this.userName,
         nickName: this.nickName,
+        userPhoto: this.$store.state.loggedInUser.userPhoto,
       };
+
       try {
-        // Call API with updated details
-       // await this.$store.dispatch("updateUserDetails", updatedDetails);
-        // Update local user details
-        this.$store.state.loggedInUser.userPhoto = this.userPhoto;
+        await apiService(updateUserDetailsRoute, this.params);
+
         this.$store.state.loggedInUser.userName = this.userName;
         this.$store.state.loggedInUser.nickName = this.nickName;
-        // Toggle editing mode off
+
         this.editing = false;
+        this.userUpdating = false;
       } catch (error) {
         console.error(error);
       }
@@ -134,7 +167,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Add any custom styles here */
 .user-detail {
   background-color: #ffffff;
   border-radius: 10px;
@@ -155,5 +187,8 @@ export default defineComponent({
 .card-text {
   font-size: 0.9rem;
   color: #6c757d;
+}
+.user-avatar {
+  padding: 1em;
 }
 </style>

@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using WebChat.Common.Dto.RequestDtos.Tests;
 using WebChat.Common.Dto.ResponseDtos.LotteryUsers;
-using WebChat.Redis;
 
 namespace WebChat.API.Controllers;
 
@@ -14,7 +13,7 @@ namespace WebChat.API.Controllers;
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/Test")]
 [ApiController]
-public class TestController(IRedisService RedisService) : ControllerBase
+public class TestController(IRedisService RedisService, IRedisService2<GetuserDetailsRspDto> RedisService2) : ControllerBase
 {
     #region ChatHubTest
     [MapToApiVersion(1)]
@@ -77,7 +76,8 @@ public class TestController(IRedisService RedisService) : ControllerBase
     {
         var userDetailsJson = JsonConvert.SerializeObject(request);
 
-        RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails);
+        await RedisService2.PushOrReplaceObject(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2, request, "UserId");
+        // RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails);
 
         // RedisService.RemoveKey(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
 
@@ -85,7 +85,7 @@ public class TestController(IRedisService RedisService) : ControllerBase
     }
     #endregion
 
-    #region PushUserDetailsToRedis
+    #region PushUsersDetailsListToRedis
     [MapToApiVersion(1)]
     [HttpPost("PushUsersDetailsListToRedis")]
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
@@ -96,7 +96,7 @@ public class TestController(IRedisService RedisService) : ControllerBase
         //  RedisService.PushObjectList(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2 , request);
         // RedisService.RemoveKey(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
 
-        RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails);
+        RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
 
         return Ok();
     }

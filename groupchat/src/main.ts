@@ -10,15 +10,13 @@ import { createRouter, createWebHistory } from 'vue-router';
 import App from './App.vue'
 import ChatHome from './components/ChatHome.vue';
 import UserDetail from './components/UserDetail.vue';
-import Login from './components/Login.vue';
+import LoginPage from './components/LoginPage.vue';
 import store from './store/store';
-
-const uuid = new URL(window.location.href).searchParams.get("uuid") ?? "f3b7b4fe-ca82-459b-8235-3d33757894d7";
 
 const routes = [
   {
     path: '/', // Define root path
-    component: Login,
+    component: LoginPage,
     children: []
   },
   {
@@ -31,9 +29,8 @@ const routes = [
   },
   {
     path: '/login',
-    component: Login
+    component: LoginPage
   },
-  // Add more routes as needed
 ];
 
 const router = createRouter({

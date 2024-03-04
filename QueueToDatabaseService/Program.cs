@@ -1,6 +1,11 @@
 ﻿#region NameSpace
 
 
+using JwtService.Interface;
+using JwtService;
+using JwtService.Jwt;
+using WebChat.Application.ApplicationSettings;
+
 namespace QueueToDatabaseService;
 #endregion
 
@@ -61,7 +66,19 @@ internal class Program
                     var AppSetting = new AppSettings(configuration);
                     Console.WriteLine("DBProvider" + AppSetting.MySqlConnectionString);
                     // Add AppSettings as a singleton service and pass the configuration to the constructor
+                    services.AddSingleton<IJwtConfig>(new JwtConfig()
+                    {
+                        SecretKey = AppSetting.JwtSecretKey,
+                        Issuer = AppSetting.JwtIssuer,
+                        Audience = AppSetting.JwtAudience,
+                        TokenTime = AppSetting.JwtTokenTime,
+                    });
+
+
                     services.AddSingleton<IAppSettings>(AppSetting);
+
+                    services.AddScoped<IAuthService, AuthService>();
+
                     // Add Persistence Infrastructure
                     services.AddPersistenceInfrastructure(AppSetting);
                     // Add Rabbit MQ

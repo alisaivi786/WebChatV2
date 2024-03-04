@@ -14,35 +14,20 @@ export default class ChatModel {
     isError: Boolean;
     isCurrentUser: Boolean;
   
-    constructor(
-        groupId: number,
-        groupName: string,
-        subGroupId: number,
-        subGroupName: string,
-        message: string,
-        messageId: number,
-        time: string,
-        userId: number,
-        userName: string,
-        nickName: string,
-        userPhoto: string,
-        uuid: string,
-        isCurrentUser: Boolean
-    ) {
-      this.groupId = groupId;
-      this.groupName = groupName;
-      this.subGroupId = subGroupId;
-      this.subGroupName = subGroupName;
-      this.message = message;
-      this.messageId = messageId;
-      this.message = message;
-      this.time = time;
-      this.userId = userId;
-      this.userName = userName;
-      this.nickName = nickName;
-      this.userPhoto = userPhoto;
-      this.uuid = uuid;
+    constructor(params: Partial<ChatModel>) {
+      this.groupId = params.groupId ?? 0;
+      this.groupName = params.groupName ?? '';
+      this.subGroupId = params.subGroupId ?? 0;
+      this.subGroupName = params.subGroupName ?? '';
+      this.message = params.message ?? '';
+      this.messageId = params.messageId ?? 0;
+      this.time = params.time ?? '';
+      this.userId = params.userId ?? 0;
+      this.userName = params.userName ?? '';
+      this.nickName = params.nickName ?? '';
+      this.userPhoto = params.userPhoto ?? '';
+      this.uuid = params.uuid ?? '';
       this.isError = false;
-      this.isCurrentUser = isCurrentUser;
+      this.isCurrentUser = params.isCurrentUser ?? false;
     }
   }

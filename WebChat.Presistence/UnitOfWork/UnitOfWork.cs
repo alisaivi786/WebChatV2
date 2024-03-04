@@ -18,12 +18,15 @@ public class UnitOfWork : IUnitOfWork,IDisposable
     private readonly IAuthService AuthService;
     private readonly IRedisService RedisService;
 
+    private readonly IRedisService2<object> RedisService2;
+
     public UnitOfWork(
         WebchatDBContext context,
         IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor,
         IAppSettings applicationSettings,
         IRedisService redisService,
+        IRedisService2<object> redisService2,
         IAuthService authService)
     {
         #region Dependencies Init()
@@ -33,6 +36,7 @@ public class UnitOfWork : IUnitOfWork,IDisposable
         Configuration = configuration; 
         AuthService = authService;
         RedisService = redisService;
+        RedisService2 = redisService2;
         #endregion
 
 
@@ -76,7 +80,8 @@ public class UnitOfWork : IUnitOfWork,IDisposable
          httpContextAccessor: HttpContextAccessor,
          appSettings: AppSettings,
          authService: AuthService,
-         redisService: RedisService);
+         redisService: RedisService,
+         redisService2: RedisService2);
         #endregion
     }
     public IUserRepository UserRepository { get; }

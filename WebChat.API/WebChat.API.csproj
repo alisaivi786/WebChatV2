@@ -3,7 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <!--<SpaRoot>..\webchatdemo.client</SpaRoot>
+	  <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+	  <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>-->
+	  
     <InvariantGlobalization>false</InvariantGlobalization>
     <UserSecretsId>86cc617c-3dc0-422b-9e27-a06c00852a21</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -13,7 +17,9 @@
 
   <ItemGroup>
 
-    
+	  <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
+		  <Version>8.*-*</Version>
+	  </PackageReference>
 	 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -45,11 +51,14 @@
     <ProjectReference Include="..\WebChat.Infrastructure.SqlServer\WebChat.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\WebChat.Infrastructure\WebChat.Infrastructure.csproj" />
     <ProjectReference Include="..\WebChat.Redis\WebChat.Redis.csproj" />
+	  <ProjectReference Include="..\groupchat\groupchat.esproj">
+		  <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+	  </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Middleware\" />
-    <Folder Include="wwwroot\Uploads\" />
+    <Folder Include="wwwroot\Files\GeneralFiles\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,1404 @@
+{
+	"info": {
+		"_postman_id": "ad6e04db-d6be-4e4d-aa9b-4908cd01b3f8",
+		"name": "WebChatV1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27704570",
+		"_collection_link": "https://cloudy-satellite-906267.postman.co/workspace/Team-Workspace~21c60bee-2b77-4d08-8616-a49112603be0/collection/27704570-ad6e04db-d6be-4e4d-aa9b-4908cd01b3f8?action=share&source=collection_link&creator=27704570"
+	},
+	"item": [
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "GetMessages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"GroupName\": \"Test group\",\r\n    \"SubGroupId\": 1,\r\n    \"UUID\": \"d6a8495c-9099-44c8-ab35-1723a738789e\",\r\n    \"timestamp\": 9999999999,\r\n    \"random\": \"stringstringstringstringstringst\",\r\n    \"signature\": \"string\",\r\n    \"pageSize\": 20,\r\n    \"pageNo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/GetMessages",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"GetMessages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessageDetailsRedis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"timestamp\": 9999999999,\r\n    \"random\": \"stringstringstringstringstringst\",\r\n    \"signature\": \"string\",\r\n    \"GroupName\": \"TB-Admin\",\r\n    \"SubGroupId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/GetRedisMessages",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"GetRedisMessages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"userId\": 3,\r\n  \"groupId\": 1,\r\n  \"message\": \"Hey Guys\",\r\n  \"setTime\": \"2024-02-06T13:45:20.203Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/AddMessage",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"AddMessage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"messageId\": 0,\r\n  \"userId\": 0,\r\n  \"groupId\": 0,\r\n  \"message\": \"string\",\r\n  \"updateTime\": \"2024-02-05T13:49:54.571Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/UpdateMessage",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"UpdateMessage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"id\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/DeleteMessage",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"DeleteMessage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSingleMessages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/222",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"222"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddBulkMessage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"Id\": 1,\r\n    \"Content\": \"Hello Team!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 2,\r\n    \"Content\": \"Did you watch the recent cricket match?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 3,\r\n    \"Content\": \"Yes, it was an exciting game!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 4,\r\n    \"Content\": \"Who do you think will win the upcoming elections?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 5,\r\n    \"Content\": \"I'm not sure, it's hard to predict.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 6,\r\n    \"Content\": \"I think the cricket team needs better bowling.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 7,\r\n    \"Content\": \"What's your favorite cricket team?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 8,\r\n    \"Content\": \"I support the national team!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 9,\r\n    \"Content\": \"Cricket is so popular, isn't it?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 10,\r\n    \"Content\": \"I heard there's a new political party forming.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 11,\r\n    \"Content\": \"Really? What's their agenda?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 12,\r\n    \"Content\": \"I hope they focus on education and healthcare.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 13,\r\n    \"Content\": \"Have you ever been to a live cricket match?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 14,\r\n    \"Content\": \"Yes, the atmosphere is incredible!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 15,\r\n    \"Content\": \"Let's plan a movie night this weekend.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 16,\r\n    \"Content\": \"Sure, I'm up for it!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 17,\r\n    \"Content\": \"I'll bring the popcorn!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 18,\r\n    \"Content\": \"What's your take on the current economic situation?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 19,\r\n    \"Content\": \"It's quite challenging, especially for small businesses.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 20,\r\n    \"Content\": \"We should stay positive and support local businesses.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 21,\r\n    \"Content\": \"What's your favorite cuisine?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 22,\r\n    \"Content\": \"I love Italian food!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 23,\r\n    \"Content\": \"Mexican cuisine is my go-to choice.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 24,\r\n    \"Content\": \"Let's plan a potluck dinner!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 25,\r\n    \"Content\": \"I'm in! I'll bring my famous lasagna.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 26,\r\n    \"Content\": \"Sounds delicious! I'll make guacamole.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 27,\r\n    \"Content\": \"Count me in too! I'll bring dessert.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 28,\r\n    \"Content\": \"Have you read any good books lately?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 29,\r\n    \"Content\": \"I just finished a fantastic mystery novel.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 30,\r\n    \"Content\": \"I'm into science fiction. Any recommendations?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 31,\r\n    \"Content\": \"Let's organize a hiking trip next month.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 32,\r\n    \"Content\": \"That sounds like a great idea! I'm in!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 33,\r\n    \"Content\": \"Count me in too! I love nature hikes.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 34,\r\n    \"Content\": \"What's your favorite hiking trail?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 35,\r\n    \"Content\": \"I enjoy trails with scenic views and waterfalls.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 36,\r\n    \"Content\": \"I prefer challenging mountain trails. The more difficult, the better!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 37,\r\n    \"Content\": \"Have you tried rock climbing before?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 38,\r\n    \"Content\": \"Yes, it's an adrenaline rush! Highly recommend it.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 39,\r\n    \"Content\": \"Rock climbing sounds exciting. I'll give it a try!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 40,\r\n    \"Content\": \"What's your favorite season for outdoor activities?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 41,\r\n    \"Content\": \"I love the fall season. The weather is perfect for hiking.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 42,\r\n    \"Content\": \"Summer is my favorite. Beach days and outdoor events!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 43,\r\n    \"Content\": \"Let's plan a beach day soon.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 44,\r\n    \"Content\": \"I'm in! I miss the sound of ocean waves.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 45,\r\n    \"Content\": \"Count me in too! I'll bring the beach games.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 46,\r\n    \"Content\": \"Have you ever tried scuba diving?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 47,\r\n    \"Content\": \"Not yet, but it's on my bucket list!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 48,\r\n    \"Content\": \"I've been scuba diving in some amazing locations.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 49,\r\n    \"Content\": \"Let's plan a game night with board games and snacks.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 50,\r\n    \"Content\": \"I'm in! I have a collection of board games at home.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 51,\r\n    \"Content\": \"Count me in too! I'll bring some homemade snacks.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 52,\r\n    \"Content\": \"Do you have any favorite board games?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 53,\r\n    \"Content\": \"I enjoy strategy games like Settlers of Catan.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 54,\r\n    \"Content\": \"I love party games like Codenames. Always so much fun!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 55,\r\n    \"Content\": \"Let's share our favorite music playlists.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 56,\r\n    \"Content\": \"I'm into indie rock. What about you?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 57,\r\n    \"Content\": \"I enjoy a mix of genres, but electronic music is my favorite.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 58,\r\n    \"Content\": \"Have you ever attended a music festival?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 59,\r\n    \"Content\": \"Yes, the energy and live performances are unforgettable!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 60,\r\n    \"Content\": \"I've been to a few. It's a unique experience every time.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 61,\r\n    \"Content\": \"Let's plan a weekend getaway to the mountains.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 62,\r\n    \"Content\": \"I'm in! A cabin in the woods sounds perfect.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 63,\r\n    \"Content\": \"Count me in too! I love the serenity of the mountains.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 64,\r\n    \"Content\": \"What's your favorite travel destination?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 65,\r\n    \"Content\": \"I love exploring European cities and their rich history.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 66,\r\n    \"Content\": \"Beach destinations are my favorite. I love the sun and sand.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 67,\r\n    \"Content\": \"Let's plan a photography day and capture the beauty around us.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 68,\r\n    \"Content\": \"Great idea! I'll bring my camera and some lenses.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 69,\r\n    \"Content\": \"Count me in too! I love photography.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 70,\r\n    \"Content\": \"Do you prefer digital or film photography?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 71,\r\n    \"Content\": \"I love the convenience of digital photography.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 72,\r\n    \"Content\": \"Film photography has a unique charm. I enjoy both.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 73,\r\n    \"Content\": \"Let's try a new restaurant together. Any cuisine preferences?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 74,\r\n    \"Content\": \"I'm a fan of Italian cuisine. Pasta and pizza are my weaknesses.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 75,\r\n    \"Content\": \"I love exploring different cuisines. Surprise me!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 76,\r\n    \"Content\": \"Have you ever participated in a charity run or walk?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 77,\r\n    \"Content\": \"Yes, it's a great way to stay active and contribute to a cause.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 78,\r\n    \"Content\": \"I've been part of a few. It's fulfilling to make a difference.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 79,\r\n    \"Content\": \"Let's plan a weekend brunch. Any favorite brunch spots?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 80,\r\n    \"Content\": \"I know a cozy café with the best brunch menu!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 81,\r\n    \"Content\": \"I'm up for brunch! Let's try something new and exciting.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 82,\r\n    \"Content\": \"What's your go-to workout routine?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 83,\r\n    \"Content\": \"I enjoy a mix of cardio and strength training.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 84,\r\n    \"Content\": \"Yoga is my go-to. It keeps me balanced and relaxed.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 85,\r\n    \"Content\": \"Let's plan a movie night. Any genre preferences?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 86,\r\n    \"Content\": \"I love sci-fi movies. The more futuristic, the better!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 87,\r\n    \"Content\": \"I enjoy a good comedy. Laughter is the best medicine.\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  },\r\n  {\r\n    \"Id\": 88,\r\n    \"Content\": \"Have you ever tried bungee jumping or skydiving?\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 1\r\n  },\r\n  {\r\n    \"Id\": 89,\r\n    \"Content\": \"Not yet, but it's on my adventure bucket list!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 2\r\n  },\r\n  {\r\n    \"Id\": 90,\r\n    \"Content\": \"I've tried both. The adrenaline rush is indescribable!\",\r\n    \"SubGroupId\": 1,\r\n    \"UserId\": 3\r\n  }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/AddBulkMessage",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"AddBulkMessage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UploadImage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/admin/Pictures/Screenshots/redis remote connection.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Message/UploadImage",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Message",
+								"UploadImage"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GetLotteryUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   //\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/User/GetLotteryUsers",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"User",
+								"GetLotteryUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCurrentUserDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"UUID\": \"ea49f508-0615-4bbe-83d6-f04f48e2198f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/User/GetCurrentUserDetails",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"User",
+								"GetCurrentUserDetails"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRedisUsersId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/User/GetRedisUsersId",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"User",
+								"GetRedisUsersId"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Group",
+			"item": [
+				{
+					"name": "GetGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n//   \"timestamp\": 9999999999,\r\n//   \"random\": \"stringstringstringstringstringst\",\r\n//   \"signature\": \"string\",\r\n  \"pageSize\": 20,\r\n  \"pageNo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/GetGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"GetGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"name\": \"Chat-K3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/AddGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"AddGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"messageId\": 0,\r\n  \"message\": \"string\",\r\n  \"updateTime\": \"2024-02-05T13:49:54.571Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/UpdateGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"UpdateGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"id\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/DeleteGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"DeleteGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSingleGroup",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Group-Id/1",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Group-Id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SubGroup",
+			"item": [
+				{
+					"name": "GetSubGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n//   \"timestamp\": 9999999999,\r\n//   \"random\": \"stringstringstringstringstringst\",\r\n//   \"signature\": \"string\",\r\n  \"pageSize\": 20,\r\n  \"pageNo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/GetSubGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"GetSubGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddSubGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"name\": \"1 minutes\",\r\n  \"groupId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/AddSubGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"AddSubGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateSubGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"id\": 1,\r\n  \"name\": \"20 Minutes\",\r\n  \"groupId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/UpdateSubGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"UpdateSubGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSubGroup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"id\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/DeleteSubGroup",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"DeleteSubGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSingleSubGroup",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/SubGroup-Id/1",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"SubGroup-Id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Version",
+			"item": [
+				{
+					"name": "InvalidVersion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v{{version}}/invalid-version",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"invalid-version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ApiVersion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v{{version}}/api-version",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"api-version"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "healthStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v{{version}}/health/status",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"health",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "ChatHubTest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"NumberOfRecords\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Test/ChatHubTest",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Test",
+								"ChatHubTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PushUserDetailsToRedis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserId\": 501,\r\n    \"UserName\": \"91925490707490\",\r\n    \"UserPhoto\": \"https://api.lightspacecdn.com/img/avatar.cfa8dd9d.svg\",\r\n    \"NickName\": \"MemberNNGY4OQB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Test/PushUserDetailsToRedis",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Test",
+								"PushUserDetailsToRedis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserDetailsFromRedis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Test/GetUserDetailsFromRedis",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Test",
+								"GetUserDetailsFromRedis"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Queue",
+			"item": [
+				{
+					"name": "ConsumeMessagesQueue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Queue/ConsumeMessagesQueue",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Queue",
+								"ConsumeMessagesQueue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsumeDisconnectedUsersQueue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Queue/ConsumeDisconnectedUsersQueue",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Queue",
+								"ConsumeDisconnectedUsersQueue"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GroupUser",
+			"item": [
+				{
+					"name": "GetGroupUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"pageSize\": 20,\r\n  \"pageNo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/GetGroupUsers",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"GetGroupUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddGroupUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"GroupId\": 1,\r\n  \"SubGroupId\": 1,\r\n  \"UserId\": 5000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/AddGroupUser",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"AddGroupUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddBulkGroupUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"groupId\" : 1,\r\n        \"userId\" : 1\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/AddBulkGroupUser",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"AddBulkGroupUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateGroupUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"groupUserId\": 1,\r\n  \"groupId\":1,\r\n  \"userId\":0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/UpdateGroupUser",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"UpdateGroupUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteGroupUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/DeleteGroupUser",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"DeleteGroupUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSingleGroupUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/GroupUser-Id/1",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"GroupUser-Id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Jobs",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/api/v1/User/GetLotteryUsers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"User",
+								"GetLotteryUsers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ChatGroup",
+			"item": [
+				{
+					"name": "GetChatGroupUsers Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"timestamp\": 9999999999,\r\n  \"random\": \"stringstringstringstringstringst\",\r\n  \"signature\": \"string\",\r\n  \"pageSize\": 200,\r\n  \"pageNo\": 1,\r\n  \"userId\": null,\r\n  //\"groupId\": 2,\r\n  \"subGroupId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/GetChatGroupUsers",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"GetChatGroupUsers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "AccessToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.environment.set(\"token\", pm.response.json().data.token);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"9122514599899\", // 91925879237160// 9122514599899\r\n  //\"userId\": \"500\",\r\n  \"password\": \"FAThxbtvwcjcwNLgDZTAmuiPW7k=\"// 1NZVB5ideYKkIZDjNAC1AFTPWVA=  //FAThxbtvwcjcwNLgDZTAmuiPW7k=\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v{{version}}/Auth/AccessToken",
+							"host": [
+								"{{url}}v{{version}}"
+							],
+							"path": [
+								"Auth",
+								"AccessToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

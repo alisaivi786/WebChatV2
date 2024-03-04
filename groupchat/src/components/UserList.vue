@@ -3,25 +3,31 @@
     <div class="user-item">
       <span class="chat-heading">Users</span>
     </div>
+    <div class="d-flex justify-content-center" v-if="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <ul class="user-list-items">
-      <template v-if="isLoading">Loading...</template>
       <template v-if="!isLoading">
         <template v-for="user in $store.state.userList" :key="user.userId">
-          <UserItem :user="convertToUserModel(user)" />
+          <template v-if="$store.state.loggedInUser.userId != user.userId">
+            <UserItem :user="convertToUserModel(user)" />
+          </template>
         </template>
       </template>
     </ul>
-    <hr>
+    <hr />
     <ul class="loggedin-user" v-if="$store.state.loggedInUser.nickName">
       <li>
         <div class="row">
-          <div class="col-md-3 text-center">
+          <div class="col-xl-3 text-center">
             <img
               v-bind:src="$store.state.loggedInUser.userPhoto"
               alt="User Icon"
             />
           </div>
-          <div class="col-md-4 p-0">
+          <div class="col-xl-4 p-0 text-center">
             <span class="username">{{
               $store.state.loggedInUser.nickName
             }}</span>
@@ -31,7 +37,7 @@
               Active
             </span>
           </div>
-          <div class="col-md-5 dropdown dropup ml-auto text-end">
+          <div class="col-xl-5 dropdown dropup ml-auto text-center">
             <button
               class="btn btn-outline-primary dropdown-toggle"
               type="button"
@@ -42,7 +48,11 @@
               Options
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><a class="dropdown-item" :href="`/user/${uuid}`">View Profile</a></li>
+              <li>
+                <a class="dropdown-item" :href="`/user/${uuid}`"
+                  >View Profile</a
+                >
+              </li>
               <li><a class="dropdown-item" href="/">Logout</a></li>
             </ul>
           </div>
@@ -83,7 +93,6 @@ export default defineComponent({
       this.isLoading = false;
     },
     convertToUserModel(user) {
-      // Assuming user is in the expected format, create a UserModel instance
       return new UserModel(
         user.userId,
         user.userName,

@@ -44,7 +44,7 @@ public class RabbitMQConsumer : IRabbitMQConsumer
         factory = connectionFactory;
         _serviceScopeFactory = serviceScopeFactory;
         scope = _serviceScopeFactory.CreateScope();
-        unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+       // unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         AppSettings = appSettings;
         this.logger = logger;
     }

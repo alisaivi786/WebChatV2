@@ -1,4 +1,6 @@
-﻿namespace WebChat.API.Controllers.User;
+﻿using WebChat.Presistence.UnitOfWork;
+
+namespace WebChat.API.Controllers.User;
 
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/User")]
@@ -62,6 +64,17 @@ public class UserController(IRedisService RedisService) : BaseAuthController
         var list = await RedisService.GetUserIds();
 
         return Ok(list);
+    }
+    #endregion
+
+    #region UpdateUserDetails
+    [MapToApiVersion(1)]
+    [HttpPost("UpdateUserDetails")]
+    [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
+    public async Task<IActionResult> UpdateUserDetails([FromBody] UpdateUserReqDto reqest)
+    {
+        var response = await UnitOfWork.UserRepository.UpdateUserAsync(reqest);
+        return Ok(response);
     }
     #endregion
 }

@@ -1,7 +1,12 @@
 import { createStore } from 'vuex';
-import { getAuthAccessToken } from '../services/authService';
-import { getSubGroupById } from '../services/groupService';
-import { getAllUsers, getCurrentUserDetails } from '../services/userService';
+import { apiService } from '../services/apiService';
+import type { Params } from '../services/apiService';
+import {
+  getAuthAccessTokenRoute,
+  getAllUsersRoute,
+  getCurrentUserDetailsRoute,
+  getSubGroupByIdRoute
+} from '../services/routes';
 import UserModel from "../models/UserModel";
 
 // Define the initial state
@@ -51,9 +56,19 @@ const store = createStore<State>({
         const userId = "500";
         const userName = "9188888888666";
         const password = "lF4r1045+MOKlS+/piVoLWSshoM=";
+        const groupId = 1;
+        const subGroupId = 1;
 
+        const params = {
+          userName,
+          userId,
+          password,
+          groupId,
+          subGroupId,
+        };
+        
         try {
-          const res = await getAuthAccessToken(userId, userName, password);
+          const res = await apiService(getAuthAccessTokenRoute, params);
           const token = res.data.token;
           commit('setAccessToken', token);
         } catch (error) {
@@ -64,7 +79,12 @@ const store = createStore<State>({
     async fetchSubGroupById({ commit, state }, subGroupId) {
       try {
         if (!('subGroupId' in state.groupData) && state.accessToken) {
-          const subGroupData = await getSubGroupById(subGroupId, state.accessToken);
+
+          const params = {
+            subGroupId,
+          };
+
+          const subGroupData = await apiService(getSubGroupByIdRoute, params);
           commit('setGroupData', subGroupData.data);
         }
       } catch (error) {
@@ -76,7 +96,11 @@ const store = createStore<State>({
       // Fetch access token only if not already available
       if (state.userList.length == 0 && state.accessToken) {
         try {
-          const res = await getAllUsers(subGroupId, state.accessToken);
+          const params: Params = {
+            SubGroupId: subGroupId
+          };
+
+          const res = await apiService(getAllUsersRoute, params);
           const userList = res.data.list;
           commit('setUserList', userList);
         } catch (error) {
@@ -88,16 +112,21 @@ const store = createStore<State>({
       try {
         if (!state.accessToken) return;
 
-        const res = await getCurrentUserDetails(uuid, state.accessToken);
+        const params: Params = {
+          UUID: uuid,
+        };
+
+        const res = await apiService(getCurrentUserDetailsRoute, params);
         const loggedInUser = new UserModel(
           0,
           '',
-          res.nickName,
+          res.data.nickName,
           0,
           '',
-          res.userId,
-          res.userName,
-          res.userPhoto
+          res.data.userId,
+          res.data.userName,
+          res.data.userPhoto,
+          uuid
         );
         commit('setLoggedInUser', loggedInUser);
       } catch (error) {

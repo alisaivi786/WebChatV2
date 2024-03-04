@@ -7,6 +7,7 @@ export default class UserModel {
     userId: number;
     userName: string;
     userPhoto: string;
+    rowId: string;
 
     constructor(
         groupId: number,
@@ -16,7 +17,8 @@ export default class UserModel {
         subGroupName: string,
         userId: number,
         userName: string,
-        userPhoto: string
+        userPhoto: string,
+        rowId: string
     ) {
         this.groupId = groupId;
         this.groupName = groupName;
@@ -26,5 +28,6 @@ export default class UserModel {
         this.userId = userId;
         this.userName = userName;
         this.userPhoto = userPhoto;
+        this.rowId = rowId;
     }
 }

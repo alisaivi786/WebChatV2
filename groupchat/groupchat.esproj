@@ -1,14 +1,17 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
   <PropertyGroup>
     <StartupCommand>npm run dev</StartupCommand>
     <JavaScriptTestRoot>.\</JavaScriptTestRoot>
     <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
     <!-- Allows the build (or compile) script located on package.json to run on Build -->
-    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <ShouldRunBuildScript>true</ShouldRunBuildScript>
     <!-- Folder where production build objects will be placed -->
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist</PublishAssetsDirectory>
+    <BuildCommand>
+    </BuildCommand>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="obj\" />
     <Folder Include="public\" />
   </ItemGroup>
   <ItemGroup>
@@ -5138,9 +5141,5 @@
     <None Include="node_modules\.bin\vue-tsc.cmd" />
     <None Include="node_modules\.bin\vue-tsc.ps1" />
     <None Include="node_modules\.package-lock.json" />
-    <None Include="obj\Debug\groupchat.esproj.CoreCompileInputs.cache" />
-    <None Include="obj\Debug\groupchat.esproj.FileListAbsolute.txt" />
-    <None Include="obj\Release\groupchat.esproj.CoreCompileInputs.cache" />
-    <None Include="obj\Release\groupchat.esproj.FileListAbsolute.txt" />
   </ItemGroup>
 </Project>

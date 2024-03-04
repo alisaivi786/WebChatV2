@@ -1,9 +1,12 @@
 ﻿
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using WebChat.Application.Contracts.UnitOfWork;
+using WebChat.Common.Dto.RequestDtos.Message;
 using WebChat.Common.Dto.ResponseDtos.Message;
 using WebChat.RabbitMQ;
 using WebChat.Redis;
+using WebChat.Redis.RedisHelper;
 
 namespace WebChat.Hubs;
 
@@ -12,14 +15,18 @@ namespace WebChat.Hubs;
 /// Developer: AYMAN MUSTAFA ADLAN
 /// Date: 01-02-2024
 /// </summary>
-public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer RabbitMQConsumer, IRedisService RedisService) : Hub
+public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer RabbitMQConsumer,
+    IRedisService2<MessageDetailDto> RedisService2,
+    IUserDetailsService UserDetailsService,
+    IUnitOfWork UnitOfWork) : Hub
 {
     #region Declaring private fields
     private readonly IRabbitMQProducer RabbitMQProducer = RabbitMQProducer;
     private readonly IRabbitMQConsumer RabbitMQConsumer = RabbitMQConsumer;
 
-    private readonly IRedisService RedisService = RedisService;
-    private static Dictionary<string, string> connectedUsers = new Dictionary<string, string>();
+    private static Dictionary<string, string> connectedUsers = [];
+
+    private AddMessageReqDto addMessageReqDto = new();
     #endregion
 
     #region OnConnectedAsync
@@ -73,16 +80,15 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
     /// <returns>Task</returns>
     public async Task SendMessageAsync(string message)
     {
+        string MessageReqjson;
+        MessageDetailDto mappedrequest;
+
         var routeOb = JsonConvert.DeserializeObject<dynamic>(message);
 
         MessageDetailDto MessageReq = new()
         {
-            SubGroupId = routeOb?.SubGroupId, //1,
-            SubGroupName = routeOb?.SubGroupName.ToString(), //"TB-Admin",
+            SubGroupId = routeOb?.SubGroupId,
             UserId = routeOb?.UserId,
-            UserName = routeOb?.UserName,
-            UserPhoto = routeOb?.UserPhoto,
-            NickName = routeOb?.NickName,
             Message = routeOb?.Message.ToString(),
             Time = routeOb?.Time,
             UUID = routeOb?.UUID
@@ -91,111 +97,62 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
         var SubGroupId = $"[{MessageReq.SubGroupId?.ToString()}]";
 
         #region [0] Map User Details and prepare the json
-        var mappedrequest = await RedisService.MapUserDetailsAsync(MessageReq);
+        // mappedrequest = await RedisService.MapUserDetailsAsync(MessageReq);
+
         // var MessageReqjson = JsonConvert.SerializeObject(mappedrequest);
 
-        var MessageReqjson = JsonConvert.SerializeObject(mappedrequest);
+        // MessageReqjson = JsonConvert.SerializeObject(mappedrequest);
         #endregion
 
-        #region [1] Publish to Queue
+        #region [1] Push to Redis
+        await Console.Out.WriteLineAsync("--> ChatHub: calling PushMessageToRedisAsync");
+        var redisKey = string.Format(CommonCacheKey.chatroom, SubGroupId);
+        // RedisService.PushMessageToRedisAsync(message: MessageReqjson, roomId: SubGroupId);
+
+        try
+        {
+            // mappedrequest = await RedisService.MapUserDetailsAsync(MessageReq);
+            mappedrequest = await UserDetailsService.MapUserDetailsAsync(CommonCacheKey.cacheKey_users_usersdetails, MessageReq);
+            MessageReqjson = JsonConvert.SerializeObject(mappedrequest);
+
+            RedisService2.PushMessageToRedisAsync(key: redisKey, message: mappedrequest);
+            RabbitMQProducer.TimedPublishMessageToRabbitMQAcks(mappedrequest, sourceQueue: $"source_queue_{SubGroupId}", destinationQueue: $"destination_queue_{SubGroupId}", groupId: SubGroupId);
+        }
+        catch (Exception)
+        {
+            #region Consume the source and destination queue
+            // await RabbitMQProducer.StartConsuming(queueNamePattern: "source_queue_*");
+            // await RabbitMQConsumer.StartConsuming(queueNamePattern: "destination_queue_*");
+            #endregion
+
+            MessageReqjson = JsonConvert.SerializeObject(MessageReq);
+
+            #region Push directly to the database
+            addMessageReqDto = new AddMessageReqDto()
+            {
+                Message = routeOb?.Message,
+                UserId = routeOb?.UserId,
+                SubGroupId = routeOb?.SubGroupId,
+                SetTime = routeOb?.Time,
+                UUID = routeOb?.Uuid
+            };
+            #endregion
+
+            await UnitOfWork.MessageRepository.AddMessageAsync(addMessageReqDto);
+        }
+
+        #endregion
+
+        #region [2] Publish to Queue
         // RabbitMQProducer.TimedPublishMessageToRabbitMQ(mappedrequest, sourceQueue: $"source_queue_{SubGroupId}", destinationQueue: $"destination_queue_{SubGroupId}",groupId: SubGroupId);
-        RabbitMQProducer.TimedPublishMessageToRabbitMQAcks(mappedrequest, sourceQueue: $"source_queue_{SubGroupId}", destinationQueue: $"destination_queue_{SubGroupId}", groupId: SubGroupId);
-        #endregion
-
-        #region [2] Push to Redis
-        await Console.Out.WriteLineAsync("-->ChatHub: calling PushMessageToRedisAsync");
-        RedisService.PushMessageToRedisAsync(message: MessageReqjson, roomId: SubGroupId);
+        // RabbitMQProducer.TimedPublishMessageToRabbitMQAcks(mappedrequest, sourceQueue: $"source_queue_{SubGroupId}", destinationQueue: $"destination_queue_{SubGroupId}", groupId: SubGroupId);
         #endregion
 
         #region [3] Consume Queue & Sync with the database
         // await RabbitMQConsumer.StartConsuming(queueNamePattern: "destination_queue_*");
         #endregion
 
-        await Clients.Group(mappedrequest.SubGroupId.ToString()).SendAsync("ReceiveMessage", mappedrequest.UserId, MessageReqjson);
+        await Clients.Group(MessageReq.SubGroupId.ToString()).SendAsync("ReceiveMessage", MessageReq.UserId, MessageReqjson);
     }
-    #endregion
-
-
-    #region Disconnection Management
-
-    #region OnDisconnectedAsync
-    /// <summary>
-    /// OnDisconnectedAsync
-    /// </summary>
-    /// <param name="exception"></param>
-    /// <returns>Task</returns>
-    public override async Task OnDisconnectedAsync(Exception exception)
-    {
-        //  SetPageRefreshFlag();
-
-        //   var isPageRefresh = Context.Items["IsPageRefresh"] as bool?;
-
-        //if ((bool)!isPageRefresh)
-        //{
-        //    if (connectedUsers.TryGetValue(Context.ConnectionId, out var userId))
-        //    {
-        //        Console.WriteLine($"--> Connection {Context.ConnectionId} (UserId: {userId}) disconnected");
-
-        //        var User = new DeleteGroupUserReqDto() { UserId = Convert.ToInt32(userId) };
-
-        //        RabbitMQProducer.PublishMessageToRabbitMQ(User, "DisconnectedUsers_queue");
-        //    }
-
-        //    connectedUsers.Remove(Context.ConnectionId);
-        //}
-    }
-
-    public void SetPageRefreshFlag()
-    {
-        Context.Items["IsPageRefresh"] = true;
-    }
-    #endregion
-
-    #region SendHeartbeat
-    public async Task SendHeartbeat()
-    {
-        // Optionally, update a timestamp or perform other actions
-        // to indicate that the client is still connected
-        // For example, you could store the last heartbeat timestamp in a dictionary
-
-        // Store the last heartbeat timestamp for the client
-        var connectionId = Context.ConnectionId;
-        // Assuming a dictionary to store timestamps for each connection
-        // You may want to use a concurrent dictionary for thread safety
-        // Adjust this based on your specific requirements
-        // Also, consider implementing cleanup logic to remove stale entries
-        HeartbeatManager.SetLastHeartbeat(connectionId, DateTime.UtcNow);
-
-        // You can perform other actions if needed
-        // For example, broadcast a message to all clients
-        // Clients.All.SendAsync("ReceiveMessage", $"{connectionId} sent a heartbeat");
-
-        await Console.Out.WriteLineAsync("--> SendHeartbeat");
-    }
-    #endregion
-
-    #region CheckIdleConnections
-    public async Task CheckIdleConnections(CancellationToken cancellationToke)
-    {
-        await Console.Out.WriteLineAsync("--> ChatHub: CheckIdleConnections");
-
-        // var timeout = TimeSpan.FromMinutes(1); // Adjust the timeout as needed
-        var timeout = TimeSpan.FromSeconds(10); // Adjust the timeout as needed
-
-        foreach (var connectionId in HeartbeatManager.GetConnectionIds())
-        {
-            var lastHeartbeat = HeartbeatManager.GetLastHeartbeat(connectionId);
-
-            if (DateTime.UtcNow - lastHeartbeat > timeout)
-            {
-                // Disconnect the idle connection
-
-                //  await Clients.Client(connectionId).SendAsync("Disconnect", "Idle connection timeout");
-                //  await Context.Connection.StopAsync(); // Disconnect the connection
-            }
-        }
-    }
-    #endregion
-
     #endregion
 }

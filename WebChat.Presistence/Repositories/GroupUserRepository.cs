@@ -1,5 +1,6 @@
 ﻿using WebChat.Common.Dto.RequestDtos.GroupUser;
 using WebChat.Common.Dto.ResponseDtos.GroupUser;
+using WebChat.Extension.Extensions;
 
 namespace WebChat.Presistence.Repositories;
 
