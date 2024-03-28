@@ -8,9 +8,9 @@ public class DIHelper(IServiceProvider serviceProvider)
 {
     protected IServiceProvider ServiceProvider { get; } = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-    protected IRedisService RedisService
-    {
-        get => ServiceProvider.GetRequiredService<IRedisService>();
-    }
+    //protected IRedisService RedisService
+    //{
+    //    get => ServiceProvider.GetRequiredService<IRedisService>();
+    //}
 }
 

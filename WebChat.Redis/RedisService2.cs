@@ -17,6 +17,7 @@ public class RedisService2<T> : IRedisService2<T>
     #region private fields initialization
     private readonly IConnectionMultiplexer redis;
     private readonly IDatabase db;
+    private readonly string redisConnection;
     private readonly int chatRoomLimit = 1000;
     #endregion
 
@@ -25,6 +26,7 @@ public class RedisService2<T> : IRedisService2<T>
     {
         this.redis = redis;
         db = redis.GetDatabase();
+        redisConnection = appSetting.RedisConnectionString;
         chatRoomLimit = Convert.ToInt32(appSetting.RedisCharRoomLimit);
     }
     #endregion
@@ -133,9 +135,9 @@ public class RedisService2<T> : IRedisService2<T>
     /// <param name="key"></param>
     /// <param name="objects"></param>
     /// <returns>bool</returns>
-    public async Task<bool> PushSingleObjectAsync(string key, List<T> objects)
+    public async Task<bool> PushSingleObjectAsync(string key, T obj)
     {
-        return await db.StringSetAsync(key, JsonConvert.SerializeObject(objects));
+        return await db.StringSetAsync(key, JsonConvert.SerializeObject(obj));
     }
     #endregion
 
@@ -197,7 +199,6 @@ public class RedisService2<T> : IRedisService2<T>
         }
         catch (Exception)
         {
-
             return false;
         }
 
@@ -354,6 +355,61 @@ public class RedisService2<T> : IRedisService2<T>
             Console.WriteLine($"Error checking Redis connection: {ex.Message}");
             return false;
         }
+    }
+    #endregion
+
+    #region IsKeyAvailable
+    /// <summary>
+    /// IsKeyAvailable
+    /// </summary>
+    /// <returns>bool</returns>
+    public async Task<bool> IsKeyAvailable(string key)
+    {
+        return await db.KeyExistsAsync(key);
+    }
+    #endregion
+
+    #region GetIdsAsync
+    /// <summary>
+    /// GetIdsAsync
+    /// </summary>
+    /// <typeparam name="T">Type of the deserialized object</typeparam>
+    /// <returns>Task<List<long>></returns>
+    public async Task<List<long>> GetIdsAsync<T>(string fieldName, string pattern)
+    {
+        var configuration = ConfigurationOptions.Parse(redisConnection);
+        var server = redis?.GetServer(configuration.EndPoints.First());
+
+        //  var server = redis.GetServer("localhost", 6379); 
+        var allKeys = server.Keys(database: db.Database, pattern: pattern).ToArray();
+        Console.WriteLine($"Found {allKeys.Length} keys matching the pattern.");
+
+        var distinctIds = new HashSet<long>();
+
+        foreach (var key in allKeys)
+        {
+            var records = await db.ListRangeAsync(key);
+
+            foreach (var r in records)
+            {
+                using (JsonTextReader reader = new JsonTextReader(new StringReader(r.ToString())))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    var record = serializer.Deserialize<T>(reader);
+
+                    if (record != null)
+                    {
+                        var idProperty = record.GetType().GetProperty(fieldName);
+                        if (idProperty != null)
+                        {
+                            distinctIds.Add((long)idProperty.GetValue(record));
+                        }
+                    }
+                }
+            }
+        }
+
+        return [.. distinctIds];
     }
     #endregion
 

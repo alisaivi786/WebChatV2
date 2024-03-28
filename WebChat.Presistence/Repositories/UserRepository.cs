@@ -21,13 +21,12 @@ namespace WebChat.Presistence.Repositories;
 /// <param name="authService"></param> 
 #endregion
 public class UserRepository(WebchatDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IAppSettings appSettings, IAuthService authService,
-    IRedisService redisService,
+   // IRedisService redisService,
     IRedisService2<object> redisService2
     )
     : BaseRepository<UserDetailsEntity>(context, configuration, httpContextAccessor, appSettings: appSettings), IUserRepository
 {
     private readonly IAppSettings appSettings = appSettings;
-    private readonly IRedisService RedisService = redisService;
 
     private readonly IRedisService2<object> RedisService2 = redisService2;
 
@@ -61,13 +60,7 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
                 //&& reqest.Password.Equals(lotteryResponse.Password) Later we Check Password to verifiy the Users
                 )
             {
-                #region Save/Update User Info in LoginInUser then generate a Token
-                //AddLoginInUserReqDto loginInUserReqDto = new()
-                //{
-                //    UserId = Convert.ToInt32(lotteryResponse.UserId),
-                //};
-
-                //var response = await LoginInUserRepository.AddLoginInUserAsync(loginInUserReqDto);
+                #region Save/Update User Info then generate a Token
 
                 AddGroupUserReqDto addGroupUser = new()
                 {
@@ -154,8 +147,33 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
             var response = await AddAsync(entity);
 
             #region Update Entity into Cache:
-            // Do Code here...
-            RedisService.PushSingleObjectToCache(CommonCacheKey.cacheKey_users_usersdetails, entity);
+            if(await RedisService2.IsKeyAvailable(CommonCacheKey.cacheKey_users_usersdetails))
+            {
+                UserDetailDto userDetailDto = new()
+                {
+                    Id = entity.Id,
+                    UserId = Convert.ToInt32(entity.UserId),
+                    UserName = entity.UserName,
+                    UserPhoto = entity.UserPhoto,
+                    RowId = entity.RowId,
+                    NickName = entity.NickName,
+                };
+                await RedisService2.PushOrReplaceObject(CommonCacheKey.cacheKey_users_usersdetails, userDetailDto, "UserId");
+            }
+            else
+            {
+                var userDetailsList = GetAll();
+                var userDetailsListCache = userDetailsList.Select(X=> (object)new UserDetailDto {
+                    Id = X.Id,
+                    UserId = Convert.ToInt32(X.UserId),
+                    UserName = X.UserName,
+                    UserPhoto = X.UserPhoto,
+                    RowId = X.RowId,
+                    NickName = X.NickName,
+                }).ToList();
+
+                await RedisService2.PushObjectListAsync(CommonCacheKey.cacheKey_users_usersdetails, userDetailsListCache);
+            }
             #endregion
 
             #endregion
@@ -169,6 +187,38 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
         {
             exist.UtcLastLoginTime = DateTime.UtcNow;
             var response = await UpdateAsync(exist, reqest.UserId);
+
+            #region Add Or Update UserDetails into Cache
+            if (await RedisService2.IsKeyAvailable(CommonCacheKey.cacheKey_users_usersdetails))
+            {
+                UserDetailDto userDetailDto = new()
+                {
+                    Id = Convert.ToInt32(response.Data?.Id),
+                    UserId = Convert.ToInt32(response.Data?.UserId),
+                    UserName = response.Data?.UserName,
+                    UserPhoto = response.Data?.UserPhoto,
+                    RowId = response.Data?.RowId,
+                    NickName = response.Data?.NickName,
+                };
+                await RedisService2.PushOrReplaceObject(CommonCacheKey.cacheKey_users_usersdetails, userDetailDto, "UserId");
+            }
+            else
+            {
+                var userDetailsList = GetAll();
+                var userDetailsListCache = userDetailsList.Select(X => (object)new UserDetailDto
+                {
+                    Id = X.Id,
+                    UserId = Convert.ToInt32(X.UserId),
+                    UserName = X.UserName,
+                    UserPhoto = X.UserPhoto,
+                    RowId = X.RowId,
+                    NickName = X.NickName,
+                }).ToList();
+
+                await RedisService2.PushObjectListAsync(CommonCacheKey.cacheKey_users_usersdetails, userDetailsListCache);
+            } 
+            #endregion
+
             if (response != null && response.Code != null && (int)response.Code == (int)DbCodeEnums.Success)
             {
                 return new ApiResponse<bool> { Data = true, Code = ApiCodeEnum.Success, MsgCode = ApiMessageEnum.Success };
@@ -264,9 +314,9 @@ public class UserRepository(WebchatDBContext context, IConfiguration configurati
             ];
 
             #region PushUserDetailsToRedis
-           // var redis = RedisService.PushListObjectToCache(CommonCacheKey.cacheKey_users_usersdetails, userList); 
-           // var redis = await RedisService2.PushOrReplaceObject(CommonCacheKey.cacheKey_users_usersdetails, userList, "UserId");
-            var redis = await RedisService2.PushOrReplaceObjectList(CommonCacheKey.cacheKey_users_usersdetails2, userList, "UserId");
+            // var redis = RedisService.PushListObjectToCache(CommonCacheKey.cacheKey_users_usersdetails, userList); 
+            // var redis = await RedisService2.PushOrReplaceObject(CommonCacheKey.cacheKey_users_usersdetails, userList, "UserId");
+            var redis = await RedisService2.PushOrReplaceObjectList(CommonCacheKey.cacheKey_users_usersdetails, userList, "UserId");
             #endregion
 
             var responseResult = response.Select(x => new UserDetailDto

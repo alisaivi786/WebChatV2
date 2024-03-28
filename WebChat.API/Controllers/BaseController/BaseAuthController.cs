@@ -6,6 +6,7 @@ namespace WebChat.API.Controllers.BaseController;
 [ApiController]
 public class BaseAuthController : ControllerBase
 {
+    //
     protected IClaimsAccessor? CurrentUser => GetCurrentUser();
     private IClaimsAccessor? GetCurrentUser() =>
         // Resolve the implementation using the built-in DI container

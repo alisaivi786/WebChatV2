@@ -68,8 +68,6 @@ public static class WebChatServiceExtension
         services.AddHealthChecksUI()
             .AddInMemoryStorage();
 
-        //services.AddHostedService<BackgroundProcess>();
-
         #region Return Service
         return services;
         #endregion 

@@ -1,6 +1,4 @@
 ﻿
-using StackExchange.Redis;
-
 namespace WebChat.Redis;
 
 /// <summary>
@@ -14,7 +12,7 @@ public interface IRedisService2<T>
     public Task<List<T>> GetRedisListAsync(string key);
     public Task<long> GetRedisCountAsync(string key);
     public Task<T> GetFirstRecordAsync(string key);
-    public Task<bool> PushSingleObjectAsync(string key, List<T> objects);
+    public Task<bool> PushSingleObjectAsync(string key, T obj);
     public Task<bool> PushObjectListAsync(string key, List<T> objects);
     //public Task<bool> PushMessagesListAsync(string key, List<T> objects);
     public Task<bool> PushSingleObjectToCacheAsync(string key, object obj);
@@ -23,6 +21,9 @@ public interface IRedisService2<T>
     public Task<bool> PushOrReplaceObjectList(string listKey, List<T> Data, string field);
 
     public bool IsRedisWorking();
+
+    public Task<bool> IsKeyAvailable(string key);
+    public Task<List<long>> GetIdsAsync<T>(string fieldName, string pattern);
 
     public void Dispose();
 }

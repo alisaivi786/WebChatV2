@@ -13,7 +13,7 @@ namespace WebChat.API.Controllers;
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/Test")]
 [ApiController]
-public class TestController(IRedisService RedisService, IRedisService2<GetuserDetailsRspDto> RedisService2) : ControllerBase
+public class TestController(IRedisService2<GetuserDetailsRspDto> RedisService2) : ControllerBase
 {
     #region ChatHubTest
     [MapToApiVersion(1)]
@@ -50,7 +50,7 @@ public class TestController(IRedisService RedisService, IRedisService2<GetuserDe
     #region GetTestMessage
     private string GetTestMessage(int index)
     {
-        return JsonConvert.SerializeObject(new { SubGroupId = 1, SubGroupName = "10 Minute", UserId = 500, UserName = "MemberNNGY4OQB", Message = $"Test Message [{index + 1}]", Time = DateTime.UtcNow, UUID = Guid.NewGuid() });
+        return JsonConvert.SerializeObject(new { SubGroupId = 1, SubGroupName = "10 Minute", UserId = 507, UserName = "MemberNNGY4OQB", Message = $"Test Message [{index + 1}]", Time = DateTime.UtcNow, UUID = Guid.NewGuid() });
         //return JsonConvert.SerializeObject(new
         //{
         //    SubGroupId = 1,
@@ -76,7 +76,7 @@ public class TestController(IRedisService RedisService, IRedisService2<GetuserDe
     {
         var userDetailsJson = JsonConvert.SerializeObject(request);
 
-        await RedisService2.PushOrReplaceObject(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2, request, "UserId");
+        await RedisService2.PushOrReplaceObject(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails, request, "UserId");
         // RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails);
 
         // RedisService.RemoveKey(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
@@ -96,7 +96,7 @@ public class TestController(IRedisService RedisService, IRedisService2<GetuserDe
         //  RedisService.PushObjectList(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2 , request);
         // RedisService.RemoveKey(WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
 
-        RedisService.PushJsonObjectToRedisAsync(userDetailsJson, WebChat.Redis.CommonCacheKey.cacheKey_users_usersdetails2);
+        RedisService2.PushSingleObjectToCacheAsync(CommonCacheKey.cacheKey_users_usersdetails, userDetailsJson);
 
         return Ok();
     }
@@ -108,7 +108,7 @@ public class TestController(IRedisService RedisService, IRedisService2<GetuserDe
     [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
     public async Task<IActionResult> GetUserDetailsFromRedis()
     {
-        var usersDetails = await RedisService.GetAllUsersDetails();
+        var usersDetails = await RedisService2.GetRedisListAsync(CommonCacheKey.cacheKey_users_usersdetails);
         // var usersDetails = await RedisService.GetAllUsersDetails2();
 
         // var uuid = await RedisService.GetLastMessageUUID("[1]");
@@ -116,4 +116,20 @@ public class TestController(IRedisService RedisService, IRedisService2<GetuserDe
         return Ok(usersDetails);
     }
     #endregion
+
+    #region IsKeyAvailable
+    [MapToApiVersion(1)]
+    [HttpPost("IsKeyAvailable")]
+    [SwaggerResponse((int)ApiCodeEnum.Success, "Back parameter comments", typeof(ApiResponse<bool>))]
+    public async Task<IActionResult> IsKeyAvailable()
+    {
+        var IsKeyAvailable = await RedisService2.IsKeyAvailable(CommonCacheKey.cacheKey_users_usersdetails);
+        // var usersDetails = await RedisService.GetAllUsersDetails2();
+
+        // var uuid = await RedisService.GetLastMessageUUID("[1]");
+
+        return Ok(IsKeyAvailable);
+    }
+    #endregion
+    
 }

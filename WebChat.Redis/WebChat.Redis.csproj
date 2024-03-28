@@ -7,13 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+    <Compile Remove="IRedisService.cs" />
+    <Compile Remove="RedisService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="StackExchange.Redis" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebChat.Application\WebChat.Application.csproj" />
-    <ProjectReference Include="..\WebChat.Common\WebChat.Common.csproj" />
   </ItemGroup>
 
 </Project>

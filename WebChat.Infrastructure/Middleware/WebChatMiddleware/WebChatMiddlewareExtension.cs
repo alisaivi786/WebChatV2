@@ -21,6 +21,7 @@ public static class WebChatMiddlewareExtension
                 "null",
                 "http://localhost:8080",
                 "https://localhost:5173",
+                "http://localhost:5173",
                 "https://localhost:5177",
                 "http://localhost:8001",
                 "https://localhost:5174",

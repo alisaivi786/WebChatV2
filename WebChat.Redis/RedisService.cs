@@ -160,7 +160,7 @@ public class RedisService : IRedisService
     /// <returns>Task<List<GetuserDetailsRspDto>></returns>
     public async Task<List<GetuserDetailsRspDto>> GetAllUsersDetails()
     {
-        var key = CommonCacheKey.cacheKey_users_usersdetails2;
+        var key = CommonCacheKey.cacheKey_users_usersdetails;
 
         var records = await db.ListRangeAsync(key);
 

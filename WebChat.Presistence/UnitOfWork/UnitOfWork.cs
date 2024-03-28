@@ -16,7 +16,7 @@ public class UnitOfWork : IUnitOfWork,IDisposable
     private readonly IHttpContextAccessor HttpContextAccessor;
     private readonly IAppSettings AppSettings;
     private readonly IAuthService AuthService;
-    private readonly IRedisService RedisService;
+   // private readonly IRedisService RedisService;
 
     private readonly IRedisService2<object> RedisService2;
 
@@ -25,7 +25,7 @@ public class UnitOfWork : IUnitOfWork,IDisposable
         IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor,
         IAppSettings applicationSettings,
-        IRedisService redisService,
+      //  IRedisService redisService,
         IRedisService2<object> redisService2,
         IAuthService authService)
     {
@@ -35,7 +35,7 @@ public class UnitOfWork : IUnitOfWork,IDisposable
         AppSettings = applicationSettings;
         Configuration = configuration; 
         AuthService = authService;
-        RedisService = redisService;
+      //  RedisService = redisService;
         RedisService2 = redisService2;
         #endregion
 
@@ -80,7 +80,7 @@ public class UnitOfWork : IUnitOfWork,IDisposable
          httpContextAccessor: HttpContextAccessor,
          appSettings: AppSettings,
          authService: AuthService,
-         redisService: RedisService,
+        // redisService: RedisService,
          redisService2: RedisService2);
         #endregion
     }

@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using WebChat.Application.Contracts.UnitOfWork;
 using WebChat.Common.Dto.RequestDtos.Message;
 using WebChat.Common.Dto.ResponseDtos.Message;
+using WebChat.Presistence.Repositories.RedisHelper;
 using WebChat.RabbitMQ;
 using WebChat.Redis;
-using WebChat.Redis.RedisHelper;
 
 namespace WebChat.Hubs;
 
@@ -111,7 +111,6 @@ public class ChatHub(IRabbitMQProducer RabbitMQProducer, IRabbitMQConsumer Rabbi
 
         try
         {
-            // mappedrequest = await RedisService.MapUserDetailsAsync(MessageReq);
             mappedrequest = await UserDetailsService.MapUserDetailsAsync(CommonCacheKey.cacheKey_users_usersdetails, MessageReq);
             MessageReqjson = JsonConvert.SerializeObject(mappedrequest);
 

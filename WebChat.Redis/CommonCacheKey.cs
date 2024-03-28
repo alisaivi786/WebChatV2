@@ -9,7 +9,7 @@ namespace WebChat.Redis;
 public class CommonCacheKey
 {
     public static readonly string cacheKey_users_usersdetails = "cacheKey:users:usersdetails";
-    public static readonly string cacheKey_users_usersdetails2 = "cacheKey:users:usersdetails2";
+   // public static readonly string cacheKey_users_usersdetails2 = "cacheKey:users:usersdetails2";
 
     public static readonly string chatroom = "chatroom:{0}";
 }

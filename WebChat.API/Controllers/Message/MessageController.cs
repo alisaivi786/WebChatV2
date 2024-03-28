@@ -1,8 +1,5 @@
 ﻿#region NameSpace
-using System.Collections.Generic;
-using WebChat.Common.Dto.ResponseDtos.Users;
-using WebChat.Redis;
-using WebChat.Redis.RedisHelper;
+using WebChat.Presistence.Repositories.RedisHelper;
 
 namespace WebChat.API.Controllers.Message;
 #endregion
